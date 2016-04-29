@@ -8,11 +8,11 @@
 - install docker-compose with [docs.docker.com/compose/install](https://docs.docker.com/compose/install/)
 
 ### 2. Download docker-compose.yml
-https://hub.docker.com/r/ubnt/ucrm-billing/
-UCRM will start on ports 8080 (the application) and 8081 (suspend page). You can change it in this config file.
+- https://hub.docker.com/r/ubnt/ucrm-billing/
+- UCRM will start on ports 8080 (the application) and 8081 (suspend page). You can change it in this config file.
 
 ### 3. Download docker-compose.env
-https://hub.docker.com/r/ubnt/ucrm-billing/
+- https://hub.docker.com/r/ubnt/ucrm-billing/
 
 ### 4. Start UCRM
 
