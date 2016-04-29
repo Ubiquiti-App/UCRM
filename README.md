@@ -9,8 +9,8 @@
 
 ### 2. Download config files 
 Download these two config files from this repository:
-- docker-compose.yml
-- docker-compose.env
+- docker-compose.yml [https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.yml]
+- docker-compose.env [https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.env]
 
 ### 3. Modify docker-compose.yml file
 It is recommended to store your CRM Billing database outside the docker container to enable easy upgrades and backups. To do so uncomment the volumes section and verify or change the path to the database.
