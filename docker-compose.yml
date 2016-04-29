@@ -1,0 +1,50 @@
+version: '2'
+services:
+  postgresql:
+    image: postgres:9.5
+    env_file: docker-compose.env
+    #volumes:
+    #  - /home/docker/ucrm/postgres:/var/lib/postgresql/data
+
+  web_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    links:
+      - postgresql
+    #volumes:
+    #  - /home/docker/ucrm:/data
+    ports:
+      - 8080:80
+      - 8081:81
+    command: "server"
+
+  sync_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    #volumes:
+    #  - /home/docker/ucrm:/data
+    links:
+      - postgresql
+    command: "sync"
+
+  crm_invoice_send_email_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    #volumes:
+    #  - /home/docker/ucrm:/data
+    links:
+      - postgresql
+    command: "crm_invoice_send_email"
+
+  crm_draft_approve_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    #volumes:
+    #  - /home/docker/ucrm:/data
+    links:
+      - postgresql
+    command: "crm_draft_approve"
