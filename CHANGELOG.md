@@ -16,14 +16,36 @@ Current Feature Set:
 * Settings (e.g. taxes, currencies, surcharges, default invoicing parameters etc.)
 
 ### Billing
-* manual invoicing
-* recurring invoicing at user defined day and time
-* automatic late fees
-* proration of first & last month bill
-* notifications
-* invoice handling
-** batch invoicing
-** invoice printable export into pdf
-** invoice preview (for both manual and recurring invoices)
-** edit/void invoice until paid
+* Manual invoicing
+* Recurring invoicing at user defined day and time
+* Automatic late fees
+* Proration of first & last month billed
+* Notifications
+* Invoice handling
+* Batch invoicing
+* Invoice printable export into pdf
+* Invoice preview (for both manual and recurring invoices)
+* Edit/void invoice until paid
+
+### Payments
+* Manual payment input
+* Gateways integration: PayPal, Stripe
+* Payments matching
+* Overpayments turning into credit
+* Payment in advance - whole payment turns into credit
+
+### Billing & control
+* Suspend & late fee & walled garden
+* Onetime postpone the suspension by client in order to be able to pay
+* Postpone the suspension by admin
+
+### App features
+* Setup wizard
+* Basic data migration from AirCrm Beta
+
+### Client's site
+* Overview of invoices, payments, account balance, contact form, change password
+* Payment gateway
+
+
 
