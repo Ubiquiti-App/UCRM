@@ -14,3 +14,16 @@ Current Feature Set:
 * Network entities: Sites, Devices, Interfaces
 * Admin users, roles, permissions
 * Settings (e.g. taxes, currencies, surcharges, default invoicing parameters etc.)
+
+### Billing
+* manual invoicing
+* recurring invoicing at user defined day and time
+* automatic late fees
+* proration of first & last month bill
+* notifications
+* invoice handling
+** batch invoicing
+** invoice printable export into pdf
+** invoice preview (for both manual and recurring invoices)
+** edit/void invoice until paid
+
