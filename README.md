@@ -12,7 +12,7 @@
 - docker-compose.env
 
 ### 3. Modify docker-compose.yml file
-- uncomment the volumes section and set path to store your CRM Billing database
+- It is recommended to store your CRM Billing database outside the docker container to enable easy upgrades and backups. To do so uncomment the volumes section and verify or change the path to the database.
 ```
 volumes:
       - /home/docker/ucrm/
