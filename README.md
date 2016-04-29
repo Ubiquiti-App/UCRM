@@ -13,12 +13,12 @@ Download these two config files from this repository:
 - [docker-compose.env](https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.env)
 
 ### 3. Modify docker-compose.yml file
-It is recommended to store your CRM Billing database outside the docker container to enable easy upgrades and backups. To do so uncomment the postgres volumes section and verify or change the path to the database.
+It is recommended to store your CRM Billing database outside the docker container to enable easy upgrades and backups. To do so uncomment the postgres volumes section and verify or change the path to the database. Uncomment and change all volumes sections.
 ```
 services:
   postgresql:
-      volumes:
-            - /home/docker/ucrm/
+    volumes:
+      - /change/this/path/postgres:/var/lib/postgresql/data
 ```
 - UCRM will start on ports 8080 (the application) and 8081 (suspend page) but you can modify it in this config file.
 
