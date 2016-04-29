@@ -29,7 +29,7 @@ At the first start postgresql creates the database, it can take several seconds.
 
 UCRM will start on ports 8080 and 8081 unless you changed it in the docker-compose.yml file.
 
-Default login and password to the CRM Billing app is `admin\admin`.
+Default login and password to the CRM Billing app is `admin/admin`.
 
 
 ## Backup
