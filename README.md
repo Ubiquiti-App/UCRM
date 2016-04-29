@@ -11,9 +11,15 @@
 - docker-compose.yml
 - docker-compose.env
 
-UCRM will start on ports 8080 (the application) and 8081 (suspend page). You can change it in docker-compose.yml file.
+### 3. Modify docker-compose.yml file
+- uncomment the volumes section and set path to store your CRM Billing database
+```
+volumes:
+      - /home/docker/ucrm/
+```
+- UCRM will start on ports 8080 (the application) and 8081 (suspend page) unless you modify it.
 
-### 3. Start UCRM
+### 4. Start UCRM
 ```
 $ docker-compose up -d
 ```
