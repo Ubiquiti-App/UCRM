@@ -2,8 +2,8 @@
 cat -vt docker-compose.yml | egrep "#  - /home/docker/ucrm/postgres:/var/lib/postgresql/data" > /dev/null
 
 if [ $? = 0 ]; then
-    echo "Your docker-compose contains postgres volume inside container. Trying to move outside container."
-    echo "Stoping containers"
+    echo "Your docker-compose contains postgres volume inside the container. Trying to move it outside."
+    echo "Stopping containers"
     docker-compose stop
     docker-compose ps
     DOCKER_POSTGRES_NAME=`docker-compose ps | grep '/docker-entrypoint.sh postgres' | cut -d ' ' -f1`
