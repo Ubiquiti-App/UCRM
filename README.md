@@ -3,6 +3,9 @@
 ## Installation 
 Please follow this [Installation guide](https://github.com/U-CRM/billing/wiki/Installation-guide)
 
+## Update 
+Please follow this [Update guide](https://github.com/U-CRM/billing/wiki/Update-guide)
+
 ## Backup
 
 For data backup, you must first pause the running containers. Go to directory, where your docker-compose.yml is located (probably `/home/ucrm`).
