@@ -7,7 +7,10 @@ if [ $? = 0 ]; then
     docker-compose stop
     docker-compose ps
     DOCKER_POSTGRES_NAME=`docker-compose ps | grep '/docker-entrypoint.sh postgres' | cut -d ' ' -f1`
-    echo $DOCKER_POSTGRES_NAME
+    if [ -z $DOCKER_POSTGRES_NAME ]; then
+    	read -p "Enter postgres container name: " DOCKER_POSTGRES_NAME
+    fi
+    echo "Using container $DOCKER_POSTGRES_NAME"
     echo "Starting PostgreSQL container"
     docker start $DOCKER_POSTGRES_NAME
     sleep 5
