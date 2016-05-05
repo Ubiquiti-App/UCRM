@@ -10,13 +10,12 @@ curl -fsSL https://raw.githubusercontent.com/U-CRM/billing/master/ucrm_install_u
 
 ## Installation Debian
 
-Run as root:
-
 ```
+su root
 apt-get update && apt-get install curl -y && curl -fsSL https://raw.githubusercontent.com/U-CRM/billing/master/ucrm_install_debian.sh | sh
 ```
 
-## Installation
+## Installation on other systems
 
 ### 1. Install docker and docker-compose
 
