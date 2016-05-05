@@ -1,5 +1,21 @@
 # U CRM Billing Beta
 
+## Installation Ubuntu
+
+Run user with sudo:
+
+```
+curl -fsSL https://raw.githubusercontent.com/U-CRM/billing/master/ucrm_install_ubuntu.sh | sudo sh
+```
+
+## Installation Debian
+
+Run as root:
+
+```
+apt-get update && apt-get install curl -y && curl -fsSL https://raw.githubusercontent.com/U-CRM/billing/master/ucrm_install_debian.sh | sh
+```
+
 ## Installation
 
 ### 1. Install docker and docker-compose
