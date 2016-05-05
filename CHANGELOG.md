@@ -1,6 +1,21 @@
 # Changelog
 
-Current Feature Set:
+## 2.0.1 (2016-05-05)
+
+### Fixed
+* Sending emails and notifications fixed
+* Password fields are no longer visible
+* Invoice style sheets fixed
+* Tooltips position and other minor UI fixes
+
+### Added
+* New feature to test mailer connection and send test email
+* Mailer log. All notifications and emails to clients are logged now
+* Version of current U CRM Billing displayed on the homepage
+
+### Changed
+* Setup of the mailer settings simplified
+* Logging into the setup wizard is no longer needed
 
 ## 2.0.0 (2016-04-29)
 
