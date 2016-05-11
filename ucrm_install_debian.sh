@@ -8,6 +8,13 @@ SECRET=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
 echo "Download and install Docker"
 curl -fsSL https://get.docker.com/ | sh
 
+which docker
+
+if [ $? = 1 ]; then
+	echo "Docker not installed. Please check previous logs. Aborting."
+	exit 1
+fi
+
 echo "Download and install Docker compose"
 curl -L https://github.com/docker/compose/releases/download/1.7.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
@@ -36,3 +43,5 @@ cd /home/$UCRM_USER && /usr/local/bin/docker-compose pull
 
 echo "Starting docker images"
 cd /home/$UCRM_USER && /usr/local/bin/docker-compose up -d && /usr/local/bin/docker-compose ps
+
+exit 0

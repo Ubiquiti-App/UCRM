@@ -6,6 +6,13 @@ UCRM_USER="ucrm"
 echo "Download and install Docker"
 curl -fsSL https://get.docker.com/ | sh
 
+which docker
+
+if [ $? = 1 ]; then
+	echo "Docker not installed. Please check previous logs. Aborting."
+	exit 1
+fi
+
 echo "Download and install Docker compose"
 curl -L https://github.com/docker/compose/releases/download/1.7.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
@@ -34,3 +41,5 @@ sudo su $UCRM_USER -c 'cd /home/$USER && /usr/local/bin/docker-compose pull'
 
 echo "Starting docker images"
 sudo su $UCRM_USER -c 'cd /home/$USER && /usr/local/bin/docker-compose up -d && /usr/local/bin/docker-compose ps'
+
+exit 0
