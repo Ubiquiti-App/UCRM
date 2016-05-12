@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.0.3 (2016-05-12)
-* Fixed zip file importing in the Setup wizard
+* Fixed zip package importing in the Setup wizard
 * Additional app speed enhancements
 
 ## 2.0.2 (2016-05-11)
