@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.4 (2016-05-12)
+* Fixed PDF generator
+
 ## 2.0.3 (2016-05-12)
 * Fixed zip package importing in the Setup wizard
 * Additional app speed enhancements
