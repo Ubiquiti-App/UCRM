@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.0.2 (2016-05-11)
+ 
+### Added
+ * Major app speed enhancement
+ * Uninstall script
+
+### Changed 
+ * Paid or partially paid invoice can not be edited now, it can be deleted though
+ * Installation script improved (does not change postgre password when run more than once) 
+
+### Fixed 
+ * Draft bulk approving of recurring invoices fixed
+ * Change password feature fixed
+ 
+
 ## 2.0.1 (2016-05-05)
 
 ### Fixed
