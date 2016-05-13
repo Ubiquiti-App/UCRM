@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.5 (2016-05-13)
+* Fixed possible file upload problem
+* Fixed organization logo and stamp in invoice PDF
+* Fixed image thumbnail cache
+* Small UI fixes
+
 ## 2.0.4 (2016-05-12)
 * Fixed PDF generator
 
