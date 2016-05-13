@@ -31,5 +31,6 @@ if [ $? = 0 ]; then
 
 fi
 
+docker-compose stop
 docker-compose pull
 docker-compose up -d
