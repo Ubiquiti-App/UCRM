@@ -12,12 +12,16 @@ services:
     env_file: docker-compose.env
     links:
       - postgresql
+      - elastic
     #volumes:
     #  - /home/docker/ucrm:/data
     ports:
       - 8080:80
       - 8081:81
     command: "server"
+
+  elastic:
+    image: elasticsearch:2
 
   sync_app:
     image: ubnt/ucrm-billing:latest

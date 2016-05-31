@@ -1,4 +1,9 @@
 #!/bin/sh
+
+DATE=$(date +"%F")
+
+cp docker-compose.yml docker-compose.yml.$DATE.backup
+
 cat -vt docker-compose.yml | egrep "#  - /home/docker/ucrm/postgres:/var/lib/postgresql/data" > /dev/null
 
 if [ $? = 0 ]; then
@@ -31,6 +36,21 @@ if [ $? = 0 ]; then
 
 fi
 
-docker-compose stop
+cat -vt docker-compose.yml | egrep "  elastic:" > /dev/null
+
+if [ $? = 1 ]; then
+    echo "Your docker-compose doesn't contain Elastic section. Trying to add."
+    echo "\\n\\n  elastic:\\n    image: elasticsearch:2" >> docker-compose.yml
+fi
+
+cat -vt docker-compose.yml | egrep "      - elastic" > /dev/null
+
+if [ $? = 1 ]; then
+    echo "Your docker-compose doesn't contain Elastic link in the Web App container. Trying to add."
+    sed -i -e "s/      - postgresql/      - postgresql\\
+      - elastic/g" docker-compose.yml
+fi
+
 docker-compose pull
+docker-compose stop
 docker-compose up -d
