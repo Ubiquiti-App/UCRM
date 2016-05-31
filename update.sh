@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DATE=$(date +"%F")
+DATE=$(date +"%Y-%m-%d")
 
 cp docker-compose.yml docker-compose.yml.$DATE.backup
 
