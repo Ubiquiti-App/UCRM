@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.0.6 (2016-05-31)
+ 
+### Added
+ * Recurring payments - client can set up an automated billing plan based on recurring invoice
+ * New billing reports: Taxed amount and Invoiced revenue
+ * Search clients using single input for name, phone, email, street or city. This search can even handle typing errors. Additionally, you can search for client by id using this prefix "id:", e.g id:142 will search for client with id 142
+ * Late fee can be chosen to be fixed amount or percentage.
+ * Fully qualified domain name of the UCRM app has been added to system settings. If provided, it will be used in redirects and email notifications sent to clients
+ * Invoice batch printing into pdf using grid filters
+ * System log - all user actions are logged now
+ * Anonymous statistics
+ * 500 Internal Server Error page now contains encoded error message (small grey text at the bottom of page). Please provide the UBNT team with a copy of this text when an error occurs
+
+### Changed 
+ * Device information and IPs removed from client zone
+ * Now you can add service IP in 3 formats - single IP, range from-to and CIDR format
+
+### Fixed 
+ * Suspension postpone redirects to proper port number
+ * Overdue invoice notifications are sent correctly
+ * minor UI fixes
+
 ## 2.0.5 (2016-05-13)
 * Fixed possible file upload problem
 * Fixed organization logo and stamp in invoice PDF
