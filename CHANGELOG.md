@@ -20,7 +20,7 @@
 ### Fixed 
  * Suspension postpone redirects to proper port number
  * Overdue invoice notifications are sent correctly
- * minor UI fixes
+ * Minor UI fixes
 
 ## 2.0.5 (2016-05-13)
 * Fixed possible file upload problem
