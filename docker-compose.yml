@@ -2,6 +2,7 @@ version: '2'
 services:
   postgresql:
     image: postgres:9.5
+    restart: always
     env_file: docker-compose.env
     #volumes:
     #  - /home/docker/ucrm/postgres:/var/lib/postgresql/data
