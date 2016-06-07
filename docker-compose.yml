@@ -23,6 +23,7 @@ services:
 
   elastic:
     image: elasticsearch:2
+    restart: always
 
   sync_app:
     image: ubnt/ucrm-billing:latest
