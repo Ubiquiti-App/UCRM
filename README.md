@@ -1,4 +1,4 @@
-# U CRM Billing Beta
+# UCRM Beta
 
 ## Installation 
 Please follow this [Installation guide](https://github.com/U-CRM/billing/wiki/Installation-guide)
