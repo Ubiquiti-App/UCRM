@@ -26,8 +26,8 @@ which docker-compose > /dev/null 2>&1
 
 if [ $? = 1 ]; then
 	echo "Download and install Docker compose"
-	curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-	chmod +x /usr/local/bin/docker-compose
+	sudo curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
 fi
 
 which docker-compose > /dev/null 2>&1
@@ -64,9 +64,13 @@ if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
 			[yY][eE][sS]|[yY])
 				sudo -u $UCRM_USER -H sed -i -e "s/- 8080:80/- 80:80/g" /home/$UCRM_USER/docker-compose.yml
 				echo "UCRM will start at port 80"
+				sudo -u $UCRM_USER -H echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				sudo -u $UCRM_USER -H echo "SERVER_PORT=80" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			[nN][oO]|[nN])
 				echo "UCRM will start at port 8080. If you want to change it, edit your docker-compose.yml in $UCRM_USER home directory."
+				sudo -u $UCRM_USER -H echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				sudo -u $UCRM_USER -H echo "SERVER_PORT=8080" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			*)
 				;;
@@ -80,9 +84,13 @@ if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
 			[yY][eE][sS]|[yY])
 				sudo -u $UCRM_USER -H sed -i -e "s/- 8081:81/- 81:81/g" /home/$UCRM_USER/docker-compose.yml
 				echo "UCRM suspend page will start at port 81"
+				sudo -u $UCRM_USER -H echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				sudo -u $UCRM_USER -H echo "SERVER_SUSPEND_PORT=81" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			[nN][oO]|[nN])
 				echo "UCRM suspend page will start at port 8081. If you want to change it, edit your docker-compose.yml in $UCRM_USER home directory."
+				sudo -u $UCRM_USER -H echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				sudo -u $UCRM_USER -H echo "SERVER_SUSPEND_PORT=8081" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			*)
 				;;

@@ -64,9 +64,13 @@ if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
 			[yY][eE][sS]|[yY])
 				sed -i -e "s/- 8080:80/- 80:80/g" /home/$UCRM_USER/docker-compose.yml
 				echo "U CRM will start at 80 port"
+				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				echo "SERVER_PORT=80" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			[nN][oO]|[nN])
 				echo "U CRM will start at 8080 port. If you will change it, edit your docker-compose.yml in $UCRM_USER home direcotry."
+				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				echo "SERVER_PORT=8080" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			*)
 				;;
@@ -80,9 +84,13 @@ if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
 			[yY][eE][sS]|[yY])
 				sed -i -e "s/- 8081:81/- 81:81/g" /home/$UCRM_USER/docker-compose.yml
 				echo "U CRM suspend page will start at 81 port"
+				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				echo "SERVER_SUSPEND_PORT=81" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			[nN][oO]|[nN])
 				echo "U CRM suspend page will start at 8081 port. If you will change it, edit your docker-compose.yml in $UCRM_USER home direcotry."
+				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
+				echo "SERVER_SUSPEND_PORT=8081" >> /home/$UCRM_USER/docker-compose.env
 				break;;
 			*)
 				;;
