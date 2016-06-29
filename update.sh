@@ -49,24 +49,21 @@ cat -vt docker-compose.yml | egrep "      - elastic" > /dev/null
 
 if [ $? = 1 ]; then
 	echo "Your docker-compose doesn't contain Elastic link in the Web App container. Trying to add."
-	sed -i -e "s/      - postgresql/      - postgresql\\
-	  - elastic/g" docker-compose.yml
+	sed -i -e "s/      - postgresql/&\n      - elastic/g" docker-compose.yml
 fi
 
 cat docker-compose.yml | grep 'image: postgres' -A1 | grep restart > /dev/null
 
 if [ $? = 1 ]; then
 	echo "Updating postgres service"
-	sed -i -e "s/image: postgres:9.5/image: postgres:9.5\\
-	restart: always/g" docker-compose.yml
+	sed -i -e "s/image: postgres:9.5/&\n    restart: always/g" docker-compose.yml
 fi
 
 cat docker-compose.yml | grep 'image: elasticsearch' -A1 | grep restart > /dev/null
 
 if [ $? = 1 ]; then
 	echo "Updating elastic service"
-	sed -i -e "s/image: elasticsearch:2/image: elasticsearch:2\\
-	restart: always/g" docker-compose.yml
+	sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" docker-compose.yml
 fi
 
 docker-compose pull
