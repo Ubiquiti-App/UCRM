@@ -3,6 +3,7 @@
 DATE=$(date +"%s")
 
 cp docker-compose.yml docker-compose.yml.$DATE.backup
+cp docker-compose.env docker-compose.env.$DATE.backup
 
 cat -vt docker-compose.yml | egrep "#  - /home/docker/ucrm/postgres:/var/lib/postgresql/data" > /dev/null
 
@@ -64,6 +65,22 @@ cat docker-compose.yml | grep 'image: elasticsearch' -A1 | grep restart > /dev/n
 if [ $? = 1 ]; then
 	echo "Updating elastic service"
 	sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" docker-compose.yml
+fi
+
+cat docker-compose.env | grep 'SERVER_PORT'
+
+if [ $? = 1 ]; then
+	SERVER_PORT=`grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1`
+	echo "#used only in instalation" >> docker-compose.env
+	echo "SERVER_PORT=$SERVER_PORT" >> docker-compose.env
+fi
+
+cat docker-compose.env | grep 'SERVER_SUSPEND_PORT'
+
+if [ $? = 1 ]; then
+	SERVER_SUSPEND_PORT=`grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1`
+	echo "#used only in instalation" >> docker-compose.env
+	echo "SERVER_SUSPEND_PORT=$SERVER_SUSPEND_PORT" >> docker-compose.env
 fi
 
 docker-compose pull
