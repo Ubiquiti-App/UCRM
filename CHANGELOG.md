@@ -13,7 +13,7 @@
  * Personalization of email notifications is enabled using wysiwyg editor (Settings | General | Notifications)
  * You can setup/change port numbers used for UCRM app and UCRM suspend page.
  * Improvements in Tax settings (tax cannot be deleted because of reporting and accountant purposes, it can be replaced globally with new tax though)
- * Database encryption for mailer and device passwords. (Make sure to backup your encryption key)
+ * Database encryption for mailer and device passwords. (Make sure to backup your encryption key, you can find it at /home/ucrm/data/ucrm/data/encryption/crypto.key)
  * Organization based invoice template settings - You can set whether to include tax id and bank account into invoice)
  * User actions are logged now. Actions such as generating invoices, batch actions, logins, etc.
  * You can add manually a custom log entry to each client.
