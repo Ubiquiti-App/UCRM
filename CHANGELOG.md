@@ -1,5 +1,47 @@
 # Changelog
 
+## 2.0.7 (2016-07-01)
+ 
+### Added
+ * Authorize.Net support for one-time payments
+ * Client impersonation feature. As an admin user you can now log in to client zone and see exactly the same what the client can see.
+ * Refunds feature. You can create a refund for client upto the amount of client's credit. (not connected to online payment gateways)
+ * Custom CSV imports for entities: client, payment. You can upload your custom csv file and match the csv columns with corresponding entity attributes. (Settings | Tools | CSV import)
+ * UCRM database backups are created periodically. Backup download and restore feature is enabled. (Settings | Tools | Database backup)
+ * Invoices and Payments overview grid can be filtered and exported into pdf
+ * Invoice notes for client (visible to client and placed into the invoice) and invoice notes for admin (not visible to client)
+ * Personalization of email notifications is enabled using wysiwyg editor (Settings | General | Notifications)
+ * You can setup/change port numbers used for UCRM app and UCRM suspend page.
+ * Improvements in Tax settings (tax cannot be deleted because of reporting and accountant purposes, it can be replaced globally with new tax though)
+ * Database encryption for mailer and device passwords. (Make sure to backup your encryption key)
+ * Organization based invoice template settings - You can set whether to include tax id and bank account into invoice)
+ * User actions are logged now. Actions such as generating invoices, batch actions, logins, etc.
+ * You can add manually a custom log entry to each client.
+
+### Changed 
+ * Service IP is not validated against router IP ranges (changed to recommendation)
+ * Client id is validated to be unique now.
+ * Vast performance improvements
+ * More user friendly Device interface form
+ * Payment entity always comprises currency now
+ * Client search should now provide better results
+ * Better grid pagination (items per page, control links)
+ * Service name now not required and inherited from service plan if not provided
+ * Mailer now uses "Sender address" from settings as "Sender" email header and includes "From" field as well
+ * Editing "Invoicing from" field on service now possible, if no invoice exists for the service
+ * "U CRM Billing" renamed to "UCRM"
+ * "Tariffs" renamed to "Service plans"
+ * Minor UI changes
+ 
+### Fixed 
+ * Sending notifications for overdue invoices is handled properly
+ * Service status is reloaded after every change (when suspended or stopped)
+ * Fixed password reset for clients and admins
+ * Fixed GPS address resolving
+ * Fixed duplicate client ID error in new client form
+ * Using new user groups with custom permissions works properly now.
+ 
+
 ## 2.0.6 (2016-05-31)
  
 ### Added
