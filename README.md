@@ -1,7 +1,6 @@
 # UCRM Beta
 
-## Installation 
-Please follow this [Installation guide](https://github.com/U-CRM/billing/wiki/Installation-guide)
+## Installation - [Download UCRM using this guide](https://github.com/U-CRM/billing/wiki/Installation-guide)
 
 ## Update 
 Please follow this [Update guide](https://github.com/U-CRM/billing/wiki/Update-guide)
