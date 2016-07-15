@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.0.8 (2016-07-15)
+
+### Added
+* Easy SSL support (Upload certificate files at Settings | Tools | SSL certificate and restart)
+* Select boxes for clients now allow searching
+* When creating an invoice you can also set up a new tax or product
+* Invoiced revenue report PDF export
+* Added PDF page size settings (US letter, US legal and A4)
+* Additional form fields validations
+* Added missing "approve" and "void" buttons for invoices in client's billing section
+
+### Changed
+* Admin users now can set their first and last name
+* CSV import validation improved
+* Better layout for user group permissions
+* Invoice form now contains different buttons for "save" and "save and send" instead of checkbox to send email to client
+
+### Fixed
+* Fixed problems with deleted services, devices and sites
+* Fixed suspend page error "File not found"
+* Password reset fixed
+* Attaching an invoice to new payment fixed
+* Fixed background scripts execution
+* Various minor fixes 
+
 ## 2.0.7 (2016-07-01)
  
 ### Added
