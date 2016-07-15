@@ -19,6 +19,7 @@ services:
     ports:
       - 8080:80
       - 8081:81
+      - 8443:443
     command: "server"
 
   elastic:

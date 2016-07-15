@@ -67,20 +67,39 @@ if [ $? = 1 ]; then
 	sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" docker-compose.yml
 fi
 
-cat docker-compose.env | grep 'SERVER_PORT'
+grep 'SERVER_PORT' docker-compose.env > /dev/null
 
 if [ $? = 1 ]; then
 	SERVER_PORT=`grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1`
+	echo "Adding $SERVER_PORT as server port, you can change it in UCRM Settings > General > System > Application > Server port"
 	echo "#used only in instalation" >> docker-compose.env
 	echo "SERVER_PORT=$SERVER_PORT" >> docker-compose.env
 fi
 
-cat docker-compose.env | grep 'SERVER_SUSPEND_PORT'
+grep 'SERVER_SUSPEND_PORT' docker-compose.env > /dev/null
 
 if [ $? = 1 ]; then
 	SERVER_SUSPEND_PORT=`grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1`
+	echo "Adding $SERVER_SUSPEND_PORT as suspend port, you can change it in UCRM Settings > General > System > Application > Server suspend port"
 	echo "#used only in instalation" >> docker-compose.env
 	echo "SERVER_SUSPEND_PORT=$SERVER_SUSPEND_PORT" >> docker-compose.env
+fi
+
+grep 'SERVER_NAME' docker-compose.env > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Adding ucrm.ubnt as Server domain name, you can change it in UCRM Settings > General > System > Application > Server domain name"
+	echo "#used only in instalation" >> docker-compose.env
+	echo "SERVER_NAME=ucrm.ubnt" >> docker-compose.env
+
+	grep "\- 8080:80" docker-compose.yml
+	if [ $? = 0 ]; then
+		echo "Adding 8443 as SSL port"
+		sed -i -e "s/:81/&\n      - 8443:443/g" docker-compose.yml
+	else
+		echo "Adding 443 as SSL port"
+		sed -i -e "s/:81/&\n      - 443:443/g" docker-compose.yml
+	fi
 fi
 
 docker-compose pull
