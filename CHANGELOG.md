@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.0.9 (2016-07-28)
+
+### Added
+* Client init id number - new id is suggested automatically according to the last id used within the given organization
+* You can now choose which rows to import in CSV import tool
+* First and last name added to admin users
+* MapBox satellite view
+* Added AOA currency support
+
+### Changed
+* Device firewall/NAT rules are synchronized when UCRM ports are changed in system settings.
+* Client can be moved to archive. Then the client can be deleted permanently.
+
+### Fixed
+* Skipped next invoicing day fixed
+* Redirection to suspend page fixed
+* Fixed file permission bug / crashes when unsuccessful write to the cache directory
+* Fixed possible problem with PDF generator render
+* Fixed validation message in new invoice form
+* Date formating on invoice fixed and other minor bugs
+
 ## 2.0.8 (2016-07-15)
 
 ### Added
