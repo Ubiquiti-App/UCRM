@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.10 (2016-07-29)
+
+### Fixed
+ * Fixed client archive UI
+ * Fixed cache permissions bug
+ * Fixed service discount dates selection
+
 ## 2.0.9 (2016-07-28)
 
 ### Added
