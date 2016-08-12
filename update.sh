@@ -92,13 +92,16 @@ if [ $? = 1 ]; then
 	echo "#used only in instalation" >> docker-compose.env
 	echo "SERVER_NAME=ucrm.ubnt" >> docker-compose.env
 
-	grep "\- 8080:80" docker-compose.yml
-	if [ $? = 0 ]; then
-		echo "Adding 8443 as SSL port"
-		sed -i -e "s/:81/&\n      - 8443:443/g" docker-compose.yml
-	else
-		echo "Adding 443 as SSL port"
-		sed -i -e "s/:81/&\n      - 443:443/g" docker-compose.yml
+	grep "443:443" docker-compose.yml > /dev/null
+	if [ $? = 1 ]; then
+		grep "\- 8080:80" docker-compose.yml
+		if [ $? = 0 ]; then
+			echo "Adding 8443 as SSL port"
+			sed -i -e "s/:81/&\n      - 8443:443/g" docker-compose.yml
+		else
+			echo "Adding 443 as SSL port"
+			sed -i -e "s/:81/&\n      - 443:443/g" docker-compose.yml
+		fi
 	fi
 fi
 
