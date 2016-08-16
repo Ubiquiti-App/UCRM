@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.11 (2016-08-16)
+
+### Added
+* Demo mode - enabling you to set real life data within a sandbox and test the app (clients will not be notified) Then launch the app to production mode
+* Custom invoicing period start day (per client, per service)
+* Help panel explaining invoicing parameters (click the tooltip icons on new service page)
+* UCRM Time zone - you can set your local time zone in Settings > General > System
+
+### Fixed
+* Service status displayed correctly (suspended - red, terminated- grey)
+* SSL redirect to custom port fixed (follow the knowledge base guide)
+* Minor bug fixes
+
+
 ## 2.0.10 (2016-07-29)
 
 ### Fixed
