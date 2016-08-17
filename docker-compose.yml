@@ -26,6 +26,10 @@ services:
     image: elasticsearch:2
     restart: always
 
+  influxdb:
+    image: influxdb:0.13-alpine
+    restart: always
+
   sync_app:
     image: ubnt/ucrm-billing:latest
     restart: always
@@ -55,3 +59,14 @@ services:
     links:
       - postgresql
     command: "crm_draft_approve"
+
+  crm_netflow:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    links:
+      - postgresql
+      - influxdb
+    ports:
+      - 2055:2055
+    command: "crm_netflow"
