@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.12 (2016-08-19)
+
+### Added
+* Payment receipts - You can send receipts manually or set up automatic receipts for incomming online payments (billing settings)
+* Various form validations
+* System logs enhancements
+
+### Fixed
+* Crashes while creating invoices fixed
+* Minor fixes
+
+
 ## 2.0.11 (2016-08-16)
 
 ### Added
