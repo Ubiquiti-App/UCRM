@@ -53,6 +53,20 @@ if [ $? = 1 ]; then
 	sed -i -e "s/      - postgresql/&\n      - elastic/g" docker-compose.yml
 fi
 
+cat -vt docker-compose.yml | egrep "  influxdb:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain Influxdb section. Trying to add."
+	echo -e "\n\n  influxdb:\n    image: influxdb:0.13-alpine\n    restart: always" >> docker-compose.yml
+fi
+
+cat -vt docker-compose.yml | egrep "  crm_netflow:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain Netflow section. Trying to add."
+	echo -e "\n\n  crm_netflow:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    links:\n      - postgresql\n      - influxdb\n    ports:\n      - 2055:2055\n    command: \"crm_netflow\"" >> docker-compose.yml
+fi
+
 cat docker-compose.yml | grep 'image: postgres' -A1 | grep restart > /dev/null
 
 if [ $? = 1 ]; then
