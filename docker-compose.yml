@@ -4,8 +4,8 @@ services:
     image: postgres:9.5
     restart: always
     env_file: docker-compose.env
-    #volumes:
-    #  - /home/docker/ucrm/postgres:/var/lib/postgresql/data
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
 
   web_app:
     image: ubnt/ucrm-billing:latest
@@ -14,8 +14,9 @@ services:
     links:
       - postgresql
       - elastic
-    #volumes:
-    #  - /home/docker/ucrm:/data
+      - influxdb
+    volumes:
+      - ./data/ucrm:/data
     ports:
       - 8080:80
       - 8081:81
@@ -29,13 +30,15 @@ services:
   influxdb:
     image: influxdb:0.13-alpine
     restart: always
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb
 
   sync_app:
     image: ubnt/ucrm-billing:latest
     restart: always
     env_file: docker-compose.env
-    #volumes:
-    #  - /home/docker/ucrm:/data
+    volumes:
+      - ./data/ucrm:/data
     links:
       - postgresql
     command: "sync"
@@ -44,8 +47,8 @@ services:
     image: ubnt/ucrm-billing:latest
     restart: always
     env_file: docker-compose.env
-    #volumes:
-    #  - /home/docker/ucrm:/data
+    volumes:
+      - ./data/ucrm:/data
     links:
       - postgresql
     command: "crm_invoice_send_email"
@@ -54,8 +57,8 @@ services:
     image: ubnt/ucrm-billing:latest
     restart: always
     env_file: docker-compose.env
-    #volumes:
-    #  - /home/docker/ucrm:/data
+    volumes:
+      - ./data/ucrm:/data
     links:
       - postgresql
     command: "crm_draft_approve"
@@ -64,9 +67,22 @@ services:
     image: ubnt/ucrm-billing:latest
     restart: always
     env_file: docker-compose.env
+    volumes:
+      - ./data/ucrm:/data
     links:
       - postgresql
       - influxdb
     ports:
       - 2055:2055
     command: "crm_netflow"
+
+  crm_ping:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    volumes:
+      - ./data/ucrm:/data
+    links:
+      - postgresql
+      - influxdb
+    command: "crm_ping"
