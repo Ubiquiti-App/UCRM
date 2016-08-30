@@ -73,7 +73,7 @@ services:
       - postgresql
       - influxdb
     ports:
-      - 2055:2055
+      - 2055:2055/udp
     command: "crm_netflow"
 
   crm_ping:
