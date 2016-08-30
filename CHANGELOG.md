@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.13 (2016-08-30)
+### Fixed
+* Invoice approving and generating fixed
+
 ## 2.0.12 (2016-08-19)
 
 ### Added
