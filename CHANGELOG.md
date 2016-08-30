@@ -2,7 +2,7 @@
 
 ## 2.0.13 (2016-08-30)
 ### Changed
-* PHP updated to v 7.0.10
+* PHP updated to v. 7.0.10
 
 ### Fixed
 * Crashes when creating invoices and approving drafts fixed
