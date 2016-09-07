@@ -5,7 +5,7 @@ services:
     restart: always
     env_file: docker-compose.env
     #volumes:
-    #  - /home/docker/ucrm/postgres:/var/lib/postgresql/data
+    #  - ./data/postgres:/var/lib/postgresql/data
 
   web_app:
     image: ubnt/ucrm-billing:latest
@@ -15,7 +15,7 @@ services:
       - postgresql
       - elastic
     #volumes:
-    #  - /home/docker/ucrm:/data
+    #  - ./data/ucrm:/data
     ports:
       - 8080:80
       - 8081:81
@@ -31,7 +31,7 @@ services:
     restart: always
     env_file: docker-compose.env
     #volumes:
-    #  - /home/docker/ucrm:/data
+    #  - ./data/ucrm:/data
     links:
       - postgresql
     command: "sync"
@@ -41,7 +41,7 @@ services:
     restart: always
     env_file: docker-compose.env
     #volumes:
-    #  - /home/docker/ucrm:/data
+    #  - ./data/ucrm:/data
     links:
       - postgresql
     command: "crm_invoice_send_email"
@@ -51,7 +51,17 @@ services:
     restart: always
     env_file: docker-compose.env
     #volumes:
-    #  - /home/docker/ucrm:/data
+    #  - ./data/ucrm:/data
     links:
       - postgresql
     command: "crm_draft_approve"
+
+  crm_search_devices_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    #volumes:
+    #  - ./data/ucrm:/data
+    links:
+      - postgresql
+    command: "crm_search_devices"
