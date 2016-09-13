@@ -9,7 +9,14 @@ cat -vt docker-compose.yml | egrep "  elastic:" > /dev/null
 
 if [ $? = 1 ]; then
 	echo "Your docker-compose doesn't contain Elastic section. Trying to add."
-	echo "\\n\\n  elastic:\\n    image: elasticsearch:2\\n    restart: always" >> docker-compose.yml
+	echo -e "\n\n  elastic:\n    image: elasticsearch:2\n    restart: always" >> docker-compose.yml
+fi
+
+cat -vt docker-compose.yml | egrep "  crm_search_devices_app:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain UCRM search devices section. Trying to add."
+	echo -e "\n\n  crm_search_devices_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    #volumes:\n    #  - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_search_devices\"" >> docker-compose.yml
 fi
 
 cat -vt docker-compose.yml | egrep "      - elastic" > /dev/null

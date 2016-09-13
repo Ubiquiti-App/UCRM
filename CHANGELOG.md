@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.13 (2016-08-30)
+### Changed
+* PHP updated to v. 7.0.10
+
+### Fixed
+* Crashes when creating invoices and approving drafts fixed
+* Bug fixed when creating services after organization has been deleted
+
 ## 2.0.12 (2016-08-19)
 
 ### Added

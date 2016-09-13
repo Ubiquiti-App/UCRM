@@ -86,3 +86,13 @@ services:
       - postgresql
       - influxdb
     command: "crm_ping"
+
+  crm_search_devices_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    volumes:
+      - ./data/ucrm:/data
+    links:
+      - postgresql
+    command: "crm_search_devices"
