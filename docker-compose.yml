@@ -14,7 +14,6 @@ services:
     links:
       - postgresql
       - elastic
-      - influxdb
     volumes:
       - ./data/ucrm:/data
     ports:
@@ -26,12 +25,6 @@ services:
   elastic:
     image: elasticsearch:2
     restart: always
-
-  influxdb:
-    image: influxdb:0.13-alpine
-    restart: always
-    volumes:
-      - ./data/influxdb:/var/lib/influxdb
 
   sync_app:
     image: ubnt/ucrm-billing:latest
@@ -63,30 +56,6 @@ services:
       - postgresql
     command: "crm_draft_approve"
 
-  crm_netflow:
-    image: ubnt/ucrm-billing:latest
-    restart: always
-    env_file: docker-compose.env
-    volumes:
-      - ./data/ucrm:/data
-    links:
-      - postgresql
-      - influxdb
-    ports:
-      - 2055:2055/udp
-    command: "crm_netflow"
-
-  crm_ping:
-    image: ubnt/ucrm-billing:latest
-    restart: always
-    env_file: docker-compose.env
-    volumes:
-      - ./data/ucrm:/data
-    links:
-      - postgresql
-      - influxdb
-    command: "crm_ping"
-
   crm_search_devices_app:
     image: ubnt/ucrm-billing:latest
     restart: always
@@ -96,3 +65,25 @@ services:
     links:
       - postgresql
     command: "crm_search_devices"
+
+  crm_netflow_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    volumes:
+      - ./data/ucrm:/data
+    links:
+      - postgresql
+    ports:
+      - 2055:2055/udp
+    command: "crm_netflow"
+
+  crm_ping_app:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    volumes:
+      - ./data/ucrm:/data
+    links:
+      - postgresql
+    command: "crm_ping"

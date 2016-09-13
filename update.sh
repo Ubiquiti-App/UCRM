@@ -12,39 +12,11 @@ if [ $? = 1 ]; then
 	echo -e "\n\n  elastic:\n    image: elasticsearch:2\n    restart: always" >> docker-compose.yml
 fi
 
-cat -vt docker-compose.yml | egrep "  crm_search_devices_app:" > /dev/null
-
-if [ $? = 1 ]; then
-	echo "Your docker-compose doesn't contain UCRM search devices section. Trying to add."
-	echo -e "\n\n  crm_search_devices_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    #volumes:\n    #  - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_search_devices\"" >> docker-compose.yml
-fi
-
 cat -vt docker-compose.yml | egrep "      - elastic" > /dev/null
 
 if [ $? = 1 ]; then
 	echo "Your docker-compose doesn't contain Elastic link in the Web App container. Trying to add."
 	sed -i -e "s/      - postgresql/&\n      - elastic/g" docker-compose.yml
-fi
-
-cat -vt docker-compose.yml | egrep "  influxdb:" > /dev/null
-
-if [ $? = 1 ]; then
-	echo "Your docker-compose doesn't contain Influxdb section. Trying to add."
-	echo -e "\n  influxdb:\n    image: influxdb:0.13-alpine\n    restart: always\n    volumes:\n      - ./data/influxdb:/var/lib/influxdb" >> docker-compose.yml
-fi
-
-cat -vt docker-compose.yml | egrep "  crm_netflow:" > /dev/null
-
-if [ $? = 1 ]; then
-	echo "Your docker-compose doesn't contain Netflow section. Trying to add."
-	echo -e "\n  crm_netflow:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - influxdb\n    ports:\n      - 2055:2055\n    command: \"crm_netflow\"" >> docker-compose.yml
-fi
-
-cat -vt docker-compose.yml | egrep "  crm_ping:" > /dev/null
-
-if [ $? = 1 ]; then
-	echo "Your docker-compose doesn't contain Ping section. Trying to add."
-	echo -e "\n  crm_ping:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - influxdb\n    command: \"crm_ping\"" >> docker-compose.yml
 fi
 
 cat docker-compose.yml | grep 'image: postgres' -A1 | grep restart > /dev/null
@@ -59,6 +31,43 @@ cat docker-compose.yml | grep 'image: elasticsearch' -A1 | grep restart > /dev/n
 if [ $? = 1 ]; then
 	echo "Updating elastic service"
 	sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" docker-compose.yml
+fi
+
+cat -vt docker-compose.yml | egrep "\.\/data\/ucrm:\/data" > /dev/null
+if [ $? = 1 ]; then
+	VOLUME=$(cat -vt docker-compose.yml | egrep "^      \- \/home\/.+:\/data$" -m 1 --color="never" | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
+else
+	VOLUME=""
+fi
+NEEDS_VOLUMES_FIX=0
+
+cat -vt docker-compose.yml | egrep "  crm_search_devices_app:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain UCRM search devices section. Trying to add."
+	echo -e "\n  crm_search_devices_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_search_devices\"" >> docker-compose.yml
+	NEEDS_VOLUMES_FIX=1
+fi
+
+cat -vt docker-compose.yml | egrep "  crm_netflow_app:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain Netflow section. Trying to add."
+	echo -e "\n  crm_netflow_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    ports:\n      - 2055:2055/udp\n    command: \"crm_netflow\"" >> docker-compose.yml
+	NEEDS_VOLUMES_FIX=1
+fi
+
+cat -vt docker-compose.yml | egrep "  crm_ping_app:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain Ping section. Trying to add."
+	echo -e "\n  crm_ping_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_ping\"" >> docker-compose.yml
+	NEEDS_VOLUMES_FIX=1
+fi
+
+if [ "$NEEDS_VOLUMES_FIX" = "1" ] && [ "$VOLUME" != "" ]; then
+	echo "Correcting volumes path."
+	sed -i -e "s/      - .\/data\/ucrm:\/data/$VOLUME/g" docker-compose.yml
 fi
 
 grep 'SERVER_PORT' docker-compose.env > /dev/null
