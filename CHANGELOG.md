@@ -5,8 +5,8 @@
 ### Added
 #### Network features
 * NetFlow - view download and upload data traffic of your clients
-* Device synchronization - device attributes such as interfaces, IPs and many more are now automatically and periodically updated according to the physical device configuration (for EdgeOs, RouterOs devices)
-* Quick autoload af a device - whenever you need to add new device to UCRM, just provide IP, username and password and UCRM will automatically set up other attributes for you, e.g. interfaces and IPs (for EdgeOs, RouterOs devices)
+* Device synchronization - device attributes such as interfaces, IPs and many more are now automatically and periodically updated according to the physical device configuration (for EdgeOs, AirOs, RouterOs devices)
+* Quick autoload af a device - whenever you need to add new device to UCRM, just provide IP, username and password and UCRM will automatically set up other attributes for you, e.g. interfaces and IPs (for EdgeOs, AirOs, RouterOs devices)
 * Device statistics - you can monitor the state of your devices thanks to new charts for Signal, CCQ, Rx and Tx rates, ping latency and loss rate (for AirOs, EdgeOs, RouterOs devices)
 * Device outages - view device outages log and define who and when should be notified in case of an outage (for all vendors and models)
 * QoS - set up the traffic shaping (current implementation: shaping on AirOs CPE devices is now available)
