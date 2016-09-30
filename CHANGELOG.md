@@ -1,5 +1,46 @@
 # Changelog
 
+## 2.1.0 (2016-09-30)
+
+### Added
+#### Network features
+* NetFlow - view download and upload data traffic of your clients
+* Device synchronization - device attributes such as interfaces, IPs and many more are now automatically and periodically updated according to the physical device configuration (for EdgeOs, RouterOs devices)
+* Quick autoload af a device - whenever you need to add new device to UCRM, just provide IP, username and password and UCRM will automatically set up other attributes for you, e.g. interfaces and IPs (for EdgeOs, RouterOs devices)
+* Device statistics - you can monitor the state of your devices thanks to new charts for Signal, CCQ, Rx and Tx rates, ping latency and loss rate (for AirOs, EdgeOs, RouterOs devices)
+* Device outages - view device outages log and define who and when should be notified in case of an outage (for all vendors and models)
+* QoS - set up the traffic shaping (current implementation: shaping on AirOs CPE devices is now available)
+* View of unknown connected devices as an outcome of netflow and synchronization features. Devices which don't belong to any client but they are connected to routers or have upload/download traffic are now detected.
+#### App features
+* Organization logo and site name is now shown on login page. Additionally, the site name is shown in the client-zone page headers
+* Now you have full control of your client registration status. These are possible values: Not invited, Invited on.., Registered on..
+* Google maps and Google geocoding are now supported. Follow the setup guide in UCRM system settings.
+* SMTP setup added to the initial setup wizard
+* Now, you can upload and restore a database backup of any previous UCRM version
+* An overview of invoices to be send is now displayed when clicked on batch invoice sending
+* Now, you can search sites and devices by names (including partial name), addresses, vendors or model names
+* Application-wide help and guides are now available - click on ? sign
+* Various form field validations added
+
+### Changed
+* Suspension feature can be enabled on specified router devices now. It is turned off by default, choose which device should manage the suspension and turn it on in device edit page.
+* Emails are now case insensitive - you can log in using name@examle.com or Name@EXAMPLE.com
+* IP in CIDR format can no longer have netmask lower than 8
+* Association between client service and network device is optional now. However, if you want to to use all current and future network features, it is recommended to link client service to a connect point network device)
+* More user friendly log messages
+* PHP updated to v7.0.11
+
+### Fixed
+* Stripe payment rounding error fixed
+* Possible problems with system settings options now fixed (suspension feature could be still active although it had been switched off in system settings)
+* CSV import bug fixed
+* Position of button for Save invoice and Send invoice has been fixed
+* Suspended service count fixed on homepage
+* Fixed payment receipt email sending
+* Suspend synchronization fixed after a new payment is added, client is correctly unsuspended in a few secs
+* Email connection check fixed
+* Problems when closing some modal windows and other minor UI fixes
+
 ## 2.0.14 (2016-09-07)
 
 ### Changed
