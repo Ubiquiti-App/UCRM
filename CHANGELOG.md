@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.0.14 (2016-09-07)
+
+### Changed
+* Various form validations added to avoid crashes
+* Better confirmation dialog when demo mode is terminated
+
+### Fixed
+* Stripe payments passed to UCRM corretly now
+* Invoice preview fixed and other UI fixes
+* Minor fixes
+
 ## 2.0.13 (2016-08-30)
 ### Changed
 * PHP updated to v. 7.0.10
