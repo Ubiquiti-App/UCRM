@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.1.1 (2016-10-07)
+
+### Added
+* Encryption key donwload feature added in Settings > Tools > Database backup. Note that while migrating a new server or to reinstalled UCRM instance, you must always migrate db along with the encryption key or all the passwords stored in the db will be unreadable.
+* Interfaces of type "Bridge" are now created automatically when device is synchronized
+
+### Changed
+* You can hide unsuccessful NetFlow setup tries in System Settings
+* While synchronization, UCRM tries to connect to a device with only one accessible IP (if there are more accessible IPs on a device, the last successful is used. The inaccessible IPs are skipped by default. Make sure each device as at least one accessible IP)
+* Setting up NetFlow is disabled until the UCRM Server IP is properly set (in Settings > General > System > Application)
+* App integrated help guide improved
+
+### Fixed
+* Possible migration failure fixed (followed by crashes of multiple pages)
+* Invoice numbers auto increment fixed
+* Excesive log entries fixed in case of unsuccessful NetFlow setup
+* Synchronization of device interfaces fixed (non existing interfaces which don't match with any real device interface are removed). See more about the matching rules in the app guide.
+* Fixed crashes when trying to delete late fee which has been already invoiced
+* Fixed crashes when removing Device, ServiceDevice or User with existing log entries or statistics
+* Fixed validations in invoice form
+* Other minor fixes
+
 ## 2.1.0 (2016-09-30)
 
 ### Added
