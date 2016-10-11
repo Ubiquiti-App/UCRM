@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.2 (2016-10-11)
+
+### Fixed
+* Fixed payment rounding error. (Fixes partially paid invoices, which should be marked as paid.)
+* Fixed automatic sending of invoices.
+* Fixed possible problem with cache after UCRM update.
+
 ## 2.1.1 (2016-10-07)
 
 ### Added
