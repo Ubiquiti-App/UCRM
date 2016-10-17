@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.3 (2016-10-17)
+
+### Fixed
+* Fixed QoS (traffic shaping) synchronization for AirOS CPEs.
+* Fixed marking devices offline after automatic addition of device interfaces.
+* Fixed SSH port getting overwritten on device edit page.
+* Fixed amount of synchronization log entries.
+* Fixed synchronization not happening immediatelly when needed.
+* Fixed errors around soft deleted entities.
+* Fixed couple of UI errors.
+
 ## 2.1.2 (2016-10-11)
 
 ### Fixed
