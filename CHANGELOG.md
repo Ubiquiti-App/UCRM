@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.1.4 (2016-10-19)
+
+### Changed
+* PHP updated to v7.0.12
+
+### Fixed
+* Fixed EdgeOS connection problem with socket script upload.
+* Fixed failing migration at container start.
+* Fixed bug with credit being wrongly applied after invoice was voided.
+* Fixed missing validation of notification template subject.
+* Fixed wrong input type for frequency on device interface form.
+* Fixed wrong application help permissions (only worked for super admin, instead of all admins).
+* Fixed searching in device list.
+* Fixed a bug in IP validation preventing creation of service device IP.
+* Fixed wrong redirect after payment was deleted on clients billing screen.
+* Fixed logging of changes after device synchronization.
+
 ## 2.1.3 (2016-10-17)
 
 ### Fixed
