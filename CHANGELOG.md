@@ -16,6 +16,7 @@
 * Fixed a bug in IP validation preventing creation of service device IP.
 * Fixed wrong redirect after payment was deleted on clients billing screen.
 * Fixed logging of changes after device synchronization.
+* Fixed a bug in AirOS device synchronization.
 
 ## 2.1.3 (2016-10-17)
 
