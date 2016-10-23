@@ -111,6 +111,7 @@ download_docker_compose_files() {
 	if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
 		echo "Downloading docker compose files."
 		curl -o /home/$UCRM_USER/docker-compose.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.yml
+		curl -o /home/$UCRM_USER/docker-compose.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
 		curl -o /home/$UCRM_USER/docker-compose.env https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.env
 
 		echo "Replacing env in docker compose."
@@ -225,7 +226,10 @@ download_docker_images() {
 
 start_docker_images() {
 	echo "Starting docker images."
-	cd /home/$UCRM_USER && /usr/local/bin/docker-compose up -d && /usr/local/bin/docker-compose ps
+	cd /home/$UCRM_USER && \
+	/usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app && \
+	/usr/local/bin/docker-compose up -d && \
+	/usr/local/bin/docker-compose ps
 }
 
 check_system
