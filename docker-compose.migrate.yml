@@ -5,4 +5,6 @@ services:
     env_file: docker-compose.env
     links:
       - postgresql
+    volumes:
+      - ./data/ucrm:/data
     command: "migrate"

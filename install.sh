@@ -111,7 +111,7 @@ download_docker_compose_files() {
 	if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
 		echo "Downloading docker compose files."
 		curl -o /home/$UCRM_USER/docker-compose.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.yml
-		curl -o /home/$UCRM_USER/docker-compose.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
+		curl -o /home/$UCRM_USER/docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
 		curl -o /home/$UCRM_USER/docker-compose.env https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.env
 
 		echo "Replacing env in docker compose."
