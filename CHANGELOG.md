@@ -8,7 +8,7 @@
 ### Fixed
 * Fixed EdgeOS connection problem with socket script upload.
 * Fixed failing migration at container start.
-* Fixed bug with credit being wrongly applied after invoice was voided.
+* Fixed bug with credit being applied incorrectly after invoice was voided.
 * Fixed missing validation of notification template subject.
 * Fixed wrong input type for frequency on device interface form.
 * Fixed wrong application help permissions (only worked for super admin, instead of all admins).
