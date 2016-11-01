@@ -39,7 +39,14 @@ if [ $? = 1 ]; then
 else
 	VOLUME=""
 fi
+
 NEEDS_VOLUMES_FIX=0
+
+if [ ! -f docker-compose.migrate.yml ]; then
+    echo "Downloading docker compose migrate file."
+    curl -o /home/$UCRM_USER/docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
+    NEEDS_VOLUMES_FIX=1
+fi
 
 cat -vt docker-compose.yml | egrep "  crm_search_devices_app:" > /dev/null
 
@@ -68,6 +75,7 @@ fi
 if [ "$NEEDS_VOLUMES_FIX" = "1" ] && [ "$VOLUME" != "" ]; then
 	echo "Correcting volumes path."
 	sed -i -e "s/      - .\/data\/ucrm:\/data/$VOLUME/g" docker-compose.yml
+	sed -i -e "s/      - .\/data\/ucrm:\/data/$VOLUME/g" docker-compose.migrate.yml
 fi
 
 grep 'SERVER_PORT' docker-compose.env > /dev/null
@@ -106,11 +114,6 @@ if [ $? = 1 ]; then
 			sed -i -e "s/:81/&\n      - 443:443/g" docker-compose.yml
 		fi
 	fi
-fi
-
-if [ ! -f docker-compose.migrate.yml ]; then
-    echo "Downloading docker compose migrate file."
-    curl -o /home/$UCRM_USER/docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
 fi
 
 MIGRATE_OUTPUT=`mktemp`
