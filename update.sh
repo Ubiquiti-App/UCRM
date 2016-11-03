@@ -44,7 +44,7 @@ NEEDS_VOLUMES_FIX=0
 
 if [ ! -f docker-compose.migrate.yml ]; then
     echo "Downloading docker compose migrate file."
-    curl -o /home/$UCRM_USER/docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
+    curl -o docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
     NEEDS_VOLUMES_FIX=1
 fi
 
@@ -149,6 +149,7 @@ update() {
 
     if [ $(isRevertSupported $1) = 't' ]; then
 
+        docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
         docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app | tee $MIGRATE_OUTPUT ; ( exit ${PIPESTATUS[0]} )
         if [ $? != 0 ]; then
             REVERT_VERSION=$(grep 'UCRM will be reverted to version' $MIGRATE_OUTPUT | awk ' {print $NF}')
@@ -157,7 +158,6 @@ update() {
                 return
             fi
         fi
-        docker-compose -f docker-compose.migrate.yml rm -af
 
     fi
 
