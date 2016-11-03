@@ -133,6 +133,7 @@ change_ucrm_port() {
 		case $PORT in
 			[yY][eE][sS]|[yY])
 				sed -i -e "s/- 8080:80/- 80:80/g" /home/$UCRM_USER/docker-compose.yml
+				sed -i -e "s/- 8443:443/- 443:443/g" /home/$UCRM_USER/docker-compose.yml
 				echo "UCRM will start at 80 port."
 				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
 				echo "SERVER_PORT=80" >> /home/$UCRM_USER/docker-compose.env
