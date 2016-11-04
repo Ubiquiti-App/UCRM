@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.1.5 (2016-11-04)
+
+### Added
+*	UCRM API - this will enable you to mass-upload clients, services and some other main entities into UCRM. See more at http://docs.ucrm.apiary.io/
+*	Subscribtions for recurring payments on Authorize.Net now available
+*	EdgeOs vlan interfaces are automatically created and synchronized now
+*	Filter payments by amount or client's name, email, etc.
+*	You can upload file into webroot directory using UCRM interface in Settings > Tools > Webroot
+*	UCRM Maintenance page shown when db backup is being restored
+*	Kenyan shillings added to currency list
+
+### Changed
+*	Safe upgrade. When database migration fails during the update it is reverted to the previous state and the UCRM version is not upgraded.
+*	Shaping on AirOs now accept float values. You can set up 4.25 Mbps
+*	Better interface for netflow turns on/off on EdgeRouters
+*	Better tooltips for sites and services on maps
+*	UI performance improved
+
+### Fixed
+*	Free service plans (with billing period for 0$) can be created now
+*	0$ invoice status fixed to be paid
+*	Zero price in service is allowed
+*	Fixed service next invoicing day shown in client zone
+*	Fixed possible problem with matching / unmatching payment to invoice
+*	Fixed default submit button in grid fiters
+*	Problem with AirCRM data import fixed
+*	Possible problem with searching fixed
+*	Device synchronization logs are now displayed in correct order
+*	Automatic change of server ports after activating HTTPS is now working correctly
+*	When encryption key is incorrect after database restore, you should now still be able to access web interface
+
 ## 2.1.4 (2016-10-19)
 
 ### Changed
