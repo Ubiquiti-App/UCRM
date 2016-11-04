@@ -39,7 +39,14 @@ if [ $? = 1 ]; then
 else
 	VOLUME=""
 fi
+
 NEEDS_VOLUMES_FIX=0
+
+if [ ! -f docker-compose.migrate.yml ]; then
+    echo "Downloading docker compose migrate file."
+    curl -o docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
+    NEEDS_VOLUMES_FIX=1
+fi
 
 cat -vt docker-compose.yml | egrep "  crm_search_devices_app:" > /dev/null
 
@@ -68,6 +75,7 @@ fi
 if [ "$NEEDS_VOLUMES_FIX" = "1" ] && [ "$VOLUME" != "" ]; then
 	echo "Correcting volumes path."
 	sed -i -e "s/      - .\/data\/ucrm:\/data/$VOLUME/g" docker-compose.yml
+	sed -i -e "s/      - .\/data\/ucrm:\/data/$VOLUME/g" docker-compose.migrate.yml
 fi
 
 grep 'SERVER_PORT' docker-compose.env > /dev/null
@@ -108,7 +116,56 @@ if [ $? = 1 ]; then
 	fi
 fi
 
-docker-compose pull
-docker-compose stop
-docker-compose rm -f
-docker-compose up -d
+MIGRATE_OUTPUT=`mktemp`
+
+isRevertSupported() {
+    if [ $1 = latest ]; then
+        echo 't'
+    elif [ $(echo $1 | awk -F. '{ printf("%d%03d%03d\n", $1,$2,$3); }') -ge 2001005 ]; then
+        echo 't'
+    else
+        echo 'f'
+    fi
+}
+
+revert() {
+    echo "Reverting docker compose files."
+    cp -f docker-compose.yml.$DATE.backup docker-compose.yml
+    cp -f docker-compose.env.$DATE.backup docker-compose.env
+
+    echo "Reverting UCRM to version $1"
+    update $1
+
+    echo "Revert complete."
+}
+
+update() {
+    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:$1/g" docker-compose.yml
+    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:$1/g" docker-compose.migrate.yml
+
+    docker-compose pull
+    docker-compose stop
+    docker-compose rm -af
+
+    if [ $(isRevertSupported $1) = 't' ]; then
+
+        docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
+        docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app | tee $MIGRATE_OUTPUT ; ( exit ${PIPESTATUS[0]} )
+        if [ $? != 0 ]; then
+            REVERT_VERSION=$(grep 'UCRM will be reverted to version' $MIGRATE_OUTPUT | awk ' {print $NF}')
+            if [ $REVERT_VERSION ]; then
+                revert $REVERT_VERSION
+                return
+            fi
+        fi
+
+    fi
+
+    docker-compose up -d
+    docker-compose ps
+}
+
+update latest
+rm -f $MIGRATE_OUTPUT
+
+exit 0

@@ -1,0 +1,10 @@
+version: '2'
+services:
+  migrate_app:
+    image: ubnt/ucrm-billing:latest
+    env_file: docker-compose.env
+    links:
+      - postgresql
+    volumes:
+      - ./data/ucrm:/data
+    command: "migrate"
