@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.1.6 (2016-11-08)
+
+### Fixed
+
+*	Payment subscribe button shown properly in client zone
+*	Invoices Batch print and Export button works now
+*	"Drafts created" notification sent only when there is at least one new invoice
+*	Disappearing menu items on some subpages fixed
+*	Minor fixes for sync feature and authorize.net subscribtions handling
+
+### Changed
+*	Invoice preview (in new service form) shows total price including tax
+*	While device sync, its interfaces types are set according to real interface type (wlan, ethernet, etc.)
+*	Improved stability for restoring db backup
+
 ## 2.1.5 (2016-11-04)
 
 ### Added
