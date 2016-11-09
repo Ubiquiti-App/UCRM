@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.7 (2016-11-09)
+
+### Added
+* UCRM API - new api for payments and invoices. You can upload new payments of any source and an invoice with simplified items
+
+### Changed
+* UCRM API improved - client's service entity now contains info about service plan and shaping speed
+
+### Fixed
+* Payment subscribe button shown properly in client zone (even for invioces with surcharges and taxes)
+
+
 ## 2.1.6 (2016-11-08)
 
 ### Fixed
