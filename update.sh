@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$1" = "" ]; then
+	UPDATE_TO_VERSION="latest"
+else
+	UPDATE_TO_VERSION=$1
+fi
 DATE=$(date +"%s")
 
 cp docker-compose.yml docker-compose.yml.$DATE.backup
@@ -165,7 +170,7 @@ update() {
     docker-compose ps
 }
 
-update latest
+update "$UPDATE_TO_VERSION"
 rm -f $MIGRATE_OUTPUT
 
 exit 0
