@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.1.8 (2016-11-24)
+
+### Changed
+*	Proper paypal exception hadnling, user is notified to contact the ISP to solve the problem.
+*	PHP bumped to v7.0.13
+
+### Fixed
+*	Fixed RouterOs synchronization
+*	Suspended service's IPs are correctly propageted to BLOCKED_USERS list even when the service is connected to a device with disabled suspension feature
+*	IPs list on interface properly synchronized. Multiple duplacate IPs are not longer created during the sync.
+*	Fixed possible bug with applying client's credit to invoice.
+*	Fixed outgoing notification emails in case of reapeated outages.
+*	Fixed turning off the outage notification feature in system settings
+
 ## 2.1.7 (2016-11-09)
 
 ### Added
