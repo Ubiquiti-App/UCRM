@@ -7,4 +7,4 @@
 INSTALL_CLOUD=true
 if [ -z "$SERVER_NAME" ]; then SERVER_NAME=""; fi
 
-. ./install.sh
+. /tmp/install.sh
