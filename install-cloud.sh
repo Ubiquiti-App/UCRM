@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This script will install ucrm on a cloud hosted server without any promt
+# This script will install ucrm on a cloud hosted server without any prompt
 # Standard ports 80,81,443 will be used
-# This script requires the variable SERVER_NAME to be defined
+# This script will append all variables in /tmp/cloud_conf (eg. SERVER_NAME) to docker-compose.env
 
 INSTALL_CLOUD=true
 CLOUD_CONF="/tmp/cloud_conf"

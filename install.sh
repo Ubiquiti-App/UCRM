@@ -158,7 +158,6 @@ change_ucrm_suspend_port() {
 	local PORT
 
 	while true; do
-
 		if [ "$INSTALL_CLOUD" = true ]; then
 			PORT=y
 		else
