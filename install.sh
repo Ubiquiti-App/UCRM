@@ -5,7 +5,6 @@ UCRM_USER="ucrm"
 POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
 SECRET=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
 if [ -z "$INSTALL_CLOUD" ]; then INSTALL_CLOUD=false; fi
-if [ -z "$SERVER_NAME" ]; then SERVER_NAME=""; fi
 
 check_system() {
 	local lsb_dist
@@ -210,13 +209,15 @@ enable_ssl() {
 
 enable_server_name() {
 	local SERVER_NAME_LOCAL
+
 	if [ "$INSTALL_CLOUD" = true ]; then
-		SERVER_NAME_LOCAL=$SERVER_NAME
+		if [ -f "$CLOUD_CONF" ]; then
+			cat "$CLOUD_CONF" >> /home/$UCRM_USER/docker-compose.env
+		fi
 	else
 		read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME_LOCAL
+		echo "SERVER_NAME=$SERVER_NAME_LOCAL" >> /home/$UCRM_USER/docker-compose.env
 	fi
-
-	echo "SERVER_NAME=$SERVER_NAME_LOCAL" >> /home/$UCRM_USER/docker-compose.env
 }
 
 change_ucrm_ssl_port() {

@@ -5,6 +5,7 @@
 # This script requires the variable SERVER_NAME to be defined
 
 INSTALL_CLOUD=true
-if [ -z "$SERVER_NAME" ]; then SERVER_NAME=""; fi
+CLOUD_CONF="/tmp/cloud_conf"
 
+exit
 . /tmp/install.sh
