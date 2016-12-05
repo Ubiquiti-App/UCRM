@@ -7,5 +7,4 @@
 INSTALL_CLOUD=true
 CLOUD_CONF="/tmp/cloud_conf"
 
-exit
 . /tmp/install.sh
