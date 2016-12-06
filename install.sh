@@ -4,6 +4,7 @@
 UCRM_USER="ucrm"
 POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
 SECRET=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
+if [ -z "$INSTALL_CLOUD" ]; then INSTALL_CLOUD=false; fi
 
 check_system() {
 	local lsb_dist
@@ -128,7 +129,11 @@ change_ucrm_port() {
 	local PORT
 
 	while true; do
-		read -r -p "Do you want UCRM to be accessible on port 80? (Yes: recommended for most users, No: will set 8080 as default) [Y/n]: " PORT
+		if [ "$INSTALL_CLOUD" = true ]; then
+			PORT=y
+		else
+			read -r -p "Do you want UCRM to be accessible on port 80? (Yes: recommended for most users, No: will set 8080 as default) [Y/n]: " PORT
+		fi
 
 		case $PORT in
 			[yY][eE][sS]|[yY])
@@ -153,7 +158,11 @@ change_ucrm_suspend_port() {
 	local PORT
 
 	while true; do
-		read -r -p "Do you want UCRM suspend page to be accessible on port 81? (Yes: recommended for most users, No: will set 8081 as default) [Y/n]: " PORT
+		if [ "$INSTALL_CLOUD" = true ]; then
+			PORT=y
+		else
+			read -r -p "Do you want UCRM suspend page to be accessible on port 81? (Yes: recommended for most users, No: will set 8081 as default) [Y/n]: " PORT
+		fi
 
 		case $PORT in
 			[yY]*)
@@ -177,7 +186,11 @@ enable_ssl() {
 	local SSL
 
 	while true; do
-		read -r -p "Do you want to enable SSL? (You need to generate a certificate for yourself) [Y/n]: " SSL
+		if [ "$INSTALL_CLOUD" = true ]; then
+			SSL=y
+		else
+			read -r -p "Do you want to enable SSL? (You need to generate a certificate for yourself) [Y/n]: " SSL
+		fi
 
 		case $SSL in
 			[yY]*)
@@ -194,17 +207,27 @@ enable_ssl() {
 }
 
 enable_server_name() {
-	local SERVER_NAME
+	local SERVER_NAME_LOCAL
 
-	read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME
-	echo "SERVER_NAME=$SERVER_NAME" >> /home/$UCRM_USER/docker-compose.env
+	if [ "$INSTALL_CLOUD" = true ]; then
+		if [ -f "$CLOUD_CONF" ]; then
+			cat "$CLOUD_CONF" >> /home/$UCRM_USER/docker-compose.env
+		fi
+	else
+		read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME_LOCAL
+		echo "SERVER_NAME=$SERVER_NAME_LOCAL" >> /home/$UCRM_USER/docker-compose.env
+	fi
 }
 
 change_ucrm_ssl_port() {
 	local PORT
 
 	while true; do
-		read -r -p "Do you want UCRM SSL to be accessible on port 443? (Yes: recommended for most users, No: will set 8443 as default) [Y/n]: " PORT
+		if [ "$INSTALL_CLOUD" = true ]; then
+			PORT=y
+		else
+			read -r -p "Do you want UCRM SSL to be accessible on port 443? (Yes: recommended for most users, No: will set 8443 as default) [Y/n]: " PORT
+		fi
 
 		case $PORT in
 			[yY]*)
