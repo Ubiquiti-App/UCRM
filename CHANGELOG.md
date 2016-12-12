@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.1.9 (2016-12-12)
+
+### Added
+#### UX & redesign
+*	Major UI, UX improvements. Mostly for client, service detail and all grids.
+*	You can now filter and export clients and invoices into csv file.
+*	Status tags in clients and invoices grid. At first sight, you will see an outage or overdue status at your client or invoice.
+*	Now, you can search clients by their service device IP and also search network device by its IP
+*	You can filter overdue invoices now
+
+#### Shaping
+*	Shaping enabled on EdgeRouters
+*	If you are used to shape on your gateway router only, you can simply turn this feature on, applied to all the clients globally - in system settings.
+*	If shaping on AirOs CPE devices you can choose whether to shape egress only (on wlan and lan) or egress, ingress (on wlan)
+
+#### Other
+*	Now you can specify a check number when creating a new check payment
+*	More details about incoming payment from paygates are now provided in payment detail page
+*	Client is enabled to modify the amount to be paid when paying online and decide to associate it with multiple invoices or to turn it into credit.
+*	As a WISP, when creating a new payment you can associate it with multiple invoices
+*	API upgraded - you can upload a payment with a third party paygate information.
+*	GPS address is automatically resolved when creating a new service according to the client location
+
+### Changed
+*	Improved grids, filtering and related action buttons
+*	Better email queue handling and error monitoring
+*	Same invoice number can be used within more UCRM organizations.
+*	"Quick add device" feature improved. No fictive interface is created after the first device synchronization.
+*	Service taxable flag removed, since it is redundant. When some tax is associated with the service it is taxable by default
+*	Major app speed improvements
+*	PHP updated to v. 7.0.14
+
+### Fixed
+*	Fixed bug when tariff period being updated with empty price
+*	Options for service periods rendered properly in edit service form, only valid periods related to a given service plan are shown now.
+*	Fixed rendering of invoice pdf with organization logo and stamp
+*	Now, the value of client's invoice maturity days overrides properly the global value set in system settings.
+*	Fixed problem with outgoing outage notifications (occurred on some smtp servers)
+*	Fixed possible problems with editing taxes or periods on a service
+*	Now, client's taxes are automatically applied to "product" invoice item
+*	$0 balanced invoices of all kinds are not sent if defined so in system settings
+*	Fixed matching of subscription payments with the invoice. Some payments from paygates were marked as unmatched although it was possible to match them with an invoice automatically
+*	Minor fixes and improvements
+
 ## 2.1.8 (2016-11-24)
 
 ### Changed
