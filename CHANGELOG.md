@@ -5,21 +5,21 @@
 ### Added
 *	Client suspended badge added to the clients grid
 *	Grids page size is remembered
-*	Now, you can search invoices by ID
+*	Now, you can search invoices by their number
 *	You can set default invoice note (comment) at organization > billing options. This note will be automatically added to every new invoice.
 
 ### Changed
-*	Associating suspend, overdue, outage badge to clients / services are no longer pushed to system log
-*	Good news for those who need custom bank account number. You can use just the first field, the second field can be left empty and now slash will be applied.
-*	Credit applied to an invoice in proper order (payments associated to the invoice are used from oldest to newest)
+*	Association of suspend, overdue and outage badges to clients / services is no longer pushed to system log
+*	Good news for those who need custom bank account number. You can use just the first field, the second field can be left empty and no slash will be displayed.
+*	Credit is now applied to an invoice in proper order (payments associated to the invoice are used from oldest to newest)
 
 ### Fixed
-*	Fixed items count and pagination for some grids
+*	Fixed item counts and pagination for some grids
 *	UI fixes for Safari browser
-*	Invoice auto-numbering fixed when non-numeric prefixes are used
+*	Invoice number generator fixed when non-numeric prefixes are used
 *	Shaping fixed on some EdgeRouters which already used own shaping rules
-*	Fixed log entries for mailer errors
-*	Minor UI, UX fixes and improvements
+* Fixed log entries for mailer errors
+* Minor UI / UX fixes and improvements
 
 ## 2.1.9 (2016-12-12)
 
