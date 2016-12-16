@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.11 (2016-12-16)
+
+### Fixed
+*	Fixed shaping on AirOs devices
+*	When shaping is turned off on EdgeOs devices or globally in system settings, UCRM will not even connect to any EdgeOs
+*	Client and service status are updated immediately after any change
+*	Fixed possible bug with resolving gps coordinates
+*	While creating a new invoice manually, late fees select box shows only those items which belongs to the given client
+*	Minor UI, UX fixes and app speed improvements
+
 ## 2.1.10 (2016-12-14)
 
 ### Added
