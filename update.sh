@@ -124,7 +124,7 @@ fi
 MIGRATE_OUTPUT=`mktemp`
 
 isRevertSupported() {
-    if [ $1 = $UPDATE_TO_VERSION ]; then
+    if [ $1 = "latest" ]; then
         echo 't'
     elif [ $(echo $1 | awk -F. '{ printf("%d%03d%03d\n", $1,$2,$3); }') -ge 2001005 ]; then
         echo 't'
