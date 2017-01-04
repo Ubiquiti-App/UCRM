@@ -87,7 +87,7 @@ grep 'SERVER_PORT' docker-compose.env > /dev/null
 
 if [ $? = 1 ]; then
 	SERVER_PORT=`grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1`
-	echo "Adding $SERVER_PORT as server port, you can change it in UCRM Settings > General > System > Application > Server port"
+	echo "Adding $SERVER_PORT as server port, you can change it in UCRM System > Settings > Application > Server port"
 	echo "#used only in instalation" >> docker-compose.env
 	echo "SERVER_PORT=$SERVER_PORT" >> docker-compose.env
 fi
@@ -96,7 +96,7 @@ grep 'SERVER_SUSPEND_PORT' docker-compose.env > /dev/null
 
 if [ $? = 1 ]; then
 	SERVER_SUSPEND_PORT=`grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1`
-	echo "Adding $SERVER_SUSPEND_PORT as suspend port, you can change it in UCRM Settings > General > System > Application > Server suspend port"
+	echo "Adding $SERVER_SUSPEND_PORT as suspend port, you can change it in UCRM System > Settings > Application > Server suspend port"
 	echo "#used only in instalation" >> docker-compose.env
 	echo "SERVER_SUSPEND_PORT=$SERVER_SUSPEND_PORT" >> docker-compose.env
 fi
@@ -104,7 +104,7 @@ fi
 grep 'SERVER_NAME' docker-compose.env > /dev/null
 
 if [ $? = 1 ]; then
-	echo "Adding ucrm.ubnt as Server domain name, you can change it in UCRM Settings > General > System > Application > Server domain name"
+	echo "Adding ucrm.ubnt as Server domain name, you can change it in UCRM System > Settings > Application > Server domain name"
 	echo "#used only in instalation" >> docker-compose.env
 	echo "SERVER_NAME=ucrm.ubnt" >> docker-compose.env
 
@@ -124,7 +124,7 @@ fi
 MIGRATE_OUTPUT=`mktemp`
 
 isRevertSupported() {
-    if [ $1 = latest ]; then
+    if [ $1 = "latest" ]; then
         echo 't'
     elif [ $(echo $1 | awk -F. '{ printf("%d%03d%03d\n", $1,$2,$3); }') -ge 2001005 ]; then
         echo 't'
@@ -149,19 +149,31 @@ update() {
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:$1/g" docker-compose.migrate.yml
 
     docker-compose pull
-    docker-compose stop
+    docker-compose -f docker-compose.yml -f docker-compose.migrate.yml stop
     docker-compose rm -af
 
     if [ $(isRevertSupported $1) = 't' ]; then
 
-        docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
         docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app | tee $MIGRATE_OUTPUT ; ( exit ${PIPESTATUS[0]} )
         if [ $? != 0 ]; then
             REVERT_VERSION=$(grep 'UCRM will be reverted to version' $MIGRATE_OUTPUT | awk ' {print $NF}')
             if [ $REVERT_VERSION ]; then
                 revert $REVERT_VERSION
-                return
+            else
+                echo "| ########################################################### |"
+                echo "|                                                             |"
+                echo "|   An error occurred during UCRM update.                     |"
+                echo "|   The system can not be reverted to the previous version.   |"
+                echo "|   Try to run update script once again or contact support    |"
+                echo "|   https://ucrm.ubnt.com/                                    |"
+                echo "|                                                             |"
+                echo "| ########################################################### |"
+
+                docker-compose -f docker-compose.yml -f docker-compose.migrate.yml stop
+                docker-compose rm -af
             fi
+
+            return
         fi
 
     fi
@@ -170,7 +182,7 @@ update() {
     docker-compose ps
 }
 
-update "$UPDATE_TO_VERSION"
+update $UPDATE_TO_VERSION
 rm -f $MIGRATE_OUTPUT
 
 exit 0
