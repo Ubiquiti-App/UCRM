@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.1.12 (2017-01-04)
+
+### Added
+*	IP of terminated service is blocked on the router
+*	UCRM update process improved. In case of a failure the previous version is restored.
+*	Demo-mode termination improved. You can now mark all clients as not invited and all existing invoices as not sent while terminating the demo-mode.
+*	While adding a new service, you will see a warning that prorating will be applied (to prevent situation when "period start day" does not match with "invoicing start" by mistake)
+*	Period start day is shown on service detail page
+*	Better price and quantity validation added to the new invoice form (you can use both . and , as the decimal separator)
+*	UCRM API improved. When adding a new payment, it can be matched with multiple invoices.
+*	UI improvements
+
+### Changed
+*	Settings structure simplified. Main settings can be found in System > Settings. All billing parameters can be found together under System > Billing. Service plans, products and surcharges are moved under System > Items, etc.
+*	DB backup simplified. You don't need to move the crypto.key while backuping or restoring UCRM database.
+*	Prepared service cannot be suspended or terminated, related buttons are hidden now.
+*	Invoices of archived clients are visible in the global invoice list.
+*	Special permission "View financial information" affects client's financial overview and also financial overview on Dashboard now
+*	Client IP not shown on walled garden suspend page unless stated explicitly using client IP placeholder in notification settings
+*	Support email is shown in client-zone instead of organization email when available
+
+### Fixed
+*	Fixed outgoing invoice emails for recurring invoices (some smtp servers affected)
+*	Bugs regarding invoice preview fixed in new service form
+*	Default client's taxes are properly applied when creating a new invoice
+*	All the client's services are shown in client zone (only the first 5 services were shown before)
+*	$0 individual service price can be set now
+*	Fixed inconvenient issues when user has insufficient permissions
+*	PayPal error is handled properly and logged
+*	Fixed minor bugs
+
 ## 2.1.11 (2016-12-16)
 
 ### Fixed
