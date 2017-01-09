@@ -83,6 +83,15 @@ if [ "$NEEDS_VOLUMES_FIX" = "1" ] && [ "$VOLUME" != "" ]; then
 	sed -i -e "s/      - .\/data\/ucrm:\/data/$VOLUME/g" docker-compose.migrate.yml
 fi
 
+cat -vt docker-compose.yml | egrep "  rabbitmq:" > /dev/null
+
+if [ $? = 1 ]; then
+	echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
+	echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n    command: \"supervisord\"" >> docker-compose.yml
+	echo "Adding RabbitMQ container links."
+	sed -i -e "s/      - elastic/&\n      - rabbitmq/g" docker-compose.yml
+fi
+
 grep 'SERVER_PORT' docker-compose.env > /dev/null
 
 if [ $? = 1 ]; then
