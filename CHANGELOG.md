@@ -3,25 +3,25 @@
 ## 2.2.0 (2017-01-13)
 
 ### Added
-*	New search bar added, accessible also with "/" slash hot key. You can find client, invoice, payment and even help article using a key word such as client id, email, IP address, invoice id, etc.
-*	You can also search archived clients by name, address, service IPs, etc.
+*	New search bar added, accessible also with "/" slash keyboard shortcut. You can find clients, invoices, payments and even help articles using a key word such as client ID, email, IP address, invoice number, etc.
+*	You can also search archived clients by name, address, service IP, etc.
 *	While setting up HTTPS, you can now upload the CA bundle file along with your cert file.
-*	Information about client's recurring payment subsriptions are shown in client detail page
-*	API enhanced. You can retrieve all clients and all services, or get entities by their id
-*	You can manually create and download up-to-date database backup (in System > Tools)
+*	Information about client's payment subscriptions are shown in client detail page.
+*	API enhanced. You can retrieve all clients and all services or get entities by their ID.
+*	You can manually create and download up-to-date database backup (in System > Tools).
 *	Old device backup files are pruned. Last 14 backups are kept in UCRM after each synchronization.
 
 ### Changed
-*	Now, you can define tax value with up to 4 decimal places
-*	SNMP community string limited to 32 chars
+*	Now, you can define tax value with up to 4 decimal places.
+*	SNMP community string limited to 32 chars.
 
 ### Fixed
-*	Mailer spool fixed in case there is a mail pending with invoice pdf previously removed
-*	Fixed possible bug with connection to elastic container after UCRM update
-*	Synchronization with older edgeOs devices improved
-*	Client sorting by id fixed
-*	Fixed automated netflow set up. (For some devices, the netflow could have remained in pending state)
-*	Minor bugs fixed
+*	Mailer spool fixed in case there is a mail pending with invoice pdf previously removed.
+*	Fixed possible bug with connection to elastic container after UCRM update.
+*	Synchronization with older edgeOs devices improved.
+*	Client sorting by id fixed.
+*	Fixed automated netflow set up. (For some devices, the netflow could have remained in pending state.)
+*	Minor bugs fixed.
 
 ## 2.1.12 (2017-01-04)
 
