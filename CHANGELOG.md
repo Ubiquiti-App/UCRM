@@ -5,6 +5,7 @@
 ### Added
 *	New search bar added, accessible also with "/" slash keyboard shortcut. You can find clients, invoices, payments and even help articles using a key word such as client ID, email, IP address, invoice number, etc.
 *	You can also search archived clients by name, address, service IP, etc.
+* UCRM Dashboard redesigned, the most important information about billing and network added.
 *	While setting up HTTPS, you can now upload the CA bundle file along with your cert file.
 *	Information about client's payment subscriptions are shown in client detail page.
 *	API enhanced. You can retrieve all clients and all services or get entities by their ID.
