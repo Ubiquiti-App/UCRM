@@ -34,6 +34,7 @@ services:
       - ./data/ucrm:/data
     links:
       - postgresql
+      - elastic
     command: "sync"
 
   crm_invoice_send_email_app:
@@ -44,6 +45,7 @@ services:
       - ./data/ucrm:/data
     links:
       - postgresql
+      - elastic
     command: "crm_invoice_send_email"
 
   crm_draft_approve_app:
@@ -54,6 +56,7 @@ services:
       - ./data/ucrm:/data
     links:
       - postgresql
+      - elastic
     command: "crm_draft_approve"
 
   crm_search_devices_app:
@@ -64,6 +67,7 @@ services:
       - ./data/ucrm:/data
     links:
       - postgresql
+      - elastic
     command: "crm_search_devices"
 
   crm_netflow_app:
@@ -74,6 +78,7 @@ services:
       - ./data/ucrm:/data
     links:
       - postgresql
+      - elastic
     ports:
       - 2055:2055/udp
     command: "crm_netflow"
@@ -86,4 +91,5 @@ services:
       - ./data/ucrm:/data
     links:
       - postgresql
+      - elastic
     command: "crm_ping"
