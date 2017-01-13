@@ -17,10 +17,10 @@ if [ $? = 1 ]; then
 	echo -e "\n\n  elastic:\n    image: elasticsearch:2\n    restart: always" >> docker-compose.yml
 fi
 
-cat -vt docker-compose.yml | egrep "      - elastic" > /dev/null
-
-if [ $? = 1 ]; then
-	echo "Your docker-compose doesn't contain Elastic link in the Web App container. Trying to add."
+cat -vt docker-compose.yml | tr -d '\n' | egrep "      - postgresql {4}[a-z]" > /dev/null
+if [ $? = 0 ]; then
+	echo "Adding Elastic container links."
+	sed -i -e "/      - elastic/d" docker-compose.yml
 	sed -i -e "s/      - postgresql/&\n      - elastic/g" docker-compose.yml
 fi
 
