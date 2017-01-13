@@ -12,15 +12,15 @@
 *	Old device backup files are pruned. Last 14 backups are kept in UCRM after each synchronization.
 
 ### Changed
-*	Now, you can define tax value with up to 4 decimal places.
+*	Now, you can define tax value with up to 4 decimal digits.
 *	SNMP community string limited to 32 chars.
 
 ### Fixed
-*	Mailer spool fixed in case there is a mail pending with invoice pdf previously removed.
-*	Fixed possible bug with connection to elastic container after UCRM update.
-*	Synchronization with older edgeOs devices improved.
-*	Client sorting by id fixed.
-*	Fixed automated netflow set up. (For some devices, the netflow could have remained in pending state.)
+*	Mailer spool fixed in case there is a mail pending with invoice PDF previously removed.
+*	Fixed possible bug with connection to Elastic container after UCRM update.
+*	Synchronization with older EdgeOs devices improved.
+*	Client sorting by ID fixed.
+*	Fixed automated NetFlow set up. (For some devices, the NetFlow could have remained in pending state.)
 *	Minor bugs fixed.
 
 ## 2.1.12 (2017-01-04)
