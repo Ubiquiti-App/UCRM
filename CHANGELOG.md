@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.2.1 (2017-01-24)
+
+### Added
+*	Vanuatu Vatu currency added 
+
+### Changed
+*	All primary IPs of network devices are excluded from Unknown Devices overview
+*	$ amount columns alligned to right
+
+### Fixed
+*	Fixed reversed upload/download speed for "egress only" shaping on AirOs devices
+*	Fixed crash after database backup restore
+*	Vlan interfaces autoloading fixed for EdgeOs devices
+*	Fix gps latitude longitude scale
+*	Deleted Products and Sites are no longer visible in any select box
+*	Fixed invoice label word wrap
+*	Fixed timezone detection in the application init wizard
+*	Fixed synchronization with EdgeOs devices of some specific configuration and with EdgeRouter X
+*	Fixed manual suspend with custom "stop reason". You can suspend any service using your own "stop reason"
+*	Fixed crashes when reseting filters for some grids (such as resetting date filter for client's invoice grid)
+*	Fixed importing client's phone when uploading clients csv
+*	The attempt to shape on AirOs device using no download/upload speed is logged properly to the device log
+*	All Stripe exceptions are properly catched and logged. (eg. when attempt to pay amount less than $0.5)
+*	Fixed url links in outage notification emails when https is enabled on UCRM server. UCRM server port must be set to 443 in system settings.
+*	Fixed and improved global search. You can find a client by their IP
+*	UI fixes (on dashboard, client logs, chart responsiveness, file input)
+*	Minor bug fixes
+
 ## 2.2.0 (2017-01-13)
 
 ### Added
