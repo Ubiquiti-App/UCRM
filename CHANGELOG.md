@@ -3,30 +3,28 @@
 ## 2.2.1 (2017-01-24)
 
 ### Added
-*	Vanuatu Vatu currency added 
+*	Vanuatu Vatu currency added.
 
 ### Changed
-*	All primary IPs of network devices are excluded from Unknown Devices overview
-*	$ amount columns alligned to right
+*	All primary IPs of network devices are excluded from the Unknown Devices overview.
+*	Currency columns aligned to right.
 
 ### Fixed
-*	Fixed reversed upload/download speed for "egress only" shaping on AirOs devices
-*	Fixed crash after database backup restore
-*	Vlan interfaces autoloading fixed for EdgeOs devices
-*	Fix gps latitude longitude scale
-*	Deleted Products and Sites are no longer visible in any select box
-*	Fixed invoice label word wrap
-*	Fixed timezone detection in the application init wizard
-*	Fixed synchronization with EdgeOs devices of some specific configuration and with EdgeRouter X
-*	Fixed manual suspend with custom "stop reason". You can suspend any service using your own "stop reason"
-*	Fixed crashes when reseting filters for some grids (such as resetting date filter for client's invoice grid)
-*	Fixed importing client's phone when uploading clients csv
-*	The attempt to shape on AirOs device using no download/upload speed is logged properly to the device log
-*	All Stripe exceptions are properly catched and logged. (eg. when attempt to pay amount less than $0.5)
-*	Fixed url links in outage notification emails when https is enabled on UCRM server. UCRM server port must be set to 443 in system settings.
-*	Fixed and improved global search. You can find a client by their IP
-*	UI fixes (on dashboard, client logs, chart responsiveness, file input)
-*	Minor bug fixes
+*	Fixed reversed upload / download speed values for "egress only" traffic shaping on AirOs devices.
+*	Fixed crash after restoring database backup.
+*	Fix GPS latitude / longitude scale.
+*	Deleted Products and Sites are no longer visible in select boxes.
+*	Fixed word wrapping of invoice labels.
+*	Fixed timezone detection in the UCRM init wizard.
+*	Fixed EdgeOs synchronization errors (including VLAN interface discovery).
+*	Fixed manual service suspension with custom "stop reason".
+*	Fixed crashes when resetting filters for some grids (such as resetting date filter for client's invoice grid).
+*	Fixed missing phone in CSV import of clients.
+*	The attempt to setup traffic shaping on AirOs device when no download / upload speed is set is now logged properly.
+*	Stripe payments now fail gracefully when there is an error (e.g. when attempting to pay less then 50 cents).
+*	Fixed device links in outage notification emails when HTTPS is enabled (note that the UCRM server port must be set to 443 in system settings).
+*	Fixed searching by IPs of devices and CPEs and generally improved searching. You can now use wildcards (* to replace zero and more characters and ? to replace a single character) and boolean operators (+ to indicate the word must be present and - to indicate the word must not be present).
+*	Minor bug fixes and UI fixes
 
 ## 2.2.0 (2017-01-13)
 
