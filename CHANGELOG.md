@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.2.1 (2017-01-24)
+
+### Added
+* You can now use wildcards in the search box (* to replace zero and more characters and ? to replace a single character) and boolean operators (+ to indicate the word must be present and - to indicate the word must not be present).
+*	Vanuatu Vatu currency added.
+
+### Changed
+*	All primary IPs of network devices are excluded from the Unknown Devices overview.
+*	Currency columns aligned to right.
+
+### Fixed
+*	Fixed reversed upload / download speed values for "egress only" traffic shaping on AirOs devices.
+*	Fixed crash after restoring database backup.
+*	Fix GPS latitude / longitude scale.
+*	Deleted Products and Sites are no longer visible in select boxes.
+*	Fixed word wrapping of invoice labels.
+*	Fixed timezone detection in the UCRM init wizard.
+*	Fixed EdgeOs synchronization errors (including VLAN interface discovery).
+*	Fixed manual service suspension with custom "stop reason".
+*	Fixed crashes when resetting filters for some grids (such as resetting date filter for client's invoice grid).
+*	Fixed missing phone in CSV import of clients.
+*	The attempt to setup traffic shaping on AirOs device when no download / upload speed is set is now logged properly.
+*	Stripe payments now fail gracefully when there is an error (e.g. when attempting to pay less then 50 cents).
+*	Fixed device links in outage notification emails when HTTPS is enabled (note that the UCRM server port must be set to 443 in system settings).
+*	Fixed searching by IPs of devices and CPEs and generally improved searching
+*	Minor bug fixes and UI fixes
+
 ## 2.2.0 (2017-01-13)
 
 ### Added
