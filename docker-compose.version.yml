@@ -1,0 +1,5 @@
+version: '2'
+services:
+  get_version_app:
+    image: ubnt/ucrm-billing:latest
+    command: "get_version"
