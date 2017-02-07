@@ -4,7 +4,7 @@ set -o errexit
 set -o errtrace
 set -o nounset
 set -o pipefail
-# set -o xtrace
+#set -o xtrace
 
 DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
@@ -366,12 +366,31 @@ check_update_possible() {
     exit 1
 }
 
+cleanup_old_images() {
+    local oldImages
+
+    oldImages=$(docker images | grep "ubnt/ucrm-billing" | grep "<none>" | awk '{print $3}') || true
+    if [[ "${oldImages:-}" -ne "" ]]; then
+        echo "Removing old UCRM images"
+        docker rmi "${oldImages}"
+    fi
+
+    if (docker system --help > /dev/null 2>&1);
+    then
+        echo -e "\n----------------\n"
+        echo "We recommend running \"docker system prune\" once in a while to clean unused containers, images, etc."
+        echo "You can determine how much space can be cleaned up by running \"docker system df\""
+    fi
+}
+
 do_update() {
     declare toVersion="${1}"
 
     compose__backup
     compose__run_update "${toVersion}"
     containers__run_update "${toVersion}"
+
+    cleanup_old_images
 }
 
 main() {
