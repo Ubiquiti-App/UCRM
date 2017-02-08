@@ -105,6 +105,20 @@ patch__compose__add_ping_section() {
     fi
 }
 
+patch__compose__add_rabbitmq() {
+    if ! cat -vt docker-compose.yml | grep -Eq "  rabbitmq:";
+    then
+        echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
+        echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n    command: \"supervisord\"" >> docker-compose.yml
+        echo "Adding RabbitMQ container links."
+        sed -i -e "s/      - elastic/&\n      - rabbitmq/g" docker-compose.yml
+
+        return 0
+    else
+        return 1
+    fi
+}
+
 patch__compose__correct_volumes() {
     declare newPath="${1}"
 
@@ -190,6 +204,9 @@ compose__run_update() {
         needsVolumesFix=1
     fi
     if patch__compose__add_ping_section; then
+        needsVolumesFix=1
+    fi
+    if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
 
