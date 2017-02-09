@@ -1,267 +1,291 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# linux user for ucrm docker containers
-UCRM_USER="ucrm"
-POSTGRES_PASSWORD=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
-SECRET=$(cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 48 | head -n 1);
-if [ -z "$INSTALL_CLOUD" ]; then INSTALL_CLOUD=false; fi
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+#set -o xtrace
+
+UCRM_USER="${UCRM_USER:-ucrm}"
+UCRM_PATH="${UCRM_PATH:-/home/${UCRM_USER}}"
+INSTALL_VERSION="${1:-latest}"
+
+POSTGRES_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
+SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
+INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
+
+GITHUB_REPOSITORY="U-CRM/billing/master"
 
 check_system() {
-	local lsb_dist
-	local dist_version
+    local lsb_dist
+    local dist_version
 
-	if [ -z "$lsb_dist" ] && [ -r /etc/lsb-release ]; then
-		lsb_dist="$(. /etc/lsb-release && echo "$DISTRIB_ID")"
-	fi
+    if [ -z "${lsb_dist:-}" ] && [ -r /etc/lsb-release ]; then
+        lsb_dist="$(. /etc/lsb-release && echo "${DISTRIB_ID:-}")"
+    fi
 
-	if [ -z "$lsb_dist" ] && [ -r /etc/debian_version ]; then
-		lsb_dist='debian'
-	fi
+    if [ -z "${lsb_dist:-}" ] && [ -r /etc/debian_version ]; then
+        lsb_dist="debian"
+    fi
 
-	if [ -z "$lsb_dist" ] && [ -r /etc/fedora-release ]; then
-		lsb_dist='fedora'
-	fi
+    if [ -z "${lsb_dist:-}" ] && [ -r /etc/fedora-release ]; then
+        lsb_dist="fedora"
+    fi
 
-	if [ -z "$lsb_dist" ] && [ -r /etc/oracle-release ]; then
-		lsb_dist='oracleserver'
-	fi
+    if [ -z "${lsb_dist:-}" ] && [ -r /etc/oracle-release ]; then
+        lsb_dist="oracleserver"
+    fi
 
-	if [ -z "$lsb_dist" ]; then
-		if [ -r /etc/centos-release ] || [ -r /etc/redhat-release ]; then
-		lsb_dist='centos'
-		fi
-	fi
+    if [ -z "${lsb_dist:-}" ]; then
+        if [ -r /etc/centos-release ] || [ -r /etc/redhat-release ]; then
+        lsb_dist="centos"
+        fi
+    fi
 
-	if [ -z "$lsb_dist" ] && [ -r /etc/os-release ]; then
-		lsb_dist="$(. /etc/os-release && echo "$ID")"
-	fi
+    if [ -z "$lsb_dist" ] && [ -r /etc/os-release ]; then
+        lsb_dist="$(. /etc/os-release && echo "${ID:-}")"
+    fi
 
-	lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
+    lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
 
-	case "$lsb_dist" in
+    case "$lsb_dist" in
 
-		ubuntu)
-		if [ -z "$dist_version" ] && [ -r /etc/lsb-release ]; then
-			dist_version="$(. /etc/lsb-release && echo "$DISTRIB_CODENAME")"
-		fi
-		;;
+        ubuntu)
+        if [ -z "${dist_version:-}" ] && [ -r /etc/lsb-release ]; then
+            dist_version="$(. /etc/lsb-release && echo "${DISTRIB_CODENAME:-}")"
+        fi
+        ;;
 
-		debian)
-		dist_version="$(cat /etc/debian_version | sed 's/\/.*//' | sed 's/\..*//')"
-		;;
+        debian)
+        dist_version="$(sed 's/\/.*//' /etc/debian_version | sed 's/\..*//')"
+        ;;
 
-		*)
-		if [ -z "$dist_version" ] && [ -r /etc/os-release ]; then
-			dist_version="$(. /etc/os-release && echo "$VERSION_ID")"
-		fi
-		;;
+        *)
+        if [ -z "${dist_version:-}" ] && [ -r /etc/os-release ]; then
+            dist_version="$(. /etc/os-release && echo "${VERSION_ID:-}")"
+        fi
+        ;;
 
-	esac
+    esac
 
-	if [ "$lsb_dist" = "ubuntu" ] && [ "$dist_version" != "xenial" ] || [ "$lsb_dist" = "debian" ] && [ "$dist_version" != "8" ]; then
-		echo "Unsupported distro."
-		echo "Supported was: Ubuntu Xenial and Debian 8."
-		echo $lsb_dist
-		echo $dist_version
-		exit 1
-	fi
+    if [ "${lsb_dist}" = "ubuntu" ] && [ "${dist_version}" != "xenial" ] || [ "${lsb_dist}" = "debian" ] && [ "${dist_version}" != "8" ]; then
+        echo "Unsupported distribution."
+        echo "Supported was: Ubuntu Xenial and Debian 8."
+        echo "${lsb_dist}"
+        echo "${dist_version}"
+
+        exit 1
+    fi
 }
 
 install_docker() {
-	which docker > /dev/null 2>&1
+    if ! (which docker > /dev/null 2>&1); then
+        echo "Download and install Docker"
+        curl -fsSL https://get.docker.com/ | sh
+    fi
 
-	if [ $? = 1 ]; then
-		echo "Download and install Docker"
-		curl -fsSL https://get.docker.com/ | sh
-	fi
+    if ! (which docker > /dev/null 2>&1); then
+        echo "Docker not installed. Please check previous logs. Aborting."
 
-	which docker > /dev/null 2>&1
-
-	if [ $? = 1 ]; then
-		echo "Docker not installed. Please check previous logs. Aborting."
-		exit 1
-	fi
+        exit 1
+    fi
 }
 
 install_docker_compose() {
-	which docker-compose > /dev/null 2>&1
+    if ! (which docker-compose > /dev/null 2>&1); then
+        echo "Download and install Docker compose."
+        curl -L "https://github.com/docker/compose/releases/download/1.11.0/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+    fi
 
-	if [ $? = 1 ]; then
-		echo "Download and install Docker compose."
-		curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-		chmod +x /usr/local/bin/docker-compose
-	fi
+    if ! (which docker-compose > /dev/nulsl 2>&1); then
+        echo "Docker compose not installed. Please check previous logs. Aborting."
 
-	which docker-compose > /dev/null 2>&1
-
-	if [ $? = 1 ]; then
-		echo "Docker compose not installed. Please check previous logs. Aborting."
-		exit 1
-	fi
+        exit 1
+    fi
 }
 
 create_user() {
-	if [ -z "$(getent passwd $UCRM_USER)" ]; then
-		echo "Creating user $UCRM_USER."
-		adduser --disabled-password --gecos "" $UCRM_USER
-		usermod -aG docker $UCRM_USER
-	fi
+    if (which getent > /dev/null 2>&1); then
+        if [ -z "$(getent passwd "${UCRM_USER}")" ]; then
+            echo "Creating user ${UCRM_USER}."
+            adduser --disabled-password --gecos "" "${UCRM_USER}" || true
+            usermod -aG docker "${UCRM_USER}" || true
+        fi
+    fi
+
+    if [[ ! -d "${UCRM_PATH}" ]]; then
+        echo "Creating directory ${UCRM_PATH}."
+        mkdir -p "${UCRM_PATH}"
+    fi
 }
 
 download_docker_compose_files() {
-	if [ ! -f /home/$UCRM_USER/docker-compose.yml ]; then
-		echo "Downloading docker compose files."
-		curl -o /home/$UCRM_USER/docker-compose.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.yml
-		curl -o /home/$UCRM_USER/docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
-		curl -o /home/$UCRM_USER/docker-compose.env https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.env
+    if [ ! -f "${UCRM_PATH}/docker-compose.yml" ]; then
+        echo "Downloading docker compose files."
+        if (echo "${INSTALL_VERSION}" | grep -q "beta"); then
+            curl -o "${UCRM_PATH}/docker-compose.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.beta.yml"
+        else
+            curl -o "${UCRM_PATH}/docker-compose.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.yml"
+        fi
 
-		echo "Replacing env in docker compose."
-		sed -i -e "s/POSTGRES_PASSWORD=ucrmdbpass1/POSTGRES_PASSWORD=$POSTGRES_PASSWORD/g" /home/$UCRM_USER/docker-compose.env
-		sed -i -e "s/SECRET=changeThisSecretKey/SECRET=$SECRET/g" /home/$UCRM_USER/docker-compose.env
+        curl -o "${UCRM_PATH}/docker-compose.migrate.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.migrate.yml"
+        curl -o "${UCRM_PATH}/docker-compose.env" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.env"
 
-		change_ucrm_port
-		change_ucrm_suspend_port
-		enable_ssl
-	fi
+        sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${INSTALL_VERSION}/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${INSTALL_VERSION}/g" "${UCRM_PATH}/docker-compose.migrate.yml"
+
+        echo "Replacing env in docker compose."
+        sed -i -e "s/POSTGRES_PASSWORD=ucrmdbpass1/POSTGRES_PASSWORD=${POSTGRES_PASSWORD}/g" "${UCRM_PATH}/docker-compose.env"
+        sed -i -e "s/SECRET=changeThisSecretKey/SECRET=${SECRET}/g" "${UCRM_PATH}/docker-compose.env"
+
+        change_ucrm_port
+        change_ucrm_suspend_port
+        enable_ssl
+    fi
 }
 
 change_ucrm_port() {
-	local PORT
+    local PORT
 
-	while true; do
-		if [ "$INSTALL_CLOUD" = true ]; then
-			PORT=y
-		else
-			read -r -p "Do you want UCRM to be accessible on port 80? (Yes: recommended for most users, No: will set 8080 as default) [Y/n]: " PORT
-		fi
+    while true; do
+        if [ "${INSTALL_CLOUD}" = true ]; then
+            PORT=y
+        else
+            read -r -p "Do you want UCRM to be accessible on port 80? (Yes: recommended for most users, No: will set 8080 as default) [Y/n]: " PORT
+        fi
 
-		case $PORT in
-			[yY][eE][sS]|[yY])
-				sed -i -e "s/- 8080:80/- 80:80/g" /home/$UCRM_USER/docker-compose.yml
-				sed -i -e "s/- 8443:443/- 443:443/g" /home/$UCRM_USER/docker-compose.yml
-				echo "UCRM will start at 80 port."
-				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
-				echo "SERVER_PORT=80" >> /home/$UCRM_USER/docker-compose.env
-				break;;
-			[nN][oO]|[nN])
-				echo "UCRM will start at 8080 port. If you will change it, edit your docker-compose.yml in $UCRM_USER home direcotry."
-				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
-				echo "SERVER_PORT=8080" >> /home/$UCRM_USER/docker-compose.env
-				break;;
-			*)
-				;;
-		esac
-	done
+        case "${PORT}" in
+            [yY][eE][sS]|[yY])
+                sed -i -e "s/- 8080:80/- 80:80/g" "${UCRM_PATH}/docker-compose.yml"
+                sed -i -e "s/- 8443:443/- 443:443/g" "${UCRM_PATH}/docker-compose.yml"
+                echo "UCRM will start at 80 port."
+                echo "#used only in instalation" >> "${UCRM_PATH}/docker-compose.env"
+                echo "SERVER_PORT=80" >> "${UCRM_PATH}/docker-compose.env"
+                break;;
+            [nN][oO]|[nN])
+                echo "UCRM will start at 8080 port. If you will change it, edit your docker-compose.yml in ${UCRM_USER} home directory."
+                echo "#used only in instalation" >> "${UCRM_PATH}/docker-compose.env"
+                echo "SERVER_PORT=8080" >> "${UCRM_PATH}/docker-compose.env"
+                break;;
+            *)
+                ;;
+        esac
+    done
 }
 
 change_ucrm_suspend_port() {
-	local PORT
+    local PORT
 
-	while true; do
-		if [ "$INSTALL_CLOUD" = true ]; then
-			PORT=y
-		else
-			read -r -p "Do you want UCRM suspend page to be accessible on port 81? (Yes: recommended for most users, No: will set 8081 as default) [Y/n]: " PORT
-		fi
+    while true; do
+        if [ "${INSTALL_CLOUD}" = true ]; then
+            PORT=y
+        else
+            read -r -p "Do you want UCRM suspend page to be accessible on port 81? (Yes: recommended for most users, No: will set 8081 as default) [Y/n]: " PORT
+        fi
 
-		case $PORT in
-			[yY]*)
-				sed -i -e "s/- 8081:81/- 81:81/g" /home/$UCRM_USER/docker-compose.yml
-				echo "UCRM suspend page will start at 81 port."
-				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
-				echo "SERVER_SUSPEND_PORT=81" >> /home/$UCRM_USER/docker-compose.env
-				break;;
-			[nN]*)
-				echo "UCRM suspend page will start at 8081 port. If you will change it, edit your docker-compose.yml in $UCRM_USER home direcotry."
-				echo "#used only in instalation" >> /home/$UCRM_USER/docker-compose.env
-				echo "SERVER_SUSPEND_PORT=8081" >> /home/$UCRM_USER/docker-compose.env
-				break;;
-			*)
-				;;
-		esac
-	done
+        case "${PORT}" in
+            [yY]*)
+                sed -i -e "s/- 8081:81/- 81:81/g" "${UCRM_PATH}/docker-compose.yml"
+                echo "UCRM suspend page will start at 81 port."
+                echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
+                echo "SERVER_SUSPEND_PORT=81" >> "${UCRM_PATH}/docker-compose.env"
+                break;;
+            [nN]*)
+                echo "UCRM suspend page will start at 8081 port. If you will change it, edit your docker-compose.yml in ${UCRM_USER} home directory."
+                echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
+                echo "SERVER_SUSPEND_PORT=8081" >> "${UCRM_PATH}/docker-compose.env"
+                break;;
+            *)
+                ;;
+        esac
+    done
 }
 
 enable_ssl() {
-	local SSL
+    local SSL
 
-	while true; do
-		if [ "$INSTALL_CLOUD" = true ]; then
-			SSL=y
-		else
-			read -r -p "Do you want to enable SSL? (You need to generate a certificate for yourself) [Y/n]: " SSL
-		fi
+    while true; do
+        if [ "${INSTALL_CLOUD}" = true ]; then
+            SSL=y
+        else
+            read -r -p "Do you want to enable SSL? (You need to generate a certificate for yourself) [Y/n]: " SSL
+        fi
 
-		case $SSL in
-			[yY]*)
-				enable_server_name
-				change_ucrm_ssl_port
-				break;;
-			[nN]*)
-				echo "UCRM has disabled support for SSL."
-				break;;
-			*)
-				;;
-		esac
-	done
+        case "${SSL}" in
+            [yY]*)
+                enable_server_name
+                change_ucrm_ssl_port
+                break;;
+            [nN]*)
+                echo "UCRM has disabled support for SSL."
+                break;;
+            *)
+                ;;
+        esac
+    done
 }
 
 enable_server_name() {
-	local SERVER_NAME_LOCAL
+    local SERVER_NAME_LOCAL
 
-	if [ "$INSTALL_CLOUD" = true ]; then
-		if [ -f "$CLOUD_CONF" ]; then
-			cat "$CLOUD_CONF" >> /home/$UCRM_USER/docker-compose.env
-		fi
-	else
-		read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME_LOCAL
-		echo "SERVER_NAME=$SERVER_NAME_LOCAL" >> /home/$UCRM_USER/docker-compose.env
-	fi
+    if [ "$INSTALL_CLOUD" = true ]; then
+        if [ -f "${CLOUD_CONF}" ]; then
+            cat "${CLOUD_CONF}" >> "${UCRM_PATH}/docker-compose.env"
+        fi
+    else
+        read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME_LOCAL
+        echo "SERVER_NAME=${SERVER_NAME_LOCAL}" >> "${UCRM_PATH}/docker-compose.env"
+    fi
 }
 
 change_ucrm_ssl_port() {
-	local PORT
+    local PORT
 
-	while true; do
-		if [ "$INSTALL_CLOUD" = true ]; then
-			PORT=y
-		else
-			read -r -p "Do you want UCRM SSL to be accessible on port 443? (Yes: recommended for most users, No: will set 8443 as default) [Y/n]: " PORT
-		fi
+    while true; do
+        if [ "${INSTALL_CLOUD}" = true ]; then
+            PORT=y
+        else
+            read -r -p "Do you want UCRM SSL to be accessible on port 443? (Yes: recommended for most users, No: will set 8443 as default) [Y/n]: " PORT
+        fi
 
-		case $PORT in
-			[yY]*)
-				sed -i -e "s/- 8443:443/- 443:443/g" /home/$UCRM_USER/docker-compose.yml
-				echo "UCRM SSL will start at 443 port."
-				break;;
-			[nN]*)
-				echo "UCRM SSL will start at 8443 port."
-				break;;
-			*)
-				;;
-		esac
-	done
+        case "${PORT}" in
+            [yY]*)
+                sed -i -e "s/- 8443:443/- 443:443/g" "${UCRM_PATH}/docker-compose.yml"
+                echo "UCRM SSL will start at 443 port."
+                break;;
+            [nN]*)
+                echo "UCRM SSL will start at 8443 port."
+                break;;
+            *)
+                ;;
+        esac
+    done
 }
 
 download_docker_images() {
-	echo "Downloading docker images."
-	cd /home/$UCRM_USER && /usr/local/bin/docker-compose pull
+    echo "Downloading docker images."
+    cd "${UCRM_PATH}" && /usr/local/bin/docker-compose pull
 }
 
 start_docker_images() {
-	echo "Starting docker images."
-	cd /home/$UCRM_USER && \
-	/usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app && \
-	/usr/local/bin/docker-compose up -d && \
-	/usr/local/bin/docker-compose ps
+    echo "Starting docker images."
+    cd "${UCRM_PATH}" && \
+    /usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app && \
+    /usr/local/bin/docker-compose up -d && \
+    /usr/local/bin/docker-compose ps
 }
 
-check_system
-install_docker
-install_docker_compose
-create_user
-download_docker_compose_files
-download_docker_images
-start_docker_images
+main() {
+    check_system
+    install_docker
+    install_docker_compose
+    create_user
+    download_docker_compose_files
+    download_docker_images
+    start_docker_images
 
-exit 0
+    exit 0
+}
+
+main
