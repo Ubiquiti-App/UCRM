@@ -1,30 +1,28 @@
 # Changelog
 
-
 ## 2.2.2-beta1 (2017-02-10)
 
 ### Added
-*	Better rounding support. Items prices can be defined with up to 6 decimal places while the final invoice items totals and invoice totals are rounded according to the currency decimal limit, eg. 2 for US dollar.
-*	Tax rounding option. You can choose whether to round the taxed amount for the sum of the invoice items (default) or per each invoice item.
-*	More formatting options added to wysiwyg editors. For example, you can set font, color or edit the html source.
-*	You can set logs expiration in system settings.
 *	Introducing robust client contacts management. You can assign an unlimited number of client's contacts with email and phone. Also, you can specify the purpose for each email address, eg. different email for billing vs. general notifications.
 *	And you can import clients with multiple contacts information using UCRM API and CSV import tool.
 *	You can also decide whether the client's email should be used as the client-zone username or not
+*	While creating a new service with deferred activation date, you can decide whether to block the service device IP until the service is active.
+*	Tax rounding option. You can choose whether to round the taxed amount for the sum of the invoice items (default) or per each invoice item.
+*	Better rounding support. Items prices can be defined with up to 6 decimal places while the final invoice items totals and invoice totals are rounded according to the currency decimal limit, eg. 2 for US dollar.
+*	More formatting options added to wysiwyg editors. For example, you can set font, color or edit the html source.
 *	Now, you will see all the spool emails immediately in the mailer log. All emails waiting in the queue are shown with flag "E-mail in queue"
-*	Mail sent during the demo mode is active are visibly marked in the mailer log.
+*	Emails sent during the demo mode is active are visibly marked in the mailer log.
 *	You can set or change the password for your client.
 *	Better error message in case the encryption key is missing in the system.
-*	While creating a new service with deferred activation date, you can decide whether to block the service device IP until the service is active.
 *	Warning shown when trying to assign a range of IPs to the client service because typically, a single IP is assigned to the service.
-*	App performance improved
 *	New system settings section Localization - to set system language, timezone, date and time format
 *	State is now loaded to new client form address from default organization as well.
+*	App performance improved
+*	You can set logs expiration in system settings.
 
 ### Changed
-*	Low traffic entries are removed from unknown devices grid
-*	You can set a default invoicing attributes such as Suspend Delay in system settings. Then you can define whether to this value should be used per client or you can override this value in client's edit page.
-*	Invoice overdue notifications are sent before the Suspension notification email.
+*	You can set a default invoicing attributes such as Suspend Delay in system settings. Then, this value will be used globally unless overridden in client's edit page.
+*	Now, invoice overdue notifications are sent before the Suspension notification email.
 *	NetFlow traffic lower than 1MB will no longer appear in Unknown devices. Eg. if you just ping non-existing IP, it will not show up in the Unknown device list.
 *	Better handling of Stripe webhook failures.
 *	By default, invoice label of the service plan is used in the invoice instead of the service name. But you can override this label manually per each service if you want.
