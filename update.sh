@@ -10,6 +10,7 @@ DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
 PATCH_STABILITY="latest"
+GITHUB_REPOSITORY="U-CRM/billing/master"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
@@ -61,7 +62,7 @@ patch__compose__fix_elastic_restart() {
 patch__compose__download_migrate_file() {
     if [[ ! -f docker-compose.migrate.yml ]]; then
         echo "Downloading docker compose migrate file."
-        curl -o docker-compose.migrate.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.migrate.yml
+        curl -o docker-compose.migrate.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.migrate.yml"
 
         return 0
     else
@@ -302,7 +303,7 @@ get_from_version() {
     local fromVersion
 
     if [[ ! -f docker-compose.version.yml ]]; then
-        curl -o docker-compose.version.yml https://raw.githubusercontent.com/U-CRM/billing/master/docker-compose.version.yml
+        curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
 
     currentComposeImage=$(grep -Eo "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')
