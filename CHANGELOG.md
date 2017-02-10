@@ -3,41 +3,41 @@
 ## 2.2.2-beta1 (2017-02-10)
 
 ### Added
-*	Introducing robust client contacts management. You can assign an unlimited number of client's contacts with email and phone. Also, you can specify the purpose for each email address, eg. different email for billing vs. general notifications.
+*	Introducing robust client contacts management. You can assign an unlimited number of client's contacts with email and phone. Also, you can specify the purpose for each email address, e.g. different email for billing vs. general notifications.
 *	And you can import clients with multiple contacts information using UCRM API and CSV import tool.
-*	You can also decide whether the client's email should be used as the client-zone username or not
+*	You can also decide whether the client's email should be used as the client-zone username or not.
 *	While creating a new service with deferred activation date, you can decide whether to block the service device IP until the service is active.
 *	Tax rounding option. You can choose whether to round the taxed amount for the sum of the invoice items (default) or per each invoice item.
-*	Better rounding support. Items prices can be defined with up to 6 decimal places while the final invoice items totals and invoice totals are rounded according to the currency decimal limit, eg. 2 for US dollar.
-*	More formatting options added to wysiwyg editors. For example, you can set font, color or edit the html source.
-*	Now, you will see all the spool emails immediately in the mailer log. All emails waiting in the queue are shown with flag "E-mail in queue"
-*	Emails sent during the demo mode is active are visibly marked in the mailer log.
-*	You can set or change the password for your client.
+*	Better rounding support. Item prices can be defined with up to 6 decimal places while the final invoice item totals and invoice totals are rounded according to the currency decimal limit, e.g. 2 for US dollar.
+*	More formatting options added to WYSIWYG editors. For example, you can set font, color or edit the HTML source.
+*	Now, you will see all the spool emails immediately in the mailer log. All emails waiting in the queue are shown with flag "E-mail in queue".
+*	Emails sent while the demo mode is active are visibly marked in the mailer log.
+*	You can set or change the password of your client.
 *	Better error message in case the encryption key is missing in the system.
 *	Warning shown when trying to assign a range of IPs to the client service because typically, a single IP is assigned to the service.
-*	New system settings section Localization - to set system language, timezone, date and time format
+*	New system settings section Localization - to set system language, timezone, date and time format.
 *	State is now loaded to new client form address from default organization as well.
-*	App performance improved
+*	App performance improved.
 *	You can set logs expiration in system settings.
 
 ### Changed
-*	You can set a default invoicing attributes such as Suspend Delay in system settings. Then, this value will be used globally unless overridden in client's edit page.
+*	You can set default invoicing attributes such as Suspend Delay in system settings. Then, this value will be used globally unless overridden in client's edit page.
 *	Now, invoice overdue notifications are sent before the Suspension notification email.
-*	NetFlow traffic lower than 1MB will no longer appear in Unknown devices. Eg. if you just ping non-existing IP, it will not show up in the Unknown device list.
+*	NetFlow traffic lower than 1 MB will no longer appear in Unknown devices. E.g. if you just ping non-existing IP, it will not show up in the Unknown device list.
 *	Better handling of Stripe webhook failures.
 *	By default, invoice label of the service plan is used in the invoice instead of the service name. But you can override this label manually per each service if you want.
 *	UX improved for editing network device.
-*	Now there are 6 decimal places allowed for invoice item quantity.
+*	Now 6 decimal places are allowed for invoice item quantity.
 
 ### Fixed
-*	Fixed Client Id auto increment when there are more than one organization in UCRM
-*	Word wrapping fixed in invoice PDF
-*	XSS vulnerability fixed for csv imports
+*	Fixed Client ID auto increment when there is more than one organization in UCRM.
+*	Word wrapping fixed in invoice PDF.
+*	XSS vulnerability fixed for CSV imports.
 *	The process of generating recurring invoices starts exactly at the hour specified in system settings.
-*	When clients are archived, their 'outage' or 'suspend' status is properly removed.
+*	When clients are archived, their "outage" or "suspend" status is properly removed.
 *	Fixed service surcharge order to be the same everywhere.
-*	Fixed taxable values in products and surcharges grid
-*	Fixed and improved detection of unknown devices connected to AirOs devices.
+*	Fixed taxable values in products and surcharges grid.
+*	Fixed and improved detection of unknown devices connected to airOS / RouterOS devices.
 *	Fixed Authorize.Net duplicate subscription error.
 
 ## 2.2.1 (2017-01-24)
