@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.2-beta1 (2017-02-10)
+## 2.2.2-beta1 (2017-02-13)
 
 ### Added
 *	Introducing robust client contacts management. You can assign an unlimited number of client's contacts with email and phone. Also, you can specify the purpose for each email address, e.g. different email for billing vs. general notifications.
