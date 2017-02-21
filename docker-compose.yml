@@ -25,6 +25,8 @@ services:
   elastic:
     image: elasticsearch:2
     restart: always
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
 
   sync_app:
     image: ubnt/ucrm-billing:latest
