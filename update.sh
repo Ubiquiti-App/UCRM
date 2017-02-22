@@ -106,6 +106,18 @@ patch__compose__add_ping_section() {
     fi
 }
 
+patch__compose__add_elasticsearch_volumes() {
+    if ! cat -vt docker-compose.yml | grep -Eq "/usr/share/elasticsearch/data";
+    then
+        echo "Updating Elasticsearch volumes configuration."
+        sed -i -e "s/image: elasticsearch:2/&\n    volumes:\n      - \.\/data\/elasticsearch:\/usr\/share\/elasticsearch\/data/g" docker-compose.yml
+
+        return 0
+    else
+        return 1
+    fi
+}
+
 patch__compose__add_rabbitmq() {
     if [[ "${PATCH_STABILITY}" != "beta" ]]; then
         return 1
@@ -135,7 +147,7 @@ patch__compose__correct_volumes() {
 patch__compose_env__fix_server_port() {
     if ! grep -q 'SERVER_PORT' docker-compose.env;
     then
-        SERVER_PORT=$(grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+        SERVER_PORT=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
         echo "Adding ${SERVER_PORT} as server port, you can change it in UCRM System > Settings > Application > Server port"
         echo "#used only in installation" >> docker-compose.env
         echo "SERVER_PORT=${SERVER_PORT}" >> docker-compose.env
@@ -145,7 +157,7 @@ patch__compose_env__fix_server_port() {
 patch__compose_env__fix_suspend_port() {
     if ! grep -q 'SERVER_SUSPEND_PORT' docker-compose.env;
     then
-        SERVER_SUSPEND_PORT=$(grep -A 20 "web_app" docker-compose.yml | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1)
+        SERVER_SUSPEND_PORT=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1)
         echo "Adding ${SERVER_SUSPEND_PORT} as suspend port, you can change it in UCRM System > Settings > Application > Server suspend port"
         echo "#used only in installation" >> docker-compose.env
         echo "SERVER_SUSPEND_PORT=${SERVER_SUSPEND_PORT}" >> docker-compose.env
@@ -176,7 +188,7 @@ patch__compose_env__fix_server_name() {
 compose__get_correct_volumes_path() {
     if ! ( cat -vt docker-compose.yml | grep -Eq "\.\/data\/ucrm:\/data" );
     then
-        cat -vt docker-compose.yml | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color="never" | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
+        cat -vt docker-compose.yml | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
     else
         echo ""
     fi
@@ -209,6 +221,9 @@ compose__run_update() {
         needsVolumesFix=1
     fi
     if patch__compose__add_ping_section; then
+        needsVolumesFix=1
+    fi
+    if patch__compose__add_elasticsearch_volumes; then
         needsVolumesFix=1
     fi
     if patch__compose__add_rabbitmq; then
@@ -271,7 +286,7 @@ containers__run_update() {
         then
             docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
         else
-            revertVersion=$(grep 'UCRM will be reverted to version' "${MIGRATE_OUTPUT}" | awk ' {print $NF}')
+            revertVersion=$(grep --color=never 'UCRM will be reverted to version' "${MIGRATE_OUTPUT}" | awk ' {print $NF}')
             if [[ "${revertVersion}" != "" ]]; then
                 containers__revert_update "${revertVersion}"
             else
@@ -306,10 +321,10 @@ get_from_version() {
         curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
 
-    currentComposeImage=$(grep -Eo "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')
+    currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')"
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" docker-compose.version.yml
 
-    fromVersion=$(docker-compose -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
+    fromVersion=$(docker-compose -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
     docker-compose -f docker-compose.version.yml rm -af > /dev/null 2>&1
 
     echo "${fromVersion}"
@@ -391,7 +406,7 @@ check_update_possible() {
 cleanup_old_images() {
     local oldImages
 
-    oldImages=$(docker images | grep "ubnt/ucrm-billing" | grep "<none>" | awk '{print $3}') || true
+    oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "<none>" | awk '{print $3}') || true
     if [[ "${oldImages:-}" -ne "" ]]; then
         echo "Removing old UCRM images"
         docker rmi "${oldImages}"
