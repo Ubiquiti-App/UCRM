@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.2.2-beta2 (2017-02-23)
+
+### Added
+*	UCRM API upgraded with new getters (of collections and single entities too) and new filters for Invoice getter. You can filter Invoices or Payments by the Create date. Please refer to [API documentation for UCRM beta](http://docs.ucrmbeta.apiary.io).
+*	Additionally, more attributes of Invoice and Payment can be retrieved using API, for example: invoice status, due date, etc.
+*	Enormous app speed improvement.
+
+### Changed
+*	Added Canadian provinces into the "States" select-box.
+*	PHP updated to v. 7.1.2.
+
+### Fixed
+*	Fixed detection of unknown devices connected to airOS network device (the false positives will disappear from the table after a week).
+*	Fixed data synchronization for some types of Mikrotik devices.
+*	Fixed crashes due to missing indexes of Elasticsearch. Now Elasticsearch data and indexes are persisted in `/home/ucrm/data`.
+*	Fixed count of unknown NetFlow devices.
+*	Fixed postponing the service suspension and the modal form for postponing always shows tomorrow at least. 
+*	Minor fixes and UX improvements.
+
 ## 2.2.2-beta1 (2017-02-13)
 
 ### Added
