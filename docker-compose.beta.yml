@@ -26,6 +26,8 @@ services:
   elastic:
     image: elasticsearch:2
     restart: always
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
 
   rabbitmq:
     image: rabbitmq:3
