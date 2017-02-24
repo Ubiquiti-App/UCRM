@@ -59,6 +59,14 @@ patch__compose__fix_elastic_restart() {
     fi
 }
 
+patch__compose__add_logging() {
+    if ! cat -vt docker-compose.yml | grep -Eq "    logging:";
+    then
+        echo "Updating logging configuration."
+        sed -i -e "s/^  [a-z_]\+:$/&\n    logging:\n      driver: \"json-file\"\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"/g" docker-compose.yml
+    fi
+}
+
 patch__compose__download_migrate_file() {
     if [[ ! -f docker-compose.migrate.yml ]]; then
         echo "Downloading docker compose migrate file."
@@ -210,6 +218,7 @@ compose__run_update() {
     patch__compose__add_elastic_links
     patch__compose__fix_postgres_restart
     patch__compose__fix_elastic_restart
+    patch__compose__add_logging
 
     if patch__compose__download_migrate_file; then
         needsVolumesFix=1
