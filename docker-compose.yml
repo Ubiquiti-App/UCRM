@@ -6,6 +6,11 @@ services:
     env_file: docker-compose.env
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   web_app:
     image: ubnt/ucrm-billing:latest
@@ -21,12 +26,22 @@ services:
       - 8081:81
       - 8443:443
     command: "server"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   elastic:
     image: elasticsearch:2
     restart: always
     volumes:
       - ./data/elasticsearch:/usr/share/elasticsearch/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   sync_app:
     image: ubnt/ucrm-billing:latest
@@ -38,6 +53,11 @@ services:
       - postgresql
       - elastic
     command: "sync"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   crm_invoice_send_email_app:
     image: ubnt/ucrm-billing:latest
@@ -49,6 +69,11 @@ services:
       - postgresql
       - elastic
     command: "crm_invoice_send_email"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   crm_draft_approve_app:
     image: ubnt/ucrm-billing:latest
@@ -60,6 +85,11 @@ services:
       - postgresql
       - elastic
     command: "crm_draft_approve"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   crm_search_devices_app:
     image: ubnt/ucrm-billing:latest
@@ -71,6 +101,11 @@ services:
       - postgresql
       - elastic
     command: "crm_search_devices"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   crm_netflow_app:
     image: ubnt/ucrm-billing:latest
@@ -84,6 +119,11 @@ services:
     ports:
       - 2055:2055/udp
     command: "crm_netflow"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   crm_ping_app:
     image: ubnt/ucrm-billing:latest
@@ -95,3 +135,8 @@ services:
       - postgresql
       - elastic
     command: "crm_ping"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
