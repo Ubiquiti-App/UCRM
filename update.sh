@@ -16,14 +16,21 @@ trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
 compose__backup() {
     echo "Backing up docker compose files."
-    cp docker-compose.yml docker-compose.yml."${DATE}".backup
-    cp docker-compose.env docker-compose.env."${DATE}".backup
+    if [[ ! -d ./docker-compose-backups ]]; then
+        mkdir ./docker-compose-backups
+
+        mv -f ./docker-compose.env.*.backup ./docker-compose-backups
+        mv -f ./docker-compose.yml.*.backup ./docker-compose-backups
+    fi
+
+    cp docker-compose.yml ./docker-compose-backups/docker-compose.yml."${DATE}".backup
+    cp docker-compose.env ./docker-compose-backups/docker-compose.env."${DATE}".backup
 }
 
 compose__restore() {
     echo "Reverting docker compose files."
-    cp -f docker-compose.yml."${DATE}".backup docker-compose.yml
-    cp -f docker-compose.env."${DATE}".backup docker-compose.env
+    cp -f ./docker-compose-backups/docker-compose.yml."${DATE}".backup docker-compose.yml
+    cp -f ./docker-compose-backups/docker-compose.env."${DATE}".backup docker-compose.env
 }
 
 patch__compose__add_elastic_section() {
@@ -429,6 +436,10 @@ cleanup_old_images() {
     fi
 }
 
+cleanup_old_backups() {
+    (cd ./docker-compose-backups && ls -tp | grep -v '/$' | tail -n +61 | xargs -I {} rm -- {})
+}
+
 do_update() {
     declare toVersion="${1}"
 
@@ -437,6 +448,7 @@ do_update() {
     containers__run_update "${toVersion}"
 
     cleanup_old_images
+    cleanup_old_backups
 }
 
 main() {
