@@ -416,7 +416,7 @@ cleanup_old_images() {
     local oldImages
 
     oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "<none>" | awk '{print $3}') || true
-    if [[ "${oldImages:-}" -ne "" ]]; then
+    if [[ "${oldImages:-}" != "" ]]; then
         echo "Removing old UCRM images"
         docker rmi "${oldImages}"
     fi
