@@ -440,12 +440,17 @@ cleanup_old_backups() {
     (cd ./docker-compose-backups && ls -tp | grep -v '/$' | tail -n +61 | xargs -I {} rm -- {})
 }
 
+flush_udp_conntrack() {
+    docker run --net=host --privileged --rm ubnt/ucrm-conntrack
+}
+
 do_update() {
     declare toVersion="${1}"
 
     compose__backup
     compose__run_update "${toVersion}"
     containers__run_update "${toVersion}"
+    flush_udp_conntrack
 
     cleanup_old_images
     cleanup_old_backups
