@@ -7,19 +7,19 @@
 *	URLs in email notifications are now clickable.
 
 ### Changed
-*	 'Tax rounding' parameter renamed to 'Invoice rounding' in System > Billing > Invoicing. There two options: 'Standard rounding', which is default and recommended and 'Precise non-rounded invoice item totals' which should be used only if you need to fix the service price with tax included. Note that this option has some limitations, see the in-app help for more details.
+*	"Tax rounding" parameter renamed to "Invoice rounding" in System > Billing > Invoicing. There are two options: "Standard rounding", which is default and recommended and "Precise non-rounded invoice item totals" which should be used only if you need to fix the service price with tax included. Note that this option has some limitations, see the in-app help for more details.
 
 ### Fixed
-*	Fixed NetFlow monitoring after UCRM update. UDP item in Conntrack table is purged using new update script.
+*	Fixed NetFlow monitoring after UCRM update. UDP item in conntrack table is purged using new update script.
 *	Fixed creating new client while no default organization is defined.
 *	Fixed overview of Billing reports.
-*	Fixed unknown devices count on dashboard.
-*	Fixed synchronization of RouterOs VLAN interfaces.
+*	Fixed unknown device count on dashboard.
+*	Fixed synchronization of RouterOS VLAN interfaces.
 *	Fixed deleting of archived clients.
 *	When service is deleted, related shaper rules are removed too.
-*	Fixed 'NetFlow unknown device' entries when its IP mathes the device interface primary IP.
+*	Fixed "NetFlow unknown device" entries when its IP matches the device interface primary IP.
 *	Fix unwanted auto-fill of form fields.
-*	Fixed csv import in non-UTF8 format.
+*	Fixed CSV import in non-UTF-8 encoding.
 *	Minor bug fixes.
 
 ## 2.2.2-beta2 (2017-02-23)
