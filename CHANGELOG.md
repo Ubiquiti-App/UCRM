@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.2-beta4 (2017-03-13)
+
+### Fixed
+*	Fixed failing PayPal payments due to wrong TLS 1.2 support.
+
 ## 2.2.2-beta3 (2017-03-10)
 
 ### Added
