@@ -182,6 +182,23 @@ patch__compose__add_rabbitmq() {
     fi
 }
 
+patch__compose__remove_draft_approve() {
+    if [[ "${PATCH_STABILITY}" != "beta" ]]; then
+        return 1
+    fi
+
+    if cat -vt docker-compose.yml | grep -Eq "  crm_draft_approve_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_draft_approve_app. Trying to remove."
+        sed -i -e '/crm_draft_approve_app/,/^  [^ ]/{//!d}' docker-compose.yml
+        sed -i -e '/crm_draft_approve_app/d' docker-compose.yml
+
+        return 0
+    else
+        return 1
+    fi
+}
+
 patch__compose__correct_volumes() {
     declare newPath="${1}"
 
@@ -276,6 +293,8 @@ compose__run_update() {
     if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
+
+    patch__compose__remove_draft_approve
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
