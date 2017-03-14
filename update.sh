@@ -19,8 +19,12 @@ compose__backup() {
     if [[ ! -d ./docker-compose-backups ]]; then
         mkdir ./docker-compose-backups
 
-        mv -f ./docker-compose.env.*.backup ./docker-compose-backups
-        mv -f ./docker-compose.yml.*.backup ./docker-compose-backups
+        if [[ -f ./docker-compose.env.*.backup ]]; then
+            mv -f ./docker-compose.env.*.backup ./docker-compose-backups
+        fi
+        if [[ -f ./docker-compose.yml.*.backup ]]; then
+            mv -f ./docker-compose.yml.*.backup ./docker-compose-backups
+        fi
     fi
 
     cp docker-compose.yml ./docker-compose-backups/docker-compose.yml."${DATE}".backup
