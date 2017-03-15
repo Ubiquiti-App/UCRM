@@ -334,7 +334,7 @@ containers__run_update() {
     docker-compose ps
 
     # wait for web container initialization and print its log
-    tail -f /home/ucrm/data/ucrm/log/ucrm/app/logs/webInitLog.log | sed '/^UCRM ready$/ q'
+    tail -f ./data/ucrm/log/ucrm/app/logs/webInitLog.log | sed '/^UCRM ready$/ q'
 }
 
 get_from_version() {
