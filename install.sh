@@ -98,7 +98,7 @@ install_docker_compose() {
         chmod +x /usr/local/bin/docker-compose
     fi
 
-    if ! (which docker-compose > /dev/nulsl 2>&1); then
+    if ! (which docker-compose > /dev/null 2>&1); then
         echo "Docker compose not installed. Please check previous logs. Aborting."
 
         exit 1
