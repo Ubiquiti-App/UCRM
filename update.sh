@@ -333,8 +333,13 @@ containers__run_update() {
     docker-compose up -d
     docker-compose ps
 
-    # wait for web container initialization and print its log
-    tail -f ./data/ucrm/log/ucrm/app/logs/webInitLog.log | sed '/^UCRM ready$/ q'
+    # print web container log and wait for its initialization ("UCRM ready" appears in the log)
+    containerName=$(docker-compose ps | grep "make server" | awk '{print $1}')
+    initLog="/tmp/UCRM_init.log"
+    echo "Booting UCRM"
+    docker exec -t ${containerName} touch ${initLog}
+    docker exec -t ${containerName} cat ${initLog} | grep -q "UCRM ready" && echo "UCRM ready" || \
+    docker exec -t ${containerName} tail -f ${initLog} | sed '/UCRM ready/ q'
 }
 
 get_from_version() {
