@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.2-beta5 (2017-03-20)
+
+### Changed
+*	Payment currency validation added for manual payment matching with an invoice.
+
+### Fixed
+*	Fixed transparent background of downloaded charts.
+*	Fixed restoring encryption key from UCRM backup when restoring on fresh installation.
+*	On linux kernels lower than 3.17 - fixed various crashes and failures to login into UCRM (PHP 7.1.3 incorporated)
+
 ## 2.2.2-beta4 (2017-03-13)
 
 ### Fixed
