@@ -14,6 +14,33 @@ GITHUB_REPOSITORY="U-CRM/billing/master"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
+check_yml() {
+    declare file="${1}"
+    declare appendFile="${2:-}"
+    local size
+
+    size=$(($(wc -c < "${file}")))
+    if [[ "${size}" = 0 ]]; then
+        echo "File ${file} is invalid. Try running the update script again and if it fails, contact UBNT support."
+
+        exit 1
+    fi
+
+    if [[ "${appendFile}" != "" ]]; then
+        if ! (docker-compose -f "${file}" -f "${appendFile}" config -q 2>/dev/null); then
+            echo "File ${file} is invalid. Try running the update script again and if it fails, contact UBNT support."
+
+            exit 1
+        fi
+    else
+        if ! (docker-compose -f "${file}" config -q 2>/dev/null); then
+            echo "File ${file} is invalid. Try running the update script again and if it fails, contact UBNT support."
+
+            exit 1
+        fi
+    fi
+}
+
 compose__backup() {
     echo "Backing up docker compose files."
     if [[ ! -d ./docker-compose-backups ]]; then
@@ -82,9 +109,12 @@ patch__compose__download_migrate_file() {
     if [[ ! -f docker-compose.migrate.yml ]]; then
         echo "Downloading docker compose migrate file."
         curl -o docker-compose.migrate.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.migrate.yml"
+        check_yml docker-compose.migrate.yml docker-compose.yml
 
         return 0
     else
+        check_yml docker-compose.migrate.yml docker-compose.yml
+
         return 1
     fi
 }
@@ -257,6 +287,8 @@ compose__run_update() {
     patch__compose_env__fix_server_port
     patch__compose_env__fix_suspend_port
     patch__compose_env__fix_server_name
+
+    check_yml docker-compose.yml
 }
 
 containers__is_revert_supported() {
@@ -340,6 +372,8 @@ get_from_version() {
     if [[ ! -f docker-compose.version.yml ]]; then
         curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
+
+    check_yml docker-compose.version.yml
 
     currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')"
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" docker-compose.version.yml
