@@ -367,7 +367,7 @@ containers__run_update() {
     docker-compose ps
 
     # print web container log and wait for its initialization
-    containerName=$(docker-compose ps | grep "make server" | awk '{print $1}')
+    containerName=$(docker-compose ps | grep -m1 "make server" | awk '{print $1}')
     echo "Booting UCRM"
     docker exec -t "${containerName}" bash -c 'touch /tmp/UCRM_init.log; spin="-\|/"; i=0; while true; do line=$(tail -1 /tmp/UCRM_init.log); i=$(( (i+1) %4 )); echo -ne "\r$line                             ${spin:$i:1}"; [ "$line" != "UCRM ready" ] || break; sleep 0.1; done'
     echo -e "\rUCRM ready"
