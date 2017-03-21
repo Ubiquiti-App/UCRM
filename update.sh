@@ -199,6 +199,23 @@ patch__compose__remove_draft_approve() {
     fi
 }
 
+patch__compose__remove_invoice_send_email() {
+    if [[ "${PATCH_STABILITY}" != "beta" ]]; then
+        return 1
+    fi
+
+    if cat -vt docker-compose.yml | grep -Eq "  crm_invoice_send_email_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_invoice_send_email_app. Trying to remove."
+        sed -i -e '/crm_invoice_send_email_app/,/^  [^ ]/{//!d}' docker-compose.yml
+        sed -i -e '/crm_invoice_send_email_app/d' docker-compose.yml
+
+        return 0
+    else
+        return 1
+    fi
+}
+
 patch__compose__correct_volumes() {
     declare newPath="${1}"
 
@@ -295,6 +312,7 @@ compose__run_update() {
     fi
 
     patch__compose__remove_draft_approve
+    patch__compose__remove_invoice_send_email
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
