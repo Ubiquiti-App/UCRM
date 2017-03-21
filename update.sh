@@ -45,13 +45,14 @@ compose__backup() {
     echo "Backing up docker compose files."
     if [[ ! -d ./docker-compose-backups ]]; then
         mkdir ./docker-compose-backups
+    fi
 
-        if [[ -f ./docker-compose.env.*.backup ]]; then
-            mv -f ./docker-compose.env.*.backup ./docker-compose-backups
-        fi
-        if [[ -f ./docker-compose.yml.*.backup ]]; then
-            mv -f ./docker-compose.yml.*.backup ./docker-compose-backups
-        fi
+    if [[ "" != "$(find . -maxdepth 1 -name 'docker-compose.env.*.backup' -print -quit)" ]]; then
+        mv -f docker-compose.env.*.backup ./docker-compose-backups
+    fi
+
+    if [[ "" != "$(find . -maxdepth 1 -name 'docker-compose.yml.*.backup' -print -quit)" ]]; then
+        mv -f docker-compose.yml.*.backup ./docker-compose-backups
     fi
 
     cp docker-compose.yml ./docker-compose-backups/docker-compose.yml."${DATE}".backup
@@ -475,7 +476,8 @@ cleanup_old_images() {
 }
 
 cleanup_old_backups() {
-    (cd ./docker-compose-backups && ls -tp | grep -v '/$' | tail -n +61 | xargs -I {} rm -- {})
+    (find . -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find . -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
 }
 
 flush_udp_conntrack() {
