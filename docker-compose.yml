@@ -19,6 +19,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     volumes:
       - ./data/ucrm:/data
     ports:
@@ -43,6 +44,34 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  rabbitmq:
+    image: rabbitmq:3
+    restart: always
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  supervisord:
+    image: ubnt/ucrm-billing:latest
+    restart: always
+    env_file: docker-compose.env
+    volumes:
+      - ./data/ucrm:/data
+    links:
+      - postgresql
+      - elastic
+      - rabbitmq
+    command: "supervisord"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   sync_app:
     image: ubnt/ucrm-billing:latest
     restart: always
@@ -52,6 +81,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     command: "sync"
     logging:
       driver: "json-file"
@@ -68,6 +98,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     command: "crm_invoice_send_email"
     logging:
       driver: "json-file"
@@ -84,6 +115,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     command: "crm_draft_approve"
     logging:
       driver: "json-file"
@@ -100,6 +132,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     command: "crm_search_devices"
     logging:
       driver: "json-file"
@@ -116,6 +149,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     ports:
       - 2055:2055/udp
     command: "crm_netflow"
@@ -134,6 +168,7 @@ services:
     links:
       - postgresql
       - elastic
+      - rabbitmq
     command: "crm_ping"
     logging:
       driver: "json-file"

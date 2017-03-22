@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.2 (2017-03-22)
+
+### Changed
+*	Map in client zone is hidden now when app keys are not set.
+
+### Fixed
+*	Fixed "egress-only" shaping on AirOS v8.
+*	Fixed blocked IPs synchronization on RouterOS when the synchronized IP is already blocked manually.
+
 ## 2.2.2-beta5 (2017-03-20)
 
 ### Changed

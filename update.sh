@@ -169,10 +169,6 @@ patch__compose__add_elasticsearch_volumes() {
 }
 
 patch__compose__add_rabbitmq() {
-    if [[ "${PATCH_STABILITY}" != "beta" ]]; then
-        return 1
-    fi
-
     if ! cat -vt docker-compose.yml | grep -Eq "  rabbitmq:";
     then
         echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
