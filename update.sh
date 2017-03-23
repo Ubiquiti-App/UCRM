@@ -9,7 +9,7 @@ set -o pipefail
 DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
-PATCH_STABILITY="latest"
+UPDATING_TO="latest"
 GITHUB_REPOSITORY="U-CRM/billing/master"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
@@ -63,6 +63,27 @@ compose__restore() {
     echo "Reverting docker compose files."
     cp -f ./docker-compose-backups/docker-compose.yml."${DATE}".backup docker-compose.yml
     cp -f ./docker-compose-backups/docker-compose.env."${DATE}".backup docker-compose.env
+}
+
+is_updating_to_version() {
+    declare to="${1}" required="${2}" allowLatest="${3}"
+    local toVersion
+
+    if [[ "${to}" = "beta" ]]; then
+        return 0
+    fi
+
+    if [[ "${to}" = "latest" ]] && [[ "${allowLatest}" = "1" ]]; then
+        return 0
+    fi
+
+    toVersion=$(echo "${to}" | awk -F. '{ printf("%d%03d%03d\n", $1, $2, $3) }')
+
+    if [[ "${toVersion}" -ge "${required}" ]]; then
+        return 0
+    fi
+
+    return 1
 }
 
 patch__compose__add_elastic_section() {
@@ -169,6 +190,10 @@ patch__compose__add_elasticsearch_volumes() {
 }
 
 patch__compose__add_rabbitmq() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2002002" 1); then
+        return 1
+    fi
+
     if ! cat -vt docker-compose.yml | grep -Eq "  rabbitmq:";
     then
         echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
@@ -183,7 +208,7 @@ patch__compose__add_rabbitmq() {
 }
 
 patch__compose__remove_draft_approve() {
-    if [[ "${PATCH_STABILITY}" != "beta" ]]; then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 0); then
         return 1
     fi
 
@@ -200,7 +225,7 @@ patch__compose__remove_draft_approve() {
 }
 
 patch__compose__remove_invoice_send_email() {
-    if [[ "${PATCH_STABILITY}" != "beta" ]]; then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 0); then
         return 1
     fi
 
@@ -279,9 +304,7 @@ compose__run_update() {
     local needsVolumesFix
     local volumesPath
 
-    if (echo "${toVersion}" | grep -q "beta"); then
-        PATCH_STABILITY="beta"
-    fi
+    UPDATING_TO="${toVersion}"
 
     needsVolumesFix=0
     volumesPath=$(compose__get_correct_volumes_path)
