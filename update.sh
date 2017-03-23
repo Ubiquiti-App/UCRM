@@ -419,7 +419,7 @@ containers__run_update() {
 
     fi
 
-    docker-compose up -d
+    docker-compose up -d --remove-orphans
     docker-compose ps
 
     # print web container log and wait for its initialization
