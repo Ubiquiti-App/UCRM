@@ -89,40 +89,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  crm_invoice_send_email_app:
-    image: ubnt/ucrm-billing:latest
-    restart: always
-    env_file: docker-compose.env
-    volumes:
-      - ./data/ucrm:/data
-    links:
-      - postgresql
-      - elastic
-      - rabbitmq
-    command: "crm_invoice_send_email"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  crm_draft_approve_app:
-    image: ubnt/ucrm-billing:latest
-    restart: always
-    env_file: docker-compose.env
-    volumes:
-      - ./data/ucrm:/data
-    links:
-      - postgresql
-      - elastic
-      - rabbitmq
-    command: "crm_draft_approve"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
   crm_search_devices_app:
     image: ubnt/ucrm-billing:latest
     restart: always
