@@ -274,6 +274,12 @@ start_docker_images() {
     /usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app && \
     /usr/local/bin/docker-compose up -d && \
     /usr/local/bin/docker-compose ps
+
+    # print web container log and wait for its initialization
+    containerName=$(/usr/local/bin/docker-compose ps | grep -m1 "make server" | awk '{print $1}')
+    echo "Booting UCRM"
+    docker exec -t "${containerName}" sh -c 'touch /tmp/UCRM_init.log; spin="-\|/"; i=0; while true; do line=$(tail -1 /tmp/UCRM_init.log); i=$(( (i+1) %4 )); printf "\r%-45s%s" "$line" "${spin:$i:1}"; [ "$line" != "UCRM ready" ] || break; sleep 0.1; done'
+    printf "\r%-55s\n" "UCRM ready"
 }
 
 main() {
