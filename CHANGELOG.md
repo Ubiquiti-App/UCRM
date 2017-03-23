@@ -1,5 +1,46 @@
 # Changelog
 
+## 2.3.0-beta1 (2017-03-23)
+
+### Added
+*	Customizable invoice templates.
+*	Added deferred service change. You can define a service change to be applied on the specified date. The service will be invoiced according to the current parameters till this date (excluding this day). The changes will be applied for the next period starting on this day (including this day).
+*	You can reactivate a terminated service (click on the service status label) and while doing so you can also modify any service parameters, e.g. change the billing attributes completely. 
+*	UCRM translations added for Spanish, Catalan, Swedish, Turkish, Dutch, Latvian, German, Portuguese and Portuguese (Brazil). Change the UCRM language in System > Settings > Localization.
+*	When deleting a client's service you can preserve the service device and attach it later to any other client's service. No need to define the device parameters again.
+*	You can automatically send notifications before an invoice gets overdue. Define how many days before the invoice maturity day the notification should be sent - See System > Billing.
+*	Server disk space utilization shown on the dashboard. This should prevent from crashes due to running out of free space.
+*	Added HTTPS support when UCRM is deployed on a cloud with load balancer. More details and guide here: https://help.ubnt.com/hc/en-us/articles/236007047-UCRM-Install-UCRM-Cloud-using-DigitalOcean
+*	You can view device password and you can allow this feature for other UCRM users in special permissions.
+*	You can define the default period start day for all new services - System > Billing. You can set a fixed day e.g. 1st day in month or a current day.
+*	Now you can manually change address and all other attributes on invoice - choose an invoice and click edit button.
+*	System notifications added to the header. You will be notified about files being ready to download or about important errors, warnings.
+*	All system logs (prod.log, nginx.log, etc) and all docker logs are compressed daily and the backups are pruned after 14 days.
+*	UX improvements in service form.
+*	Better UCRM booting log.
+
+### Changed
+*	Now, late fee is created for each overdue invoice even when they are related to the same service.
+*	Simplified and less restricted invoicing. Now, you are enabled to create an invoice with any billing period even already invoiced. You can also delete any invoice, not only the last one in the row.
+*	Less restricted custom payment subscriptions. You or your client can create a subscription at any time and with any amount. The subscription is no longer linked to a service. You can create the subscription for a client directly from the administrator's interface without a need to switch to the client-zone.
+*	Now, you are enabled to delete a service having some invoices. Additionally, you can decide whether to keep them or delete them as well.
+*	Invoice item quantity is rounded to 6 decimal places now.
+*	Invoice subtotal is always shown with the currency symbol. When it is possible, the symbol is also used for each invoice item total.
+*	Manual draft approving improved. All invoices are created in the background now.
+*	Improvements of recurring invoicing. Services with different periods can be invoiced together (on condition "invoice separately" flag is set to false).
+*	Backend maintenance scripts are executed more often. As a consequence, various notifications and status updates are executed earlier.
+*	UI improvement - items in price summary overview are shown as links so that you can click on them and edit them, e.g. surcharge, discount or the service itself.
+*	Company name is shown in header of client zone when a client of type "Company" is logged in.
+*	Editing ActiveFrom date of an active service is no longer possible.
+*	Update script improved. All config files are validated now.
+
+### Fixed
+*	Invoice is properly created when a service is still "Prepared" and you use forward invoicing.
+*	UCRM domain name or server IP is required when outgoing emails are used in UCRM.
+*	You are now enabled to set service individual price same as the plan price. This will make the service price fixed even when the plan price is changed in the future.
+*	UI fixes and improvements.
+*	Minor fixes and improvements.
+
 ## 2.2.2 (2017-03-22)
 
 ### Changed

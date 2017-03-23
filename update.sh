@@ -9,7 +9,7 @@ set -o pipefail
 DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
-PATCH_STABILITY="latest"
+UPDATING_TO="latest"
 GITHUB_REPOSITORY="U-CRM/billing/master"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
@@ -63,6 +63,27 @@ compose__restore() {
     echo "Reverting docker compose files."
     cp -f ./docker-compose-backups/docker-compose.yml."${DATE}".backup docker-compose.yml
     cp -f ./docker-compose-backups/docker-compose.env."${DATE}".backup docker-compose.env
+}
+
+is_updating_to_version() {
+    declare to="${1}" required="${2}" allowLatest="${3}"
+    local toVersion
+
+    if [[ "${to}" = "beta" ]]; then
+        return 0
+    fi
+
+    if [[ "${to}" = "latest" ]] && [[ "${allowLatest}" = "1" ]]; then
+        return 0
+    fi
+
+    toVersion=$(echo "${to}" | awk -F. '{ printf("%d%03d%03d\n", $1, $2, $3) }')
+
+    if [[ "${toVersion}" -ge "${required}" ]]; then
+        return 0
+    fi
+
+    return 1
 }
 
 patch__compose__add_elastic_section() {
@@ -169,12 +190,50 @@ patch__compose__add_elasticsearch_volumes() {
 }
 
 patch__compose__add_rabbitmq() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2002002" 1); then
+        return 1
+    fi
+
     if ! cat -vt docker-compose.yml | grep -Eq "  rabbitmq:";
     then
         echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
         echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n    command: \"supervisord\"" >> docker-compose.yml
         echo "Adding RabbitMQ container links."
         sed -i -e "s/      - elastic/&\n      - rabbitmq/g" docker-compose.yml
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_draft_approve() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 0); then
+        return 1
+    fi
+
+    if cat -vt docker-compose.yml | grep -Eq "  crm_draft_approve_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_draft_approve_app. Trying to remove."
+        sed -i -e '/crm_draft_approve_app/,/^  [^ ]/{//!d}' docker-compose.yml
+        sed -i -e '/crm_draft_approve_app/d' docker-compose.yml
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_invoice_send_email() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 0); then
+        return 1
+    fi
+
+    if cat -vt docker-compose.yml | grep -Eq "  crm_invoice_send_email_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_invoice_send_email_app. Trying to remove."
+        sed -i -e '/crm_invoice_send_email_app/,/^  [^ ]/{//!d}' docker-compose.yml
+        sed -i -e '/crm_invoice_send_email_app/d' docker-compose.yml
 
         return 0
     else
@@ -245,9 +304,7 @@ compose__run_update() {
     local needsVolumesFix
     local volumesPath
 
-    if (echo "${toVersion}" | grep -q "beta"); then
-        PATCH_STABILITY="beta"
-    fi
+    UPDATING_TO="${toVersion}"
 
     needsVolumesFix=0
     volumesPath=$(compose__get_correct_volumes_path)
@@ -276,6 +333,9 @@ compose__run_update() {
     if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
+
+    patch__compose__remove_draft_approve
+    patch__compose__remove_invoice_send_email
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
@@ -359,8 +419,24 @@ containers__run_update() {
 
     fi
 
-    docker-compose up -d
+    docker-compose up -d --remove-orphans
     docker-compose ps
+
+    # print web container log and wait for its initialization
+    containerName=$(docker-compose ps | grep -m1 "make server" | awk '{print $1}')
+    docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
+    		echo "UCRM is booting now, will be available soon"; \
+    	else \
+    		echo "Booting UCRM"; spin="-\|/"; i=0; \
+    		while true; \
+    			do line=$(tail -1 /tmp/UCRM_init.log); \
+    			i=$(( (i+1) %4 )); \
+    			printf "\r%-45s%s" "$line" "${spin:$i:1}"; \
+    			[ "$line" != "UCRM ready" ] || break; \
+    			sleep 0.1; \
+    		done; \
+    		printf "\r%-55s\n" "UCRM ready"; \
+    	fi'
 }
 
 get_from_version() {
