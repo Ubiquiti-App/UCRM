@@ -5,14 +5,14 @@
 ### Added
 *	Customizable invoice templates.
 *	Added deferred service change. You can define a service change to be applied on the specified date. The service will be invoiced according to the current parameters till this date (excluding this day). The changes will be applied for the next period starting on this day (including this day).
-*	You can reactivate a terminated service (click on the service status label) and while doing so you can also modify any service parameters, eg. change the billing attributes completely. 
+*	You can reactivate a terminated service (click on the service status label) and while doing so you can also modify any service parameters, e.g. change the billing attributes completely. 
 *	UCRM translations added for Spanish, Catalan, Swedish, Turkish, Dutch, Latvian, German, Portuguese and Portuguese (Brazil). Change the UCRM language in System > Settings > Localization.
 *	When deleting a client's service you can preserve the service device and attach it later to any other client's service. No need to define the device parameters again.
 *	You can automatically send notifications before an invoice gets overdue. Define how many days before the invoice maturity day the notification should be sent - See System > Billing.
 *	Server disk space utilization shown on the dashboard. This should prevent from crashes due to running out of free space.
-*	Added HTTPS support when UCRM is deployed on a cloud with load balancer. More details and guide here: https://help.ubnt.com/hc/en-us/articles/236007047-UCRM-Install-UCRM-Cloud-using-DigitalOcean#HTTPS Support
-*	You can view device password and you can allow this feature for other UCRM users, in special permissions.
-*	You can define the default period start day for all new services - System > Billing. You can set a fix day eq. 1st day in month or a current day.
+*	Added HTTPS support when UCRM is deployed on a cloud with load balancer. More details and guide here: https://help.ubnt.com/hc/en-us/articles/236007047-UCRM-Install-UCRM-Cloud-using-DigitalOcean
+*	You can view device password and you can allow this feature for other UCRM users in special permissions.
+*	You can define the default period start day for all new services - System > Billing. You can set a fixed day e.g. 1st day in month or a current day.
 *	Now you can manually change address and all other attributes on invoice - choose an invoice and click edit button.
 *	System notifications added to the header. You will be notified about files being ready to download or about important errors, warnings.
 *	All system logs (prod.log, nginx.log, etc) and all docker logs are compressed daily and the backups are pruned after 14 days.
