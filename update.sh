@@ -73,8 +73,12 @@ is_updating_to_version() {
         return 0
     fi
 
-    if [[ "${to}" = "latest" ]] && [[ "${allowLatest}" = "1" ]]; then
-        return 0
+    if [[ "${to}" = "latest" ]]; then
+        if [[ "${allowLatest}" = "1" ]]; then
+            return 0
+        else
+            return 1
+        fi
     fi
 
     toVersion=$(echo "${to}" | awk -F. '{ printf("%d%03d%03d\n", $1, $2, $3) }')
@@ -334,8 +338,8 @@ compose__run_update() {
         needsVolumesFix=1
     fi
 
-    patch__compose__remove_draft_approve
-    patch__compose__remove_invoice_send_email
+    patch__compose__remove_draft_approve || true
+    patch__compose__remove_invoice_send_email || true
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
