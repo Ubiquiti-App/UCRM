@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.3 (2017-03-30)
+
+### Fixed
+*	Fixed invoice creating with empty surcharge label.
+*	Fixed import of airCRM database having email duplicates.
+*	Fixed discount rounding. Now, when a service with discount is invoiced manually, the negative amount of discount is rounded in the same way as all other positive numbers on the invoice.
+*	Fixed bug when creating an unattached payment with undefined currency.
+*	Fixed date time of device outage due to the wrong time zone used. Only new entries will be fixed.
+*	Fixed form for creating a new refund.
+
 ## 2.3.0-beta1 (2017-03-23)
 
 ### Added
