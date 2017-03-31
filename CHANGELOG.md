@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.3.0-beta2 (2017-03-31)
+
+### Added
+*	Papua New Guinean kina currency added.
+
+### Changed
+*	Surcharge invoice label improved. When not defined per service, global surcharge label will be used.
+*	Additionally, "name" attribute of service surcharge has been removed from UCRM API.
+
+### Fixed
+*	Fixed failures in modal window for editing a service which has been terminated. 
+*	Fixed error when deleting payment subscription which has been already removed from Authorize.Net.
+*	Fixed crashes when generating too large billing report.
+*	Translations update and fixes, better word wrapping on several places.
+*	Fixed translations usage in "new invoice" email. Change of UCRM language setting is applied properly in all email notifications.
+
 ## 2.2.3 (2017-03-30)
 
 ### Fixed
