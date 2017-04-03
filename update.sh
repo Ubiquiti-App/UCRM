@@ -566,7 +566,7 @@ do_update() {
     compose__backup
     compose__run_update "${toVersion}"
     containers__run_update "${toVersion}"
-    flush_udp_conntrack
+    flush_udp_conntrack || true
 
     cleanup_old_images
     cleanup_old_backups
