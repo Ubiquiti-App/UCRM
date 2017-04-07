@@ -10,7 +10,7 @@
 
 ### Fixed
 *	Crashes when exporting large billing reports (memory limits increased).
-*	QoS not being updated when service changed (when service plan upgraded/downgraded to another one).
+*	QoS not being updated when service changed (when service plan upgraded / downgraded to another one).
 *	Price of service surcharge could not be set to $0.
 *	Integer numbers were not allowed in UCRM API along with float numbers. For example: both formats $10 and $10.00 are now valid.
 *	False positive alert in header notifications. In some cases, new notification sign was shown even when there was no new notification.
