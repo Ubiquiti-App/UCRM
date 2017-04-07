@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.3.0-beta3 (2017-04-07)
+
+### Changed
+*	Invoice item quantity is now shown along with the unit label such as "pcs", "meters", etc.
+*	Flash message is shown when the Elastic search fails for any reason.
+*	Guide for Stripe settings updated to accommodate new Stripe dashboard.
+*	UCRM system logging improved (unimportant ping notices are ignored).
+
+### Fixed
+*	Crashes when exporting large billing reports (memory limits increased).
+*	QoS not being updated when service changed (when service plan upgraded / downgraded to another one).
+*	Price of service surcharge could not be set to $0.
+*	Integer numbers were not allowed in UCRM API along with float numbers. For example: both formats $10 and $10.00 are now valid.
+*	False positive alert in header notifications. In some cases, new notification sign was shown even when there was no new notification.
+*	Translations fixes and updates.
+
 ## 2.3.0-beta2 (2017-03-31)
 
 ### Added
