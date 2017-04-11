@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0-beta4 (2017-04-11)
+
+### Fixed
+*	Wrong total untaxed amount in billing reports.
+*	Missing edit button added for drafts in the invoice grid.
+*	Removed false client's credit entries if they possibly still exist after a related payment is unmatched from client.
+*	Fixed possible failures of RouterOS device sync due to wrong SSID format.
+
 ## 2.3.0-beta3 (2017-04-07)
 
 ### Changed
