@@ -20,38 +20,37 @@ check_system() {
     local lsb_dist
     local dist_version
 
-    if [ -z "${lsb_dist:-}" ] && [ -r /etc/lsb-release ]; then
+    if [[ "" = "${lsb_dist:-}" ]] && [[ -r /etc/lsb-release ]]; then
         lsb_dist="$(. /etc/lsb-release && echo "${DISTRIB_ID:-}")"
     fi
 
-    if [ -z "${lsb_dist:-}" ] && [ -r /etc/debian_version ]; then
+    if [[ "" = "${lsb_dist:-}" ]] && [[ -r /etc/debian_version ]]; then
         lsb_dist="debian"
     fi
 
-    if [ -z "${lsb_dist:-}" ] && [ -r /etc/fedora-release ]; then
+    if [[ "" = "${lsb_dist:-}" ]] && [[ -r /etc/fedora-release ]]; then
         lsb_dist="fedora"
     fi
 
-    if [ -z "${lsb_dist:-}" ] && [ -r /etc/oracle-release ]; then
+    if [[ "" = "${lsb_dist:-}" ]] && [[ -r /etc/oracle-release ]]; then
         lsb_dist="oracleserver"
     fi
 
-    if [ -z "${lsb_dist:-}" ]; then
-        if [ -r /etc/centos-release ] || [ -r /etc/redhat-release ]; then
+    if [[ "" = "${lsb_dist:-}" ]]; then
+        if [[ -r /etc/centos-release ]] || [[ -r /etc/redhat-release ]]; then
         lsb_dist="centos"
         fi
     fi
 
-    if [ -z "$lsb_dist" ] && [ -r /etc/os-release ]; then
+    if [[ "" = "${lsb_dist:-}" ]] && [[ -r /etc/os-release ]]; then
         lsb_dist="$(. /etc/os-release && echo "${ID:-}")"
     fi
 
     lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
 
     case "$lsb_dist" in
-
         ubuntu)
-        if [ -z "${dist_version:-}" ] && [ -r /etc/lsb-release ]; then
+        if [[ "" = "${dist_version:-}" ]] && [[ -r /etc/lsb-release ]]; then
             dist_version="$(. /etc/lsb-release && echo "${DISTRIB_CODENAME:-}")"
         fi
         ;;
@@ -61,20 +60,33 @@ check_system() {
         ;;
 
         *)
-        if [ -z "${dist_version:-}" ] && [ -r /etc/os-release ]; then
+        if [[ "" = "${dist_version:-}" ]] && [[ -r /etc/os-release ]]; then
             dist_version="$(. /etc/os-release && echo "${VERSION_ID:-}")"
         fi
         ;;
 
     esac
 
-    if [ "${lsb_dist}" = "ubuntu" ] && [ "${dist_version}" != "xenial" ] || [ "${lsb_dist}" = "debian" ] && [ "${dist_version}" != "8" ]; then
-        echo "Unsupported distribution."
-        echo "Supported was: Ubuntu Xenial and Debian 8."
-        echo "${lsb_dist}"
-        echo "${dist_version}"
+    if [[ "${lsb_dist}-${dist_version}" != "ubuntu-xenial" ]] && [[ "${lsb_dist}-${dist_version}" != "debian-8" ]]; then
+        echo "Your OS (${lsb_dist} ${dist_version}) is not officially supported."
+        echo "Officially supported operating systems are: Ubuntu Xenial and Debian 8."
 
-        exit 1
+        local continueUnsupported
+
+        while true; do
+            read -r -p "Do you still wish to continue? [Y/n]: " continueUnsupported
+
+            case "${continueUnsupported}" in
+                [yY][eE][sS]|[yY])
+                    return 0
+                    break;;
+                [nN][oO]|[nN])
+                    exit 1
+                    break;;
+                *)
+                    ;;
+            esac
+        done
     fi
 }
 
@@ -109,7 +121,11 @@ create_user() {
     if (which getent > /dev/null 2>&1); then
         if [ -z "$(getent passwd "${UCRM_USER}")" ]; then
             echo "Creating user ${UCRM_USER}."
-            adduser --disabled-password --gecos "" "${UCRM_USER}" || true
+            if (which adduser > /dev/null 2>&1); then
+                adduser --disabled-password --gecos "" "${UCRM_USER}" || true
+            elif (which useradd > /dev/null 2>&1); then
+                useradd "${UCRM_USER}" || true
+            fi
             usermod -aG docker "${UCRM_USER}" || true
         fi
     fi
