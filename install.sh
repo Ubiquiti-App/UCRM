@@ -293,9 +293,19 @@ start_docker_images() {
 
     # print web container log and wait for its initialization
     containerName=$(/usr/local/bin/docker-compose ps | grep -m1 "make server" | awk '{print $1}')
-    echo "Booting UCRM"
-    docker exec -t "${containerName}" sh -c 'touch /tmp/UCRM_init.log; spin="-\|/"; i=0; while true; do line=$(tail -1 /tmp/UCRM_init.log); i=$(( (i+1) %4 )); printf "\r%-45s%s" "$line" "${spin:$i:1}"; [ "$line" != "UCRM ready" ] || break; sleep 0.1; done'
-    printf "\r%-55s\n" "UCRM ready"
+    docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
+    		echo "UCRM is booting now, will be available soon"; \
+    	else \
+    		echo "Booting UCRM"; spin="-\|/"; i=0; \
+    		while true; \
+    			do line=$(tail -1 /tmp/UCRM_init.log); \
+    			i=$(( (i+1) %4 )); \
+    			printf "\r%-45s%s" "$line" "${spin:$i:1}"; \
+    			[ "$line" != "UCRM ready" ] || break; \
+    			sleep 0.1; \
+    		done; \
+    		printf "\r%-55s\n" "UCRM ready"; \
+    	fi'
 }
 
 main() {
