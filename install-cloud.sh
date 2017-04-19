@@ -19,7 +19,7 @@ sysctl vm.swappiness=10
 echo "vm.swappiness=10" >> /etc/sysctl.conf
 sysctl vm.vfs_cache_pressure=50
 echo "vm.vfs_cache_pressure = 50" >> /etc/sysctl.conf
-sudo swapon -s
+swapon -s
 echo "swap file created"
 
 # Install UCRM
