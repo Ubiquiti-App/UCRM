@@ -16,8 +16,9 @@ echo "vm.swappiness=10" >> /etc/sysctl.conf
 sysctl vm.vfs_cache_pressure=50
 echo "vm.vfs_cache_pressure = 50" >> /etc/sysctl.conf
 
+# Force using swap without need to reboot
 swapoff -a
 swapon -a
 swapon -s
 
-echo "swap file created"
+echo "Swap file created"
