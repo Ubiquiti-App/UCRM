@@ -1,19 +1,5 @@
 # Changelog
 
-## 2.3.0 (2017-04-20)
-
-### Changed
-*	Escaping of possibly harmful strings in csv exports.
-
-### Fixed
-*	Fixed discount rounding to decimal places allowed by the currency.
-*	Fixed PayPal payment failures for amounts greater than $999.
-*	UCRM API fixed. When getting invoices or payments using date range limit, the end date is now included to the filter.
-*	Elasticsearch failures when found entities have just been deleted.
-*	Invoice maturity days must not be a negative number now.
-*	Possible privilege escalation in the client impersonation feature.
-*	Form submit button not working in Microsoft Edge and Internet Explorer browsers.
-
 ## 2.3.0-beta4 (2017-04-11)
 
 ### Fixed
