@@ -7,4 +7,8 @@
 INSTALL_CLOUD=true
 CLOUD_CONF="/tmp/cloud_conf"
 
+# Set up swap file
+. /tmp/setup-swap.sh
+
+# Install UCRM
 . /tmp/install.sh
