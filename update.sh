@@ -537,10 +537,11 @@ check_update_possible() {
 cleanup_old_images() {
     local oldImages
 
-    oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "<none>" | awk '{print $3}') || true
+    oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "<none>" | awk '{print $3}' | tr '\r\n' ' ' | xargs) || true
     if [[ "${oldImages:-}" != "" ]]; then
         echo "Removing old UCRM images"
-        docker rmi "${oldImages}"
+        # don't double quote, we need word splitting here
+        docker rmi ${oldImages}
     fi
 
     if (docker system --help > /dev/null 2>&1);
