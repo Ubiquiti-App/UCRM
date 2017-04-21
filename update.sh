@@ -212,7 +212,7 @@ patch__compose__add_rabbitmq() {
 }
 
 patch__compose__remove_draft_approve() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 0); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 1); then
         return 1
     fi
 
@@ -229,7 +229,7 @@ patch__compose__remove_draft_approve() {
 }
 
 patch__compose__remove_invoice_send_email() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 0); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2003000" 1); then
         return 1
     fi
 
