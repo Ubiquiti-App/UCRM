@@ -290,8 +290,10 @@ start_docker_images() {
     /usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app && \
     /usr/local/bin/docker-compose up -d && \
     /usr/local/bin/docker-compose ps
+}
 
-    # print web container log and wait for its initialization
+detect_instal_finished() {
+	# print web container log and wait for its initialization
     containerName=$(/usr/local/bin/docker-compose ps | grep -m1 "make server" | awk '{print $1}')
     docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
     		echo "UCRM is booting now, will be available soon"; \
@@ -306,6 +308,14 @@ start_docker_images() {
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
     	fi'
+
+    # Notify about failure if exists and UCRM_init.log was created
+    docker exec -t "${containerName}" bash -c 'if [[ -f /tmp/UCRM_init.log ]]; then \
+    		lastLog=$(</tmp/UCRM_init.log); \
+    		if [ "$lastLog" != "UCRM ready" ]; then \
+    			printf "UCRM installation failed.\n"; \
+    		fi; \
+    	fi'
 }
 
 main() {
@@ -316,6 +326,7 @@ main() {
     download_docker_compose_files
     download_docker_images
     start_docker_images
+    detect_instal_finished
 
     exit 0
 }
