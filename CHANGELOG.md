@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.1 (2017-04-26)
+
+### Added
+*	Client ID can be added to the invoice template using the new placeholder "client.userIdent".
+
+### Fixed
+*	Better escaping of possibly harmful strings in CSV exports.
+*	Fixed QoS rules synchronization on airOS devices in case service plan speed values are removed.
+
 ## 2.3.0 (2017-04-21)
 
 ### Changed
