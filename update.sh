@@ -442,15 +442,7 @@ detect_update_finished() {
     			sleep 0.1; \
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    	fi'
-
-    # Notify about failure if exists and UCRM_init.log was created
-    docker exec -t "${containerName}" bash -c 'if [[ -f /tmp/UCRM_init.log ]]; then \
-    		lastLog=$(</tmp/UCRM_init.log); \
-    		if [ "$lastLog" != "UCRM ready" ]; then \
-    			printf "UCRM update failed.\nPlease send update.log to the UCRM community forum.\n"; \
-    		fi; \
-    	fi'
+    	fi'  || printf "\nUCRM update failed.\nPlease send update.log to UCRM Community Forum.\n"
 }
 
 get_from_version() {
