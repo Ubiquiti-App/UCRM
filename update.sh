@@ -442,7 +442,7 @@ detect_update_finished() {
     			sleep 0.1; \
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    	fi'  || printf "\nUCRM update failed.\nPlease send update.log to UCRM Community Forum.\n"
+    	fi'  || (printf "\n------------------\nUCRM UPDATE FAILED!\nPlease send update.log to UCRM Community Forum.\n" && exit 1)
 }
 
 get_from_version() {
