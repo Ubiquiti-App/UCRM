@@ -425,7 +425,9 @@ containers__run_update() {
 
     docker-compose up -d --remove-orphans
     docker-compose ps
+}
 
+detect_update_finished() {
     # print web container log and wait for its initialization
     containerName=$(docker-compose ps | grep -m1 "make server" | awk '{print $1}')
     docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
@@ -440,7 +442,7 @@ containers__run_update() {
     			sleep 0.1; \
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    	fi'
+    	fi'  || (printf "\n------------------\nUCRM UPDATE FAILED!\nPlease send update.log to UCRM Community Forum.\n" && exit 1)
 }
 
 get_from_version() {
@@ -568,6 +570,7 @@ do_update() {
     compose__run_update "${toVersion}"
     containers__run_update "${toVersion}"
     flush_udp_conntrack || true
+    detect_update_finished
 
     cleanup_old_images
     cleanup_old_backups
