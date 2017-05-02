@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.2 (2017-05-02)
+
+### Fixed
+*	Possibly invalid invoice numbers are fixed before invoice PDF is created.
+*	Proper taxed amount rounding on "service show page" is applied in the same way as on an invoice.
+*	Fixed Stripe payment issue with invalid parameters.
+*	Minor bug fixes.
+
 ## 2.3.1 (2017-04-26)
 
 ### Added
