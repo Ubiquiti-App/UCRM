@@ -24,6 +24,7 @@
 *	UX Improvements and minor fixes
 
 ### Changed
+*	Invoice rounding mode "Precise non-rounded item totals" is deprecated now. It was used as a temporary workaround for determining the final service price with tax included. Now, we strongly recommend switching to the new Pricing Mode called "tax inclusive pricing".
 *	Exports of Billing reports are now generated in the background. When finished, you can download it in System > Tools > Downloads
 *	Service surcharge price can be left empty. Then, the default system surcharge price will be used. If left empty, the price will be updated on each service when system default is changed.
 *	Changing payment currency is now allowed when matching it with an invoice.
@@ -35,7 +36,7 @@
 ### Fixed
 *	Excessive restarts of CPE devices are eliminated. Shaper rules are now applied only when qos-related parameters are changed.
 *	Now, device status is detected also before the first synchronization is done.
-*	"Last successful synchronization" of a device shows really the date of last successful sync not the last sync.
+*	"Last successful synchronization" of a device now really shows the date of last successful sync and not the last sync attempt.
 
 ## 2.3.2 (2017-05-02)
 
