@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.4.0-beta1 (2017-05-03)
+
+### Added
+*	Added fully automated HTTPS setup. Now, you can set up SSL certificates using Let's Encrypt. UCRM will automatically handle everything for you, including certificate renewal.
+*	New Client Documents module added. You can upload any document related to your client, such as contracts, images, PDF files, etc.
+*	FCC 477 Reporting. Two CSV exports (Fixed Broadband Deployment, Fixed Broadband Subscription) are available in System > Tools > FCC Reports
+*	Tax inclusive pricing. Now, you can define service or product prices with tax included. You can switch to this pricing mode in System > Billing or in the initial setup wizard.
+*	Added device management IP. Now, you can provide a CPE or any other device of your network with a management IP. Then, this IP will be used for all UCRM connections to the device (sync, outage detection and signal statistics) while the suspension will normally be applied to standard IP(s) of the CPE device.
+*	Now, you can search client, invoice, device or site by their notes. (In the header search bar)
+*	Now, the "new drafts created" notification contains a brief overview of the invoices with a link to each of them. If you have already modified the content of this notification, you can add this overview manually in System > Notifications settings.
+*	Date, when the next recurring invoice will be generated, is shown on service view page.
+*	UCRM backup extended. Now you can define whether to backup also important files and documents along with the whole database. (System > Tools > Backup)
+*	On device view page, IP addresses and notes are now included in interface list.
+*	Now, there are two types of "new invoice" notifications for administrators - for drafts and for auto-approved invoices. You can customize both or even turn them off (in System > Notifications > Settings).
+*	NetFlow graphs refresh interval can be set up in System > Settings > Netflow
+*	UCRM API improvements, you can edit client's services and invoices. You can also get invoice templates stored in UCRM.
+*	All notifications and emails can be turned on / off in System > Notifications > Settings. You can even suppress invoice sending.
+*	You can now define the minimal data traffic for "NetFlow unknown device" detection.
+*	Decimal and thousand separators can be defined in System > Settings > Localization
+*	CSRF protection for several pages.
+*	Notification about new UCRM version added to header toolbar.
+*	UX Improvements and minor fixes
+
+### Changed
+*	Exports of Billing reports are now generated in the background. When finished, you can download it in System > Tools > Downloads
+*	Service surcharge price can be left empty. Then, the default system surcharge price will be used. If left empty, the price will be updated on each service when system default is changed.
+*	Changing payment currency is now allowed when matching it with an invoice.
+*	While terminating Demo mode, all files are deleted now (when factory reset mode is chosen).
+*	Improvements of NetFlow auto-setup for EdgeRouters. NetFlow v.9 and memory table disabling are set by default to improve the router performance.
+*	Invoice discount validation improved, now only 0-100% is a valid invoice discount.
+*	UCRM Translations updated.
+
+### Fixed
+*	Excessive restarts of CPE devices are eliminated. Shaper rules are now applied only when qos-related parameters are changed.
+*	Now, device status is detected also before the first synchronization is done.
+*	"Last successful synchronization" of a device shows really the date of last successful sync not the last sync.
+
 ## 2.3.2 (2017-05-02)
 
 ### Fixed
