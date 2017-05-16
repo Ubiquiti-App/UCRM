@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.3 (2017-05-16)
+
+### Fixed
+*	Suspension not working and suspension notification repeatedly sent every hour. This might happen after the "Demo mode" has been terminated.
+
+### Added
+
+
 ## 2.4.0-beta1 (2017-05-03)
 
 ### Added
