@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.4.0-beta2 (2017-05-16)
+
+### Added
+*	New filter for device outages grid. Now, you can filter out all the outages of devices with turned off outage notifications.
+*	SZL (Swazi Lilangeni) currency added.
+
+### Changed
+*	When client postpones the suspension, the suspension will be reactivated after 24 hours (before, it was reactivated after the today's midnight).
+*	Higher contrast added for input fields to improve user experience when UCRM is used outside under the sun.
+*	PHP upgraded to v. 7.1.5.
+
+### Fixed
+*	Fixed getting all VLAN interfaces and advanced information from airOS devices.
+*	Fixed wrong timezone being used giving wrong results for several actions and views. Now the proper timezone of your UCRM is always used.
+*	Added CSRF protection.
+*	Minor fixes.
+
 ## 2.3.3 (2017-05-16)
 
 ### Fixed
