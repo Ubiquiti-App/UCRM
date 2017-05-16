@@ -12,7 +12,7 @@
 *	PHP upgraded to v. 7.1.5.
 
 ### Fixed
-*	Fixed getting all VLAN interfaces and advanced information from AirOS devices.
+*	Fixed getting all VLAN interfaces and advanced information from airOS devices.
 *	Fixed wrong timezone being used giving wrong results for several actions and views. Now the proper timezone of your UCRM is always used.
 *	Added CSRF protection.
 *	Minor fixes.
