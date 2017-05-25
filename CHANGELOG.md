@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.4.0 (2017-05-25)
+
+### Fixed
+*	Failing to mark all header notifications as read.
+*	Grid sorting errors, various form validations and other minor fixes.
+*	Failing Authorize.Net subscriptions due to a long client name.
+*	XSS Vulnerability fixed.
+*	UX fixes and improvements.
+
 ## 2.4.0-beta2 (2017-05-16)
 
 ### Added
