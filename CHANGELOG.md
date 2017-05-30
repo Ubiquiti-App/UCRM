@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.1 (2017-05-30)
+
+### Fixed
+*	Postpone suspension button not working on client's suspension (walled garden) page. 
+
 ## 2.4.0 (2017-05-25)
 
 ### Fixed
