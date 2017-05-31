@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.5.0-beta1 (2017-05-31)
+
+### Added
+*	New Scheduling Module. Create a job, monitor its life-cycle, assign it to an administrator. Additionally, all jobs can be exported and linked to your own calendar (iCal) or managed by UCRM API.
+*	Antiflood and Throttler for UCRM mailer. You can turn on these new features to accommodate the needs of your mail server.
+*	Custom Client Attributes. You can create a custom attribute and associate it to a client. You can also modify the invoice template to include that attribute.
+*	Courtesy credit. You can create courtesy credit for a client. This works as any other payment, which increases client's credit but this credit cannot be refunded.
+*	UCRM translations per administrator. Each administrator can set up his own language in the user profile. This will affect the user's view while the app localization remains applied to invoicing and client zone (still configurable in System > Settings > Localization).
+*	IPpay one-time payments integrated into UCRM.
+*	New placeholders are now available in custom invoice template. For example client's account standing or credit can be added to the invoice now.
+*	Late fees can be configured separately regardless of the suspension feature being active. You can also define the delay which will determine when the late fee will be applied after the due date.
+*	Top downloaders list. View all NetFlow data for all the clients. See Dashboard > Top downloaders > Show all clients.
+*	Added Data Usage overview in a grid on client's service page. The usage is organized according to the service periods. This can be used for manual data usage billing.
+*	Minimum unpaid amount to trigger suspension. Now, you can define the minimum unpaid amount of an overdue invoice to trigger the suspension. See System > Billing > Suspension.
+*	You can restore a database backup in the UCRM wizard. No need to initialize whole UCRM before restoring a backup.
+*	UCRM API enhancements. Now, you can create new taxes and also apply tax to an invoice item. Additionally, you can manage client's log using the API.
+*	Hungarian translation added (still incomplete, translation is in progress).
+*	Fancy UX improvements.
+
+### Changed
+*	The size of organization logo thumbnail in invoice templates is changed from 260x80px to 200x200px, to correspond with size of organization stamp thumbnail. Additionally you can use new invoice template variable to use original image size for both logo and stamp.
+*	Better UX for client log. Now all messages are merged into a single grid giving you a better overview.
+*	While a service is suspended for a whole billing period, this period is not invoiced if "Stop invoicing for suspended services" is true. All other periods even partially suspended will be invoiced as usual. Note that this option is irrelevant for prepaid services, i.e. forward invoicing.
+*	For security reasons, the mail server password must be provided each time the mailer parameters are edited.
+*	Suspension and Late fee features are turned off by default for new UCRM installations.
+
+### Fixed
+*	Count of Device outages shown on dashboard now complies with the default grid filters used in Network > Outages section.
+*	Minor fixes related to deferred services.
+
 ## 2.4.1 (2017-05-30)
 
 ### Fixed
