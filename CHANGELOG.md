@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.2 (2017-06-02)
+
+### Fixed
+*	Fix credit being duplicated after it's used to pay for invoice. All payments are checked and if the credit was created wrongly, it will be removed from the invoice. Make sure to check your invoices after updating. Only payments / invoices created after version 2.3.0-beta1 could be affected by this bug.
+*	Fixed walled garden postpone suspension button not working after it was used for previous suspension.
+
 ## 2.5.0-beta1 (2017-05-31)
 
 ### Added
