@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.0-beta2 (2017-06-02)
+
+### Changed
+*	Minor scheduling UX improvements.
+
+### Fixed
+*	Fix Top Downloaders filter.
+*	Fixed growing chart in Safari.
+*	Minor fixes.
+
 ## 2.4.2 (2017-06-02)
 
 ### Fixed
