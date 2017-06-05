@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.5.0-beta3 (2017-06-05)
+
+### Fixed
+*	Fixed suspension synchronization.
+*	Fixed client permanent delete.
+*	Minor UI fixes.
+
 ## 2.5.0-beta2 (2017-06-02)
 
 ### Changed
