@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.4.3 (2017-06-12)
+
+### Changed
+*	Maximum file size for Organization logo and stamp is now limited to 2 MB.
+*	UX Improvement - services with postponed suspension are marked with a label.
+
+### Fixed
+*	Fixed suspension of service IPs with a netmask on Mikrotik devices.
+*	Repeated suspension postponing by a client is forbidden again. This feature is possible only once per each suspension.
+*	Fixed permission issue when changing own password.
+*	Blocking a prepared service till the activation date not working for services after reactivation.
+*	CSRF protection for document uploads.
+*	Other minor fixes.
+
 ## 2.5.0-beta3 (2017-06-05)
 
 ### Fixed
