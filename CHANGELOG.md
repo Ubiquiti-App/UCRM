@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.5.0-beta4 (2017-06-12)
+
+### Changed
+*	UX Improvements.
+
+### Fixed
+*	Fixed permanent client deletion.
+*	Fixed creating invoices X days in advance for Forward Invoicing.
+
 ## 2.4.3 (2017-06-12)
 
 ### Changed
