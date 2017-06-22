@@ -131,6 +131,25 @@ patch__compose__add_logging() {
     fi
 }
 
+patch__compose__add_networks() {
+    if ! cat -vt docker-compose.yml | grep -Eq "networks:";
+    then
+        echo "Updating networks configuration."
+        sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" docker-compose.yml
+
+        sed -i -e "s/  postgresql:/&\n    networks:\n      - internal/g" docker-compose.yml
+        sed -i -e "s/  elastic:/&\n    networks:\n      - internal/g" docker-compose.yml
+        sed -i -e "s/  rabbitmq:/&\n    networks:\n      - internal/g" docker-compose.yml
+
+        sed -i -e "s/  web_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  supervisord:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  sync_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  crm_search_devices_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  crm_netflow_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+    fi
+}
+
 patch__compose__download_migrate_file() {
     if [[ ! -f docker-compose.migrate.yml ]]; then
         echo "Downloading docker compose migrate file."
