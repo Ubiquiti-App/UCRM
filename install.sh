@@ -16,6 +16,13 @@ INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
 
 GITHUB_REPOSITORY="U-CRM/billing/master"
 
+PORT_HTTP="${PORT_HTTP:-80}"
+PORT_SUSPENSION="${PORT_SUSPENSION:-81}"
+PORT_HTTPS="${PORT_HTTPS:-443}"
+ALTERNATIVE_PORT_HTTP="${ALTERNATIVE_PORT_HTTP:-8080}"
+ALTERNATIVE_PORT_SUSPENSION="${ALTERNATIVE_PORT_SUSPENSION:-8081}"
+ALTERNATIVE_PORT_HTTPS="${ALTERNATIVE_PORT_HTTPS:-8443}"
+
 version_equal_or_newer() {
     if [[ "$1" == "$2" ]]; then return 0; fi
     local IFS=.
@@ -214,91 +221,78 @@ download_docker_compose_files() {
         sed -i -e "s/POSTGRES_PASSWORD=ucrmdbpass1/POSTGRES_PASSWORD=${POSTGRES_PASSWORD}/g" "${UCRM_PATH}/docker-compose.env"
         sed -i -e "s/SECRET=changeThisSecretKey/SECRET=${SECRET}/g" "${UCRM_PATH}/docker-compose.env"
 
-        change_ucrm_port
-        change_ucrm_suspend_port
-        enable_ssl
+        check_ports
     fi
 }
 
-change_ucrm_port() {
-    local PORT
-
-    while true; do
+check_port_http() {
+    while (nc -z 127.0.0.1 "${PORT_HTTP}" >/dev/null 2>&1); do
         if [ "${INSTALL_CLOUD}" = true ]; then
-            PORT=y
-        else
-            read -r -p "Do you want UCRM to be accessible on port 80? (Yes: recommended for most users, No: will set 8080 as default) [Y/n]: " PORT
-        fi
+            echo "ERROR: Port ${PORT_HTTP} is already in use."
 
-        case "${PORT}" in
-            [yY][eE][sS]|[yY])
-                sed -i -e "s/- 8080:80/- 80:80/g" "${UCRM_PATH}/docker-compose.yml"
-                sed -i -e "s/- 8443:443/- 443:443/g" "${UCRM_PATH}/docker-compose.yml"
-                echo "UCRM will start at 80 port."
-                echo "#used only in instalation" >> "${UCRM_PATH}/docker-compose.env"
-                echo "SERVER_PORT=80" >> "${UCRM_PATH}/docker-compose.env"
-                break;;
-            [nN][oO]|[nN])
-                echo "UCRM will start at 8080 port. If you will change it, edit your docker-compose.yml in ${UCRM_USER} home directory."
-                echo "#used only in instalation" >> "${UCRM_PATH}/docker-compose.env"
-                echo "SERVER_PORT=8080" >> "${UCRM_PATH}/docker-compose.env"
-                break;;
-            *)
-                ;;
-        esac
+            exit 1;
+        fi
+        read -r -p "Port ${PORT_HTTP} is already in use, please choose a different HTTP port for UCRM. [${ALTERNATIVE_PORT_HTTP}]: " PORT_HTTP
+        PORT_HTTP=${PORT_HTTP:-$ALTERNATIVE_PORT_HTTP}
+        while ! [[ "${PORT_HTTP}" =~ ^[0-9]+$ ]] || [[ "${PORT_HTTP:-}" -le 0 ]] || [[ "${PORT_HTTP:-}" -ge 65536 ]]; do
+            read -r -p "Entered port is invalid, please try again: " PORT_HTTP
+        done
     done
+
+    export PORT_HTTP
 }
 
-change_ucrm_suspend_port() {
-    local PORT
-
-    while true; do
+check_port_suspension() {
+    while (nc -z 127.0.0.1 "${PORT_SUSPENSION}" >/dev/null 2>&1); do
         if [ "${INSTALL_CLOUD}" = true ]; then
-            PORT=y
-        else
-            read -r -p "Do you want UCRM suspend page to be accessible on port 81? (Yes: recommended for most users, No: will set 8081 as default) [Y/n]: " PORT
-        fi
+            echo "ERROR: Port ${PORT_SUSPENSION} is already in use."
 
-        case "${PORT}" in
-            [yY]*)
-                sed -i -e "s/- 8081:81/- 81:81/g" "${UCRM_PATH}/docker-compose.yml"
-                echo "UCRM suspend page will start at 81 port."
-                echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
-                echo "SERVER_SUSPEND_PORT=81" >> "${UCRM_PATH}/docker-compose.env"
-                break;;
-            [nN]*)
-                echo "UCRM suspend page will start at 8081 port. If you will change it, edit your docker-compose.yml in ${UCRM_USER} home directory."
-                echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
-                echo "SERVER_SUSPEND_PORT=8081" >> "${UCRM_PATH}/docker-compose.env"
-                break;;
-            *)
-                ;;
-        esac
+            exit 1;
+        fi
+        read -r -p "Port ${PORT_SUSPENSION} is already in use, please choose a different suspension page port for UCRM. [${ALTERNATIVE_PORT_SUSPENSION}]: " PORT_SUSPENSION
+        PORT_SUSPENSION=${PORT_SUSPENSION:-$ALTERNATIVE_PORT_SUSPENSION}
+        while ! [[ "${PORT_SUSPENSION}" =~ ^[0-9]+$ ]] || [[ "${PORT_SUSPENSION:-}" -le 0 ]] || [[ "${PORT_SUSPENSION:-}" -ge 65536 ]]; do
+            read -r -p "Entered port is invalid, please try again: " PORT_SUSPENSION
+        done
     done
+
+    export PORT_SUSPENSION
 }
 
-enable_ssl() {
-    local SSL
-
-    while true; do
+check_port_https() {
+    while (nc -z 127.0.0.1 "${PORT_HTTPS}" >/dev/null 2>&1); do
         if [ "${INSTALL_CLOUD}" = true ]; then
-            SSL=y
-        else
-            read -r -p "Do you want to enable SSL? (You need to generate a certificate for yourself) [Y/n]: " SSL
-        fi
+            echo "ERROR: Port ${PORT_HTTPS} is already in use."
 
-        case "${SSL}" in
-            [yY]*)
-                enable_server_name
-                change_ucrm_ssl_port
-                break;;
-            [nN]*)
-                echo "UCRM has disabled support for SSL."
-                break;;
-            *)
-                ;;
-        esac
+            exit 1;
+        fi
+        read -r -p "Port ${PORT_HTTPS} is already in use, please choose a different HTTPS port for UCRM. [${ALTERNATIVE_PORT_HTTPS}]: " PORT_HTTPS
+        PORT_HTTPS=${PORT_HTTPS:-$ALTERNATIVE_PORT_HTTPS}
+        while ! [[ "${PORT_HTTPS}" =~ ^[0-9]+$ ]] || [[ "${PORT_HTTPS:-}" -le 0 ]] || [[ "${PORT_HTTPS:-}" -ge 65536 ]]; do
+            read -r -p "Entered port is invalid, please try again: " PORT_HTTPS
+        done
     done
+
+    export PORT_HTTPS
+}
+
+check_ports() {
+    echo "Checking available ports."
+
+    check_port_http
+    check_port_suspension
+    check_port_https
+
+    sed -i -e "s/- 8080:80/- ${PORT_HTTP}:80/g" "${UCRM_PATH}/docker-compose.yml"
+    sed -i -e "s/- 8443:443/- ${PORT_HTTPS}:443/g" "${UCRM_PATH}/docker-compose.yml"
+    sed -i -e "s/- 8081:81/- ${PORT_SUSPENSION}:81/g" "${UCRM_PATH}/docker-compose.yml"
+
+    echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
+    echo "SERVER_PORT=${PORT_HTTP}" >> "${UCRM_PATH}/docker-compose.env"
+    echo "SERVER_SUSPEND_PORT=${PORT_SUSPENSION}" >> "${UCRM_PATH}/docker-compose.env"
+
+    echo "UCRM will be available on port ${PORT_HTTP} (or ${PORT_HTTPS} for HTTPS)."
+    echo "UCRM suspension page be available on port ${PORT_SUSPENSION}."
 }
 
 enable_server_name() {
@@ -312,30 +306,6 @@ enable_server_name() {
         read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME_LOCAL
         echo "SERVER_NAME=${SERVER_NAME_LOCAL}" >> "${UCRM_PATH}/docker-compose.env"
     fi
-}
-
-change_ucrm_ssl_port() {
-    local PORT
-
-    while true; do
-        if [ "${INSTALL_CLOUD}" = true ]; then
-            PORT=y
-        else
-            read -r -p "Do you want UCRM SSL to be accessible on port 443? (Yes: recommended for most users, No: will set 8443 as default) [Y/n]: " PORT
-        fi
-
-        case "${PORT}" in
-            [yY]*)
-                sed -i -e "s/- 8443:443/- 443:443/g" "${UCRM_PATH}/docker-compose.yml"
-                echo "UCRM SSL will start at 443 port."
-                break;;
-            [nN]*)
-                echo "UCRM SSL will start at 8443 port."
-                break;;
-            *)
-                ;;
-        esac
-    done
 }
 
 download_docker_images() {
