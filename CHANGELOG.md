@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.5.0 (2017-06-22)
+
+### Changed
+*	PHP updated to version 7.1.6.
+*	Translations updated.
+
+### Fixed
+*	Proper error handling when creating payment subscription failed for PayPal and Authorize.Net.
+*	Fixed possible malfunction of automatic SSL setup using Let's Encrypt.
+*	Fixed excessive automatic creation of late fees from a single overdue invoice.
+*	When archiving clients their ended services' End Date is not modified now.
+*	Fixed invoice sorting by due date.
+*	CSRF Protection and minor fixes.
+*	Fixed permissions check for job editing actions.
+*	Minor UI fixes.
+
 ## 2.5.0-beta4 (2017-06-12)
 
 ### Changed
