@@ -16,7 +16,32 @@ INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
 
 GITHUB_REPOSITORY="U-CRM/billing/master"
 
+version_equal_or_newer() {
+    if [[ "$1" == "$2" ]]; then return 0; fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do ver1[i]=0; done
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then ver2[i]=0; fi
+        if ((10#${ver1[i]} > 10#${ver2[i]})); then return 0; fi
+        if ((10#${ver1[i]} < 10#${ver2[i]})); then return 1; fi
+    done
+    return 0;
+}
+
 check_system() {
+    local architecture
+    architecture="$(uname -m)"
+    case "${architecture}" in
+        amd64|x86_64)
+            ;;
+        *)
+            echo "Your architecture (${architecture}) is not supported."
+            echo "Check https://ucrm.ubnt.com/ for minimum system requirements."
+            exit 1
+            ;;
+    esac
+
     local lsb_dist
     local dist_version
 
@@ -46,30 +71,36 @@ check_system() {
         lsb_dist="$(. /etc/os-release && echo "${ID:-}")"
     fi
 
-    lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
+    lsb_dist="$(echo "${lsb_dist:-}" | tr '[:upper:]' '[:lower:]')"
 
-    case "$lsb_dist" in
-        ubuntu)
-        if [[ "" = "${dist_version:-}" ]] && [[ -r /etc/lsb-release ]]; then
-            dist_version="$(. /etc/lsb-release && echo "${DISTRIB_CODENAME:-}")"
-        fi
-        ;;
+    local supported_distribution=false
+    case "${lsb_dist}" in
+      ubuntu)
+          if [[ "" = "${dist_version:-}" ]] && [[ -r /etc/lsb-release ]]; then
+              dist_version="$(. /etc/lsb-release && echo "${DISTRIB_RELEASE:-}")"
+          fi
+          if version_equal_or_newer "${dist_version}" "16.04"; then
+            supported_distribution=true
+          fi
+          ;;
 
-        debian)
-        dist_version="$(sed 's/\/.*//' /etc/debian_version | sed 's/\..*//')"
-        ;;
+      debian)
+          dist_version="$(sed 's/\/.*//' /etc/debian_version | sed 's/\..*//')"
+          if version_equal_or_newer "${dist_version}" "8"; then
+            supported_distribution=true
+          fi
+          ;;
 
-        *)
-        if [[ "" = "${dist_version:-}" ]] && [[ -r /etc/os-release ]]; then
+      *)
+          if [[ "" = "${dist_version:-}" ]] && [[ -r /etc/os-release ]]; then
             dist_version="$(. /etc/os-release && echo "${VERSION_ID:-}")"
-        fi
-        ;;
-
+          fi
+          ;;
     esac
 
-    if [[ "${lsb_dist}-${dist_version}" != "ubuntu-xenial" ]] && [[ "${lsb_dist}-${dist_version}" != "debian-8" ]]; then
+    if [[ "${supported_distribution}" != true ]]; then
         echo "Your OS (${lsb_dist} ${dist_version}) is not officially supported."
-        echo "Officially supported operating systems are: Ubuntu Xenial and Debian 8."
+        echo "Check https://ucrm.ubnt.com/ for minimum system requirements."
 
         local continueUnsupported
 
