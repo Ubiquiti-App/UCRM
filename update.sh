@@ -635,10 +635,11 @@ main() {
 }
 
 print_intro() {
-    echo "+------------------------------------------+"
-    echo "| UCRM - Complete WISP Management Platform |"
-    echo "| https://ucrm.ubnt.com/     (update v1.0) |"
-    echo "+------------------------------------------+"
+    echo "+------------------------------------------------+"
+    echo "| UCRM - Complete WISP Management Platform       |"
+    echo "|                                                |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.0) |"
+    echo "+------------------------------------------------+"
     echo ""
 }
 print_intro

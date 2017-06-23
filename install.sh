@@ -415,10 +415,11 @@ detect_installation_finished() {
 }
 
 print_intro() {
-    echo "+------------------------------------------+"
-    echo "| UCRM - Complete WISP Management Platform |"
-    echo "| https://ucrm.ubnt.com/    (install v1.0) |"
-    echo "+------------------------------------------+"
+    echo "+------------------------------------------------+"
+    echo "| UCRM - Complete WISP Management Platform       |"
+    echo "|                                                |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.0) |"
+    echo "+------------------------------------------------+"
     echo ""
 }
 
