@@ -390,7 +390,16 @@ detect_installation_finished() {
     	fi' || printf "\nUCRM installation failed.\nPlease report this on UCRM Community Forum.\n"
 }
 
+print_intro() {
+    echo "+------------------------------------------+"
+    echo "| UCRM - Complete WISP Management Platform |"
+    echo "| https://ucrm.ubnt.com/    (install v1.0) |"
+    echo "+------------------------------------------+"
+    echo ""
+}
+
 main() {
+    print_intro
     check_system
     install_docker
     install_docker_compose

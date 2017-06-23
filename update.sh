@@ -608,6 +608,15 @@ main() {
     exit 0
 }
 
+print_intro() {
+    echo "+------------------------------------------+"
+    echo "| UCRM - Complete WISP Management Platform |"
+    echo "| https://ucrm.ubnt.com/     (update v1.0) |"
+    echo "+------------------------------------------+"
+    echo ""
+}
+print_intro
+
 while getopts ":f" opt; do
   case "${opt}" in
     f)
