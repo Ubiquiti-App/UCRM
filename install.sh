@@ -346,6 +346,7 @@ configure_cloud() {
 configure_network_subnet() {
     if [[ "${NETWORK_SUBNET}" != "" ]]; then
         sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
