@@ -298,27 +298,6 @@ patch__compose_env__fix_suspend_port() {
     fi
 }
 
-patch__compose_env__fix_server_name() {
-    if ! grep -q 'SERVER_NAME' docker-compose.env;
-    then
-        echo "Adding ucrm.ubnt as Server domain name, you can change it in UCRM System > Settings > Application > Server domain name"
-        echo "#used only in installation" >> docker-compose.env
-        echo "SERVER_NAME=ucrm.ubnt" >> docker-compose.env
-
-        if ! grep -q "443:443" docker-compose.yml;
-        then
-            if grep -q "\- 8080:80" docker-compose.yml;
-            then
-                echo "Adding 8443 as SSL port"
-                sed -i -e "s/:81/&\n      - 8443:443/g" docker-compose.yml
-            else
-                echo "Adding 443 as SSL port"
-                sed -i -e "s/:81/&\n      - 443:443/g" docker-compose.yml
-            fi
-        fi
-    fi
-}
-
 compose__get_correct_volumes_path() {
     if ! ( cat -vt docker-compose.yml | grep -Eq "\.\/data\/ucrm:\/data" );
     then
@@ -374,7 +353,6 @@ compose__run_update() {
 
     patch__compose_env__fix_server_port
     patch__compose_env__fix_suspend_port
-    patch__compose_env__fix_server_name
 
     check_yml docker-compose.yml
 }
