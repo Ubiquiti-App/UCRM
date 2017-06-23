@@ -8,7 +8,7 @@ set -o pipefail
 
 UCRM_USER="${UCRM_USER:-ucrm}"
 UCRM_PATH="${UCRM_PATH:-/home/${UCRM_USER}}"
-INSTALL_VERSION="${1:-latest}"
+INSTALL_VERSION="latest"
 
 POSTGRES_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
@@ -16,12 +16,50 @@ INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
 
 GITHUB_REPOSITORY="U-CRM/billing/master"
 
+NETWORK_SUBNET="${NETWORK_SUBNET:-}"
 PORT_HTTP="${PORT_HTTP:-80}"
 PORT_SUSPENSION="${PORT_SUSPENSION:-81}"
 PORT_HTTPS="${PORT_HTTPS:-443}"
 ALTERNATIVE_PORT_HTTP="${ALTERNATIVE_PORT_HTTP:-8080}"
 ALTERNATIVE_PORT_SUSPENSION="${ALTERNATIVE_PORT_SUSPENSION:-8081}"
 ALTERNATIVE_PORT_HTTPS="${ALTERNATIVE_PORT_HTTPS:-8443}"
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case "${key}" in
+  -v|--version)
+    echo "Setting INSTALL_VERSION=$2"
+    INSTALL_VERSION="$2"
+    shift # past argument value
+    ;;
+  --http-port)
+    echo "Setting PORT_HTTP=$2"
+    PORT_HTTP="$2"
+    shift # past argument value
+    ;;
+  --https-port)
+    echo "Setting PORT_HTTPS=$2"
+    PORT_HTTPS="$2"
+    shift # past argument value
+    ;;
+  --suspension-port)
+    echo "Setting PORT_SUSPENSION=$2"
+    PORT_SUSPENSION="$2"
+    shift # past argument value
+    ;;
+  --subnet)
+    echo "Setting NETWORK_SUBNET=$2"
+    NETWORK_SUBNET="$2"
+    shift # past argument value
+    ;;
+  *)
+    # unknown option
+    ;;
+esac
+shift # past argument key
+done
 
 version_equal_or_newer() {
     if [[ "$1" == "$2" ]]; then return 0; fi
@@ -222,6 +260,8 @@ download_docker_compose_files() {
         sed -i -e "s/SECRET=changeThisSecretKey/SECRET=${SECRET}/g" "${UCRM_PATH}/docker-compose.env"
 
         check_ports
+        configure_cloud
+        configure_network_subnet
     fi
 }
 
@@ -295,16 +335,17 @@ check_ports() {
     echo "UCRM suspension page be available on port ${PORT_SUSPENSION}."
 }
 
-enable_server_name() {
-    local SERVER_NAME_LOCAL
-
+configure_cloud() {
     if [ "$INSTALL_CLOUD" = true ]; then
         if [ -f "${CLOUD_CONF}" ]; then
             cat "${CLOUD_CONF}" >> "${UCRM_PATH}/docker-compose.env"
         fi
-    else
-        read -r -p "Enter Server domain name for UCRM, for example ucrm.example.com: " SERVER_NAME_LOCAL
-        echo "SERVER_NAME=${SERVER_NAME_LOCAL}" >> "${UCRM_PATH}/docker-compose.env"
+    fi
+}
+
+configure_network_subnet() {
+    if [[ "${NETWORK_SUBNET}" != "" ]]; then
+        sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
