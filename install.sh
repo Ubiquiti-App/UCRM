@@ -388,6 +388,8 @@ confirm_ucrm_running() {
     done
 
     if [[ "${ucrmRunning}" = true ]]; then
+        printf "\r%-55s\n" "UCRM ready";
+
         return 0
     else
         printf "\nUCRM installation failed.\nPlease report this on UCRM Community Forum.\n"
