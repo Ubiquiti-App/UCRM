@@ -17,6 +17,7 @@ INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
 
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
+NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 PORT_HTTP="${PORT_HTTP:-80}"
 PORT_SUSPENSION="${PORT_SUSPENSION:-81}"
 PORT_HTTPS="${PORT_HTTPS:-443}"
@@ -52,6 +53,11 @@ case "${key}" in
   --subnet)
     echo "Setting NETWORK_SUBNET=$2"
     NETWORK_SUBNET="$2"
+    shift # past argument value
+    ;;
+  --subnet-internal)
+    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
+    NETWORK_SUBNET_INTERNAL="$2"
     shift # past argument value
     ;;
   *)
@@ -332,7 +338,7 @@ check_ports() {
     echo "SERVER_SUSPEND_PORT=${PORT_SUSPENSION}" >> "${UCRM_PATH}/docker-compose.env"
 
     echo "UCRM will be available on port ${PORT_HTTP} (or ${PORT_HTTPS} for HTTPS)."
-    echo "UCRM suspension page be available on port ${PORT_SUSPENSION}."
+    echo "UCRM suspension page will be available on port ${PORT_SUSPENSION}."
 }
 
 configure_cloud() {
@@ -346,7 +352,10 @@ configure_cloud() {
 configure_network_subnet() {
     if [[ "${NETWORK_SUBNET}" != "" ]]; then
         sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
-        sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
+    fi
+
+    if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+        sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
