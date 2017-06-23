@@ -8,3 +8,5 @@ services:
     volumes:
       - ./data/ucrm:/data
     command: "migrate"
+    networks:
+      - internal

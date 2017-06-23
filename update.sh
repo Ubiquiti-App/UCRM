@@ -134,7 +134,7 @@ patch__compose__add_logging() {
 patch__compose__add_networks() {
     if ! cat -vt docker-compose.yml | grep -Eq "networks:";
     then
-        echo "Updating networks configuration."
+        echo "Updating docker-compose.yml networks configuration."
         sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" docker-compose.yml
 
         sed -i -e "s/  postgresql:/&\n    networks:\n      - internal/g" docker-compose.yml
@@ -147,6 +147,12 @@ patch__compose__add_networks() {
         sed -i -e "s/  crm_search_devices_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
         sed -i -e "s/  crm_netflow_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
         sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+    fi
+
+    if ! cat -vt docker-compose.migrate.yml | grep -Eq "networks:";
+    then
+        echo "Updating docker-compose.migrate.yml networks configuration."
+        sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" docker-compose.migrate.yml
     fi
 }
 
@@ -357,6 +363,8 @@ compose__run_update() {
         needsVolumesFix=1
     fi
 
+    patch__compose__add_networks
+
     patch__compose__remove_draft_approve || true
     patch__compose__remove_invoice_send_email || true
 
@@ -469,6 +477,11 @@ get_from_version() {
 
     if [[ ! -f docker-compose.version.yml ]]; then
         curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
+    fi
+
+    if ! cat -vt docker-compose.version.yml | grep -Eq "networks:";
+    then
+        sed -i -e "s/  get_version_app:/&\n    networks:\n      - internal/g" docker-compose.version.yml
     fi
 
     check_yml docker-compose.version.yml

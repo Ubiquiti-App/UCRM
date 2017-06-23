@@ -14,7 +14,7 @@ POSTGRES_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 |
 SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
 
-GITHUB_REPOSITORY="U-CRM/billing/master"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
 
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
 PORT_HTTP="${PORT_HTTP:-80}"
