@@ -170,6 +170,17 @@ check_system() {
             esac
         done
     fi
+
+    if [[ -e /proc/meminfo ]]; then
+        local memory
+        local memoryGB
+        memory="$(awk '/MemTotal/{print $2}' /proc/meminfo)"
+        memoryGB=$(echo "scale=2; ${memory}/1024^2" | bc)
+        if [[ "${memory}" -lt 2000000 ]]; then
+            echo "WARNING: Your system has only ${memoryGB} GB RAM."
+            echo "We recommend at least 2 GB RAM to run UCRM without problems."
+        fi
+    fi
 }
 
 install_docker() {
