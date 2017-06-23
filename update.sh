@@ -10,7 +10,7 @@ DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
 UPDATING_TO="latest"
-GITHUB_REPOSITORY="U-CRM/billing/master"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
@@ -479,18 +479,18 @@ get_from_version() {
         curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
 
-    if ! cat -vt docker-compose.version.yml | grep -Eq "networks:";
+    if (cat -vt docker-compose.yml | grep -Eq "networks:") && ! (cat -vt docker-compose.version.yml | grep -Eq "networks:");
     then
         sed -i -e "s/  get_version_app:/&\n    networks:\n      - internal/g" docker-compose.version.yml
     fi
 
-    check_yml docker-compose.version.yml
+    check_yml docker-compose.version.yml docker-compose.yml
 
     currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')"
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" docker-compose.version.yml
 
-    fromVersion=$(docker-compose -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
-    docker-compose -f docker-compose.version.yml rm -af > /dev/null 2>&1
+    fromVersion=$(docker-compose -f docker-compose.yml -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
+    docker-compose -f docker-compose.yml -f docker-compose.version.yml rm -f get_version_app > /dev/null 2>&1
 
     echo "${fromVersion}"
 }
