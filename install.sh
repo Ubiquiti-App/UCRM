@@ -44,7 +44,7 @@ check_system() {
             ;;
         *)
             echo "Your architecture (${architecture}) is not supported."
-            echo "Check https://ucrm.ubnt.com/ for minimum system requirements."
+            echo "Check https://ucrm.ubnt.com/#minimum-system-requirements for minimum system requirements."
             exit 1
             ;;
     esac
@@ -107,7 +107,7 @@ check_system() {
 
     if [[ "${supported_distribution}" != true ]]; then
         echo "Your OS (${lsb_dist} ${dist_version}) is not officially supported."
-        echo "Check https://ucrm.ubnt.com/ for minimum system requirements."
+        echo "Check https://ucrm.ubnt.com/#minimum-system-requirements for minimum system requirements."
 
         local continueUnsupported
 
