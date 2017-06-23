@@ -372,6 +372,30 @@ start_docker_images() {
     /usr/local/bin/docker-compose ps
 }
 
+confirm_ucrm_running() {
+    local ucrmRunning
+
+    ucrmRunning=false
+    n=0
+    until [ ${n} -ge 10 ]
+    do
+        sleep 3s
+        ucrmRunning=true
+        nc -z 127.0.0.1 "${PORT_HTTP}" && break
+        echo "."
+        ucrmRunning=false
+        n=$((n+1))
+    done
+
+    if [[ "${ucrmRunning}" = true ]]; then
+        return 0
+    else
+        printf "\nUCRM installation failed.\nPlease report this on UCRM Community Forum.\n"
+
+        exit 1
+    fi
+}
+
 detect_installation_finished() {
 	# print web container log and wait for its initialization
     containerName=$(/usr/local/bin/docker-compose ps | grep -m1 "make server" | awk '{print $1}')
@@ -387,7 +411,7 @@ detect_installation_finished() {
     			sleep 0.1; \
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    	fi' || printf "\nUCRM installation failed.\nPlease report this on UCRM Community Forum.\n"
+    	fi' || confirm_ucrm_running
 }
 
 print_intro() {

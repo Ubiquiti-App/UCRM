@@ -432,6 +432,32 @@ containers__run_update() {
     docker-compose ps
 }
 
+confirm_ucrm_running() {
+    local ucrmRunning
+    local webAppPort
+
+    ucrmRunning=false
+    webAppPort=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+    n=0
+    until [ ${n} -ge 10 ]
+    do
+        sleep 3s
+        ucrmRunning=true
+        nc -z 127.0.0.1 "${webAppPort}" && break
+        echo "."
+        ucrmRunning=false
+        n=$((n+1))
+    done
+
+    if [[ "${ucrmRunning}" = true ]]; then
+        return 0
+    else
+        printf "\n------------------\nUCRM UPDATE FAILED!\nPlease send update.log to UCRM Community Forum.\n"
+
+        exit 1
+    fi
+}
+
 detect_update_finished() {
     # print web container log and wait for its initialization
     containerName=$(docker-compose ps | grep -m1 "make server" | awk '{print $1}')
@@ -447,7 +473,7 @@ detect_update_finished() {
     			sleep 0.1; \
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    	fi'  || (printf "\n------------------\nUCRM UPDATE FAILED!\nPlease send update.log to UCRM Community Forum.\n" && exit 1)
+    	fi' || confirm_ucrm_running
 }
 
 get_from_version() {
