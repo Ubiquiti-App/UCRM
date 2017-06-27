@@ -8,13 +8,28 @@ set -o pipefail
 
 UCRM_USER="${UCRM_USER:-ucrm}"
 UCRM_PATH="${UCRM_PATH:-/home/${UCRM_USER}}"
+UCRM_USERNAME=""
+UCRM_PASSWORD=""
 INSTALL_VERSION="latest"
 
 POSTGRES_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
+SKIP_SYSTEM_SETUP="false"
 
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+
+if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
+    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "PORT_HTTP=" ); then
+        PORT_HTTP=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "PORT_HTTP=" --color=never | awk -F= ' {print $NF}')
+    fi
+    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "PORT_SUSPENSION=" ); then
+        PORT_SUSPENSION=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "PORT_SUSPENSION=" --color=never | awk -F= ' {print $NF}')
+    fi
+    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "PORT_HTTPS=" ); then
+        PORT_HTTPS=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "PORT_HTTPS=" --color=never | awk -F= ' {print $NF}')
+    fi
+fi
 
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
 NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
@@ -60,6 +75,10 @@ case "${key}" in
     NETWORK_SUBNET_INTERNAL="$2"
     shift # past argument value
     ;;
+  --skip-system-setup)
+    echo "Setting SKIP_SYSTEM_SETUP=true"
+    SKIP_SYSTEM_SETUP="true"
+    ;;
   *)
     # unknown option
     ;;
@@ -78,6 +97,35 @@ version_equal_or_newer() {
         if ((10#${ver1[i]} < 10#${ver2[i]})); then return 1; fi
     done
     return 0;
+}
+
+is_updating_to_version() {
+    declare to="${1}" required="${2}" allowLatest="${3}" allowBeta="${4}"
+    local toVersion
+
+    if [[ "${to}" = "beta" ]]; then
+        if [[ "${allowBeta}" = "1" ]]; then
+            return 0
+        else
+            return 1
+        fi
+    fi
+
+    if [[ "${to}" = "latest" ]]; then
+        if [[ "${allowLatest}" = "1" ]]; then
+            return 0
+        else
+            return 1
+        fi
+    fi
+
+    toVersion=$(echo "${to}" | awk -F. '{ printf("%d%03d%03d\n", $1, $2, $3) }')
+
+    if [[ "${toVersion}" -ge "${required}" ]]; then
+        return 0
+    fi
+
+    return 1
 }
 
 check_system() {
@@ -273,7 +321,9 @@ download_docker_compose_files() {
         fi
 
         curl -o "${UCRM_PATH}/docker-compose.migrate.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.migrate.yml"
-        curl -o "${UCRM_PATH}/docker-compose.env" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.env"
+        if [[ ! -f "${UCRM_PATH}/docker-compose.env" ]]; then
+            curl -o "${UCRM_PATH}/docker-compose.env" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.env"
+        fi
 
         sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${INSTALL_VERSION}/g" "${UCRM_PATH}/docker-compose.yml"
         sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${INSTALL_VERSION}/g" "${UCRM_PATH}/docker-compose.migrate.yml"
@@ -381,6 +431,38 @@ download_docker_images() {
     cd "${UCRM_PATH}" && /usr/local/bin/docker-compose pull
 }
 
+configure_wizard_user() {
+    if ! (is_updating_to_version "${INSTALL_VERSION}" "2006000" 0 0); then
+        return 0
+    fi
+
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_USERNAME" ) && ! ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_PASSWORD" );
+    then
+        UCRM_USERNAME="admin"
+        UCRM_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 7 | head -n 1 || true)"
+
+        echo "UCRM_USERNAME=${UCRM_USERNAME}" >> "${UCRM_PATH}/docker-compose.env"
+        echo "UCRM_PASSWORD=${UCRM_PASSWORD}" >> "${UCRM_PATH}/docker-compose.env"
+    else
+        UCRM_USERNAME=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_USERNAME=" --color=never | awk -F= ' {print $NF}')
+        UCRM_PASSWORD=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_PASSWORD=" --color=never | awk -F= ' {print $NF}')
+    fi
+}
+
+print_wizard_login() {
+    if [[ "${UCRM_USERNAME}" = "" ]] || [[ "${UCRM_PASSWORD}" = "" ]]; then
+        return 0
+    fi
+
+    echo ""
+    echo "--------------------------------------------------"
+    echo "Initial login information:"
+    echo "Username: ${UCRM_USERNAME}"
+    echo "Password: ${UCRM_PASSWORD}"
+    echo "--------------------------------------------------"
+    echo ""
+}
+
 start_docker_images() {
     echo "Starting docker images."
     cd "${UCRM_PATH}" && \
@@ -444,14 +526,20 @@ print_intro() {
 
 main() {
     print_intro
-    check_system
-    install_docker
-    install_docker_compose
-    create_user
+
+    if [[ "${SKIP_SYSTEM_SETUP}" = "false" ]]; then
+        check_system
+        install_docker
+        install_docker_compose
+        create_user
+    fi
+
     download_docker_compose_files
     download_docker_images
+    configure_wizard_user
     start_docker_images
     detect_installation_finished
+    print_wizard_login
 
     exit 0
 }
