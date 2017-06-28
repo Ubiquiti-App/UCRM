@@ -14,6 +14,48 @@ GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
+download_docker_compose() {
+    echo "Downloading and installing Docker Compose."
+    curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+}
+
+install_docker_compose() {
+    if ! (which docker-compose > /dev/null 2>&1); then
+        download_docker_compose
+    fi
+
+    if ! (which docker-compose > /dev/null 2>&1); then
+        echo "Docker Compose not installed. Please check previous logs. Aborting."
+
+        exit 1
+    fi
+
+    local DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
+    local DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
+    local DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
+
+    if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
+        echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
+        local DO_UPDATE_DOCKER_COMPOSE
+
+        while true; do
+            read -r -p "Would you like to upgrade Docker Compose automatically? [Y/n]: " DO_UPDATE_DOCKER_COMPOSE
+
+            case "${DO_UPDATE_DOCKER_COMPOSE}" in
+                [yY][eE][sS]|[yY])
+                    download_docker_compose
+                    break;;
+                [nN][oO]|[nN])
+                    exit 1
+                    break;;
+                *)
+                    ;;
+            esac
+        done
+    fi
+}
+
 check_yml() {
     declare file="${1}"
     declare appendFile="${2:-}"
@@ -604,6 +646,7 @@ flush_udp_conntrack() {
 do_update() {
     declare toVersion="${1}"
 
+    install_docker_compose
     compose__backup
     compose__run_update "${toVersion}"
     containers__run_update "${toVersion}"
@@ -618,6 +661,7 @@ main() {
     declare toVersion="${1}"
     local fromVersion
 
+    install_docker_compose
     fromVersion=$(get_from_version)
     fromVersion="${fromVersion:-latest}"
     if [[ "${toVersion}" = "" ]]; then
