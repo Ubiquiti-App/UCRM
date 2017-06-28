@@ -10,7 +10,7 @@ DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
 UPDATING_TO="latest"
-GITHUB_REPOSITORY="U-CRM/billing/master"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
@@ -128,6 +128,31 @@ patch__compose__add_logging() {
     then
         echo "Updating logging configuration."
         sed -i -e "s/^  [a-z_]\+:$/&\n    logging:\n      driver: \"json-file\"\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"/g" docker-compose.yml
+    fi
+}
+
+patch__compose__add_networks() {
+    if ! cat -vt docker-compose.yml | grep -Eq "networks:";
+    then
+        echo "Updating docker-compose.yml networks configuration."
+        sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" docker-compose.yml
+
+        sed -i -e "s/  postgresql:/&\n    networks:\n      - internal/g" docker-compose.yml
+        sed -i -e "s/  elastic:/&\n    networks:\n      - internal/g" docker-compose.yml
+        sed -i -e "s/  rabbitmq:/&\n    networks:\n      - internal/g" docker-compose.yml
+
+        sed -i -e "s/  web_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  supervisord:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  sync_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  crm_search_devices_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  crm_netflow_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+    fi
+
+    if ! cat -vt docker-compose.migrate.yml | grep -Eq "networks:";
+    then
+        echo "Updating docker-compose.migrate.yml networks configuration."
+        sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" docker-compose.migrate.yml
     fi
 }
 
@@ -273,27 +298,6 @@ patch__compose_env__fix_suspend_port() {
     fi
 }
 
-patch__compose_env__fix_server_name() {
-    if ! grep -q 'SERVER_NAME' docker-compose.env;
-    then
-        echo "Adding ucrm.ubnt as Server domain name, you can change it in UCRM System > Settings > Application > Server domain name"
-        echo "#used only in installation" >> docker-compose.env
-        echo "SERVER_NAME=ucrm.ubnt" >> docker-compose.env
-
-        if ! grep -q "443:443" docker-compose.yml;
-        then
-            if grep -q "\- 8080:80" docker-compose.yml;
-            then
-                echo "Adding 8443 as SSL port"
-                sed -i -e "s/:81/&\n      - 8443:443/g" docker-compose.yml
-            else
-                echo "Adding 443 as SSL port"
-                sed -i -e "s/:81/&\n      - 443:443/g" docker-compose.yml
-            fi
-        fi
-    fi
-}
-
 compose__get_correct_volumes_path() {
     if ! ( cat -vt docker-compose.yml | grep -Eq "\.\/data\/ucrm:\/data" );
     then
@@ -338,6 +342,8 @@ compose__run_update() {
         needsVolumesFix=1
     fi
 
+    patch__compose__add_networks
+
     patch__compose__remove_draft_approve || true
     patch__compose__remove_invoice_send_email || true
 
@@ -347,7 +353,6 @@ compose__run_update() {
 
     patch__compose_env__fix_server_port
     patch__compose_env__fix_suspend_port
-    patch__compose_env__fix_server_name
 
     check_yml docker-compose.yml
 }
@@ -427,6 +432,34 @@ containers__run_update() {
     docker-compose ps
 }
 
+confirm_ucrm_running() {
+    local ucrmRunning
+    local webAppPort
+
+    ucrmRunning=false
+    webAppPort=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+    n=0
+    until [ ${n} -ge 10 ]
+    do
+        sleep 3s
+        ucrmRunning=true
+        nc -z 127.0.0.1 "${webAppPort}" && break
+        echo "."
+        ucrmRunning=false
+        n=$((n+1))
+    done
+
+    if [[ "${ucrmRunning}" = true ]]; then
+        printf "\r%-55s\n" "UCRM ready";
+
+        return 0
+    else
+        printf "\n------------------\nUCRM UPDATE FAILED!\nPlease send update.log to UCRM Community Forum.\n"
+
+        exit 1
+    fi
+}
+
 detect_update_finished() {
     # print web container log and wait for its initialization
     containerName=$(docker-compose ps | grep -m1 "make server" | awk '{print $1}')
@@ -442,7 +475,7 @@ detect_update_finished() {
     			sleep 0.1; \
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    	fi'  || (printf "\n------------------\nUCRM UPDATE FAILED!\nPlease send update.log to UCRM Community Forum.\n" && exit 1)
+    	fi' || confirm_ucrm_running
 }
 
 get_from_version() {
@@ -452,13 +485,18 @@ get_from_version() {
         curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
 
-    check_yml docker-compose.version.yml
+    if (cat -vt docker-compose.yml | grep -Eq "networks:") && ! (cat -vt docker-compose.version.yml | grep -Eq "networks:");
+    then
+        sed -i -e "s/  get_version_app:/&\n    networks:\n      - internal/g" docker-compose.version.yml
+    fi
+
+    check_yml docker-compose.version.yml docker-compose.yml
 
     currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')"
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" docker-compose.version.yml
 
-    fromVersion=$(docker-compose -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
-    docker-compose -f docker-compose.version.yml rm -af > /dev/null 2>&1
+    fromVersion=$(docker-compose -f docker-compose.yml -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
+    docker-compose -f docker-compose.yml -f docker-compose.version.yml rm -f get_version_app > /dev/null 2>&1
 
     echo "${fromVersion}"
 }
@@ -597,6 +635,16 @@ main() {
 
     exit 0
 }
+
+print_intro() {
+    echo "+------------------------------------------------+"
+    echo "| UCRM - Complete WISP Management Platform       |"
+    echo "|                                                |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.0) |"
+    echo "+------------------------------------------------+"
+    echo ""
+}
+print_intro
 
 while getopts ":f" opt; do
   case "${opt}" in
