@@ -48,7 +48,7 @@ install_docker_compose() {
         echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
         echo "You can use following commands to upgrade:"
         echo ""
-        echo 'curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose'
+        echo 'curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
         echo 'chmod +x /usr/local/bin/docker-compose'
         echo ""
 
