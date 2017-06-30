@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.5.1 (2017-06-30)
+
+### Fixed
+*	Broken item selection in grids for exports into CSV or PDF.
+*	Invoices not automatically generated on a proper day for Backward Invoicing. ("Create X days in advance" parameter ignored.)
+*	These API calls fixed: GET ServiceDevice, GET ServiceSurcharge for the service and GET ServiceIp for the serviceDevice.
+*	NetFlow download data fixed. UCRM auto NetFlow setup now uses "netflow enable-egress" option for NetFlow version 9.
+*	Minor fixes in device outage detection and NetFlow data collecting.
+
 ## 2.5.0 (2017-06-22)
 
 ### Changed
