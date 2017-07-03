@@ -35,28 +35,30 @@ install_docker_compose() {
         exit 1
     fi
 
-    local DOCKER_COMPOSE_VERSION
-    local DOCKER_COMPOSE_MAJOR
-    local DOCKER_COMPOSE_MINOR
+    if (cat -vt docker-compose.yml | grep -Eq "networks:") || [[ "${NETWORK_SUBNET}" != "" ]] || [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+        local DOCKER_COMPOSE_VERSION
+        local DOCKER_COMPOSE_MAJOR
+        local DOCKER_COMPOSE_MINOR
 
-    DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
-    if [[ "${DOCKER_COMPOSE_VERSION}" != "" ]]; then
-        DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
-        DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
-    else
-        DOCKER_COMPOSE_MAJOR="0"
-        DOCKER_COMPOSE_MINOR="0"
-    fi
+        DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
+        if [[ "${DOCKER_COMPOSE_VERSION}" != "" ]]; then
+            DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
+            DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
+        else
+            DOCKER_COMPOSE_MAJOR="0"
+            DOCKER_COMPOSE_MINOR="0"
+        fi
 
-    if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
-        echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
-        echo "You can use following commands to upgrade:"
-        echo ""
-        echo 'sudo curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
-        echo 'sudo chmod +x /usr/local/bin/docker-compose'
-        echo ""
+        if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
+            echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
+            echo "You can use following commands to upgrade:"
+            echo ""
+            echo 'sudo curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+            echo 'sudo chmod +x /usr/local/bin/docker-compose'
+            echo ""
 
-        exit 1
+            exit 1
+        fi
     fi
 }
 
@@ -712,7 +714,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.0) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
@@ -749,9 +751,6 @@ case "${key}" in
 esac
 shift # past argument key
 done
-
-compose__run_update "${UPDATE_TO_VERSION}"
-exit 0
 
 if [[ "${FORCE_UPDATE}" = "1" ]]; then
     do_update "${UPDATE_TO_VERSION}"
