@@ -204,13 +204,25 @@ patch__compose__add_networks() {
 
 patch__compose__configure_network_subnet() {
     if [[ "${NETWORK_SUBNET}" != "" ]]; then
-        patch__compose__add_networks
-        sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" docker-compose.yml
+        if (cat -vt docker-compose.yml | tr -d '\n' | grep -Eq '  public:    internal: false    ipam:      config:        - subnet: '); then
+            echo "Subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
+
+            exit 1
+        else
+            patch__compose__add_networks
+            sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" docker-compose.yml
+        fi
     fi
 
     if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
-        patch__compose__add_networks
-        sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" docker-compose.yml
+        if (cat -vt docker-compose.yml | tr -d '\n' | grep -Eq '  internal:    internal: true    ipam:      config:        - subnet: '); then
+            echo "Internal subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
+
+            exit 1
+        else
+            patch__compose__add_networks
+            sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" docker-compose.yml
+        fi
     fi
 }
 
@@ -737,6 +749,9 @@ case "${key}" in
 esac
 shift # past argument key
 done
+
+compose__run_update "${UPDATE_TO_VERSION}"
+exit 0
 
 if [[ "${FORCE_UPDATE}" = "1" ]]; then
     do_update "${UPDATE_TO_VERSION}"
