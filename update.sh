@@ -105,12 +105,24 @@ compose__backup() {
 
     cp docker-compose.yml ./docker-compose-backups/docker-compose.yml."${DATE}".backup
     cp docker-compose.env ./docker-compose-backups/docker-compose.env."${DATE}".backup
+    if [[ -f docker-compose.migrate.yml ]]; then
+        cp docker-compose.migrate.yml ./docker-compose-backups/docker-compose.migrate.yml."${DATE}".backup
+    fi
+    if [[ -f docker-compose.version.yml ]]; then
+        cp docker-compose.version.yml ./docker-compose-backups/docker-compose.version.yml."${DATE}".backup
+    fi
 }
 
 compose__restore() {
     echo "Reverting docker compose files."
     cp -f ./docker-compose-backups/docker-compose.yml."${DATE}".backup docker-compose.yml
     cp -f ./docker-compose-backups/docker-compose.env."${DATE}".backup docker-compose.env
+    if [[ -f docker-compose.migrate.yml."${DATE}".backup ]]; then
+        cp -f docker-compose.migrate.yml ./docker-compose-backups/docker-compose.migrate.yml."${DATE}".backup docker-compose.migrate.yml
+    fi
+    if [[ -f docker-compose.version.yml."${DATE}".backup ]]; then
+        cp -f docker-compose.version.yml ./docker-compose-backups/docker-compose.version.yml."${DATE}".backup docker-compose.version.yml
+    fi
 }
 
 is_updating_to_version() {
@@ -667,6 +679,8 @@ cleanup_old_images() {
 cleanup_old_backups() {
     (find . -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
     (find . -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find . -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find . -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
 }
 
 flush_udp_conntrack() {
