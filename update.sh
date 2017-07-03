@@ -9,8 +9,12 @@ set -o pipefail
 DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
+UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+
+NETWORK_SUBNET="${NETWORK_SUBNET:-}"
+NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
@@ -31,28 +35,30 @@ install_docker_compose() {
         exit 1
     fi
 
-    local DOCKER_COMPOSE_VERSION
-    local DOCKER_COMPOSE_MAJOR
-    local DOCKER_COMPOSE_MINOR
+    if (cat -vt docker-compose.yml | grep -Eq "networks:") || [[ "${NETWORK_SUBNET}" != "" ]] || [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+        local DOCKER_COMPOSE_VERSION
+        local DOCKER_COMPOSE_MAJOR
+        local DOCKER_COMPOSE_MINOR
 
-    DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
-    if [[ "${DOCKER_COMPOSE_VERSION}" != "" ]]; then
-        DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
-        DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
-    else
-        DOCKER_COMPOSE_MAJOR="0"
-        DOCKER_COMPOSE_MINOR="0"
-    fi
+        DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
+        if [[ "${DOCKER_COMPOSE_VERSION}" != "" ]]; then
+            DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
+            DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
+        else
+            DOCKER_COMPOSE_MAJOR="0"
+            DOCKER_COMPOSE_MINOR="0"
+        fi
 
-    if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
-        echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
-        echo "You can use following commands to upgrade:"
-        echo ""
-        echo 'sudo curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
-        echo 'sudo chmod +x /usr/local/bin/docker-compose'
-        echo ""
+        if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
+            echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
+            echo "You can use following commands to upgrade:"
+            echo ""
+            echo 'sudo curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+            echo 'sudo chmod +x /usr/local/bin/docker-compose'
+            echo ""
 
-        exit 1
+            exit 1
+        fi
     fi
 }
 
@@ -195,6 +201,30 @@ patch__compose__add_networks() {
     then
         echo "Updating docker-compose.migrate.yml networks configuration."
         sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" docker-compose.migrate.yml
+    fi
+}
+
+patch__compose__configure_network_subnet() {
+    if [[ "${NETWORK_SUBNET}" != "" ]]; then
+        if (cat -vt docker-compose.yml | tr -d '\n' | grep -Eq '  public:    internal: false    ipam:      config:        - subnet: '); then
+            echo "Subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
+
+            exit 1
+        else
+            patch__compose__add_networks
+            sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" docker-compose.yml
+        fi
+    fi
+
+    if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+        if (cat -vt docker-compose.yml | tr -d '\n' | grep -Eq '  internal:    internal: true    ipam:      config:        - subnet: '); then
+            echo "Internal subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
+
+            exit 1
+        else
+            patch__compose__add_networks
+            sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" docker-compose.yml
+        fi
     fi
 }
 
@@ -383,6 +413,8 @@ compose__run_update() {
     if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
+
+    patch__compose__configure_network_subnet
 
     patch__compose__remove_draft_approve || true
     patch__compose__remove_invoice_send_email || true
@@ -682,22 +714,46 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.0) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
 print_intro
 
-while getopts ":f" opt; do
-  case "${opt}" in
-    f)
-      FORCE_UPDATE=1
-      ;;
-  esac
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case "${key}" in
+  -v|--version)
+    echo "Setting UPDATE_TO_VERSION=$2"
+    UPDATE_TO_VERSION="$2"
+    shift # past argument value
+    ;;
+  --subnet)
+    echo "Setting NETWORK_SUBNET=$2"
+    NETWORK_SUBNET="$2"
+    shift # past argument value
+    ;;
+  --subnet-internal)
+    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
+    NETWORK_SUBNET_INTERNAL="$2"
+    shift # past argument value
+    ;;
+  -f|--force)
+    echo "Setting FORCE_UPDATE=1"
+    FORCE_UPDATE=1
+    ;;
+  *)
+    echo "Setting UPDATE_TO_VERSION=$1"
+    UPDATE_TO_VERSION="$1"
+    ;;
+esac
+shift # past argument key
 done
 
 if [[ "${FORCE_UPDATE}" = "1" ]]; then
-    do_update "${2:-}"
+    do_update "${UPDATE_TO_VERSION}"
 else
-    main "${1:-}"
+    main "${UPDATE_TO_VERSION}"
 fi
