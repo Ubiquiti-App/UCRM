@@ -9,8 +9,12 @@ set -o pipefail
 DATE=$(date +"%s")
 MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
+UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+
+NETWORK_SUBNET="${NETWORK_SUBNET:-}"
+NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
 
@@ -195,6 +199,18 @@ patch__compose__add_networks() {
     then
         echo "Updating docker-compose.migrate.yml networks configuration."
         sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" docker-compose.migrate.yml
+    fi
+}
+
+patch__compose__configure_network_subnet() {
+    if [[ "${NETWORK_SUBNET}" != "" ]]; then
+        patch__compose__add_networks
+        sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" docker-compose.yml
+    fi
+
+    if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+        patch__compose__add_networks
+        sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" docker-compose.yml
     fi
 }
 
@@ -383,6 +399,8 @@ compose__run_update() {
     if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
+
+    patch__compose__configure_network_subnet
 
     patch__compose__remove_draft_approve || true
     patch__compose__remove_invoice_send_email || true
@@ -688,16 +706,40 @@ print_intro() {
 }
 print_intro
 
-while getopts ":f" opt; do
-  case "${opt}" in
-    f)
-      FORCE_UPDATE=1
-      ;;
-  esac
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case "${key}" in
+  -v|--version)
+    echo "Setting UPDATE_TO_VERSION=$2"
+    UPDATE_TO_VERSION="$2"
+    shift # past argument value
+    ;;
+  --subnet)
+    echo "Setting NETWORK_SUBNET=$2"
+    NETWORK_SUBNET="$2"
+    shift # past argument value
+    ;;
+  --subnet-internal)
+    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
+    NETWORK_SUBNET_INTERNAL="$2"
+    shift # past argument value
+    ;;
+  -f|--force)
+    echo "Setting FORCE_UPDATE=1"
+    FORCE_UPDATE=1
+    ;;
+  *)
+    echo "Setting UPDATE_TO_VERSION=$1"
+    UPDATE_TO_VERSION="$1"
+    ;;
+esac
+shift # past argument key
 done
 
 if [[ "${FORCE_UPDATE}" = "1" ]]; then
-    do_update "${2:-}"
+    do_update "${UPDATE_TO_VERSION}"
 else
-    main "${1:-}"
+    main "${UPDATE_TO_VERSION}"
 fi
