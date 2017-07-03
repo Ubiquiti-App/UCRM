@@ -1,11 +1,5 @@
 version: '2'
 
-networks:
-  public:
-    internal: false
-  internal:
-    internal: true
-
 services:
   postgresql:
     image: postgres:9.5
@@ -13,8 +7,6 @@ services:
     env_file: docker-compose.env
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
-    networks:
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -26,9 +18,9 @@ services:
     restart: always
     env_file: docker-compose.env
     links:
-      - postgresql
-      - elastic
-      - rabbitmq
+      - postgresql:postgresql
+      - elastic:elastic
+      - rabbitmq:rabbitmq
     volumes:
       - ./data/ucrm:/data
     ports:
@@ -36,9 +28,6 @@ services:
       - 8081:81
       - 8443:443
     command: "server"
-    networks:
-      - public
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -50,8 +39,6 @@ services:
     restart: always
     volumes:
       - ./data/elasticsearch:/usr/share/elasticsearch/data
-    networks:
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -63,8 +50,6 @@ services:
     restart: always
     volumes:
       - ./data/rabbitmq:/var/lib/rabbitmq
-    networks:
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -78,13 +63,10 @@ services:
     volumes:
       - ./data/ucrm:/data
     links:
-      - postgresql
-      - elastic
-      - rabbitmq
+      - postgresql:postgresql
+      - elastic:elastic
+      - rabbitmq:rabbitmq
     command: "supervisord"
-    networks:
-      - public
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -98,13 +80,10 @@ services:
     volumes:
       - ./data/ucrm:/data
     links:
-      - postgresql
-      - elastic
-      - rabbitmq
+      - postgresql:postgresql
+      - elastic:elastic
+      - rabbitmq:rabbitmq
     command: "sync"
-    networks:
-      - public
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -118,13 +97,10 @@ services:
     volumes:
       - ./data/ucrm:/data
     links:
-      - postgresql
-      - elastic
-      - rabbitmq
+      - postgresql:postgresql
+      - elastic:elastic
+      - rabbitmq:rabbitmq
     command: "crm_search_devices"
-    networks:
-      - public
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -138,15 +114,12 @@ services:
     volumes:
       - ./data/ucrm:/data
     links:
-      - postgresql
-      - elastic
-      - rabbitmq
+      - postgresql:postgresql
+      - elastic:elastic
+      - rabbitmq:rabbitmq
     ports:
       - 2055:2055/udp
     command: "crm_netflow"
-    networks:
-      - public
-      - internal
     logging:
       driver: "json-file"
       options:
@@ -160,13 +133,10 @@ services:
     volumes:
       - ./data/ucrm:/data
     links:
-      - postgresql
-      - elastic
-      - rabbitmq
+      - postgresql:postgresql
+      - elastic:elastic
+      - rabbitmq:rabbitmq
     command: "crm_ping"
-    networks:
-      - public
-      - internal
     logging:
       driver: "json-file"
       options:

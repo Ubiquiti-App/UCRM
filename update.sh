@@ -384,8 +384,6 @@ compose__run_update() {
         needsVolumesFix=1
     fi
 
-    patch__compose__add_networks
-
     patch__compose__remove_draft_approve || true
     patch__compose__remove_invoice_send_email || true
 

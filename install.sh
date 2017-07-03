@@ -267,9 +267,18 @@ install_docker_compose() {
         exit 1
     fi
 
-    local DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
-    local DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
-    local DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
+    local DOCKER_COMPOSE_VERSION
+    local DOCKER_COMPOSE_MAJOR
+    local DOCKER_COMPOSE_MINOR
+
+    DOCKER_COMPOSE_VERSION="$(docker-compose -v | sed 's/.*version \([0-9]*\.[0-9]*\).*/\1/')"
+    if [[ "${DOCKER_COMPOSE_VERSION}" != "" ]]; then
+        DOCKER_COMPOSE_MAJOR="${DOCKER_COMPOSE_VERSION%.*}"
+        DOCKER_COMPOSE_MINOR="${DOCKER_COMPOSE_VERSION#*.}"
+    else
+        DOCKER_COMPOSE_MAJOR="0"
+        DOCKER_COMPOSE_MINOR="0"
+    fi
 
     if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
         echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
@@ -416,12 +425,37 @@ configure_cloud() {
     fi
 }
 
+patch__compose__add_networks() {
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:";
+    then
+        sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" "${UCRM_PATH}/docker-compose.yml"
+
+        sed -i -e "s/  postgresql:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  elastic:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  rabbitmq:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.yml"
+
+        sed -i -e "s/  web_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  supervisord:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  sync_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  crm_search_devices_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  crm_netflow_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+    fi
+
+    if ! cat -vt "${UCRM_PATH}/docker-compose.migrate.yml" | grep -Eq "networks:";
+    then
+        sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.migrate.yml"
+    fi
+}
+
 configure_network_subnet() {
     if [[ "${NETWORK_SUBNET}" != "" ]]; then
+        patch__compose__add_networks
         sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
     fi
 
     if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+        patch__compose__add_networks
         sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
