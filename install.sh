@@ -40,6 +40,8 @@ ALTERNATIVE_PORT_HTTP="${ALTERNATIVE_PORT_HTTP:-8080}"
 ALTERNATIVE_PORT_SUSPENSION="${ALTERNATIVE_PORT_SUSPENSION:-8081}"
 ALTERNATIVE_PORT_HTTPS="${ALTERNATIVE_PORT_HTTPS:-8443}"
 
+NO_AUTO_UPDATE="false"
+
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -78,6 +80,10 @@ case "${key}" in
   --skip-system-setup)
     echo "Setting SKIP_SYSTEM_SETUP=true"
     SKIP_SYSTEM_SETUP="true"
+    ;;
+  --no-auto-update)
+    echo "Setting NO_AUTO_UPDATE=true"
+    NO_AUTO_UPDATE="true"
     ;;
   *)
     # unknown option
@@ -342,6 +348,7 @@ download_docker_compose_files() {
         echo "Replacing env in docker compose."
         sed -i -e "s/POSTGRES_PASSWORD=ucrmdbpass1/POSTGRES_PASSWORD=${POSTGRES_PASSWORD}/g" "${UCRM_PATH}/docker-compose.env"
         sed -i -e "s/SECRET=changeThisSecretKey/SECRET=${SECRET}/g" "${UCRM_PATH}/docker-compose.env"
+        echo "UCRM_USER=${UCRM_USER}" >> "${UCRM_PATH}/docker-compose.env"
 
         check_ports
         configure_cloud
@@ -555,9 +562,58 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.1) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.2) |"
     echo "+------------------------------------------------+"
     echo ""
+}
+
+configure_auto_update_permissions() {
+    if [[ ! -d "${UCRM_PATH}/data/ucrm/updates" ]]; then
+        mkdir -p "${UCRM_PATH}/data/ucrm/updates"
+    fi
+
+    chown -R "${UCRM_USER}" "${UCRM_PATH}"
+}
+
+setup_auto_update() {
+    if ! (is_updating_to_version "${INSTALL_VERSION}" "2006000" 0 0); then
+        return 0
+    fi
+
+    if [[ "${NO_AUTO_UPDATE}" = "true" ]]; then
+        echo "Skipping auto-update setup."
+    else
+        if crontab -l -u "${UCRM_USER}"; then
+            if ! crontab -u "${UCRM_USER}" -r; then
+                echo "Failed to clean crontab."
+
+                exit 1
+            fi
+        fi
+
+        configure_auto_update_permissions
+
+        UPDATE_CRON_SCRIPT="${UCRM_PATH}/update-cron.sh"
+        curl -o "${UPDATE_CRON_SCRIPT}" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/update-cron.sh"
+
+        if ! (chown "${UCRM_USER}" "${UPDATE_CRON_SCRIPT}"); then
+          echo "Failed to setup auto-update script."
+
+          exit 1
+        fi
+
+        if ! (chmod +x "${UPDATE_CRON_SCRIPT}"); then
+          echo "Failed to setup auto-update script."
+
+          exit 1
+        fi
+
+        if ! (crontab -l -u "${UCRM_USER}"; echo "* * * * * ${UPDATE_CRON_SCRIPT} > /dev/null 2>&1 || true") | crontab -u "${UCRM_USER}" -; then
+          echo "Failed to setup auto-update cron job."
+
+          exit 1
+        fi
+    fi
 }
 
 main() {
@@ -573,6 +629,7 @@ main() {
     download_docker_compose_files
     download_docker_images
     configure_wizard_user
+    setup_auto_update
     start_docker_images
     detect_installation_finished
     print_wizard_login
