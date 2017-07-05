@@ -13,6 +13,15 @@ UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
 
+UCRM_USER="${UCRM_USER:-ucrm}"
+if [[ -f docker-compose.env ]]; then
+    if ( cat -vt docker-compose.env | grep -Eq "UCRM_USER=" ); then
+        UCRM_USER=$(cat -vt docker-compose.env | grep -E "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
+    fi
+fi
+NO_AUTO_UPDATE="false"
+CRON="false"
+
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
 NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 
@@ -93,6 +102,7 @@ compose__backup() {
     echo "Backing up docker compose files."
     if [[ ! -d ./docker-compose-backups ]]; then
         mkdir ./docker-compose-backups
+        chown -R "${UCRM_USER}" "./docker-compose-backups"
     fi
 
     if [[ "" != "$(find . -maxdepth 1 -name 'docker-compose.env.*.backup' -print -quit)" ]]; then
@@ -126,11 +136,15 @@ compose__restore() {
 }
 
 is_updating_to_version() {
-    declare to="${1}" required="${2}" allowLatest="${3}"
+    declare to="${1}" required="${2}" allowLatest="${3}" allowBeta="${4:-1}"
     local toVersion
 
     if [[ "${to}" = "beta" ]]; then
-        return 0
+        if [[ "${allowBeta}" = "1" ]]; then
+            return 0
+        else
+            return 1
+        fi
     fi
 
     if [[ "${to}" = "latest" ]]; then
@@ -512,6 +526,7 @@ containers__run_update() {
 
     fi
 
+    setup_auto_update
     docker-compose up -d --remove-orphans
     docker-compose ps
 }
@@ -687,10 +702,100 @@ flush_udp_conntrack() {
     docker run --net=host --privileged --rm ubnt/ucrm-conntrack
 }
 
+get_ucrm_data_path() {
+    if ! ( cat -vt "docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
+    then
+        cat -vt "docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | awk ' {print $NF}' | awk -F: '{print $1}'
+    else
+        echo "data/ucrm"
+    fi
+}
+
+configure_auto_update_permissions() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 0); then
+        return 0
+    fi
+
+    if [[ "${NO_AUTO_UPDATE}" = "true" ]] || [[ "${CRON}" = "true" ]]; then
+        echo "Skipping auto-update permissions setup."
+    else
+        UCRM_DATA_PATH=$(get_ucrm_data_path)
+        UCRM_UPDATES_PATH="${UCRM_DATA_PATH}/updates"
+
+        if [[ ! -d "${UCRM_UPDATES_PATH}" ]]; then
+            mkdir -p "${UCRM_UPDATES_PATH}"
+            chown -R "${UCRM_USER}" "${UCRM_UPDATES_PATH}"
+        fi
+
+        if [[ -d "./docker-compose-backups" ]]; then
+            chown -R "${UCRM_USER}" "./docker-compose-backups"
+        fi
+
+        chown -R "${UCRM_USER}" "${UCRM_UPDATES_PATH}"
+        chown -R "${UCRM_USER}" "${UCRM_DATA_PATH}" || true
+
+        if [[ -f docker-compose.yml ]]; then
+            chown "${UCRM_USER}" docker-compose.yml
+        fi
+
+        if [[ -f docker-compose.migrate.yml ]]; then
+            chown "${UCRM_USER}" docker-compose.migrate.yml
+        fi
+
+        if [[ -f docker-compose.version.yml ]]; then
+            chown "${UCRM_USER}" docker-compose.version.yml
+        fi
+
+        if [[ -f docker-compose.env ]]; then
+            chown "${UCRM_USER}" docker-compose.env
+        fi
+    fi
+}
+
+setup_auto_update() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 0); then
+        return 0
+    fi
+
+    if [[ "${NO_AUTO_UPDATE}" = "true" ]]; then
+        echo "Skipping auto-update setup."
+    else
+        if crontab -l -u "${UCRM_USER}"; then
+            if ! crontab -u "${UCRM_USER}" -r; then
+                echo "Failed to clean crontab."
+
+                exit 1
+            fi
+        fi
+
+        UPDATE_CRON_SCRIPT="$(pwd)/update-cron.sh"
+        curl -o "${UPDATE_CRON_SCRIPT}" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/update-cron.sh"
+
+        if ! (chown "${UCRM_USER}" "${UPDATE_CRON_SCRIPT}"); then
+          echo "Failed to setup auto-update script."
+
+          exit 1
+        fi
+
+        if ! (chmod +x "${UPDATE_CRON_SCRIPT}"); then
+          echo "Failed to setup auto-update script."
+
+          exit 1
+        fi
+
+        if ! (crontab -l -u "${UCRM_USER}"; echo "* * * * * ${UPDATE_CRON_SCRIPT} > /dev/null 2>&1 || true") | crontab -u "${UCRM_USER}" -; then
+          echo "Failed to setup auto-update cron job."
+
+          exit 1
+        fi
+    fi
+}
+
 do_update() {
     declare toVersion="${1}"
 
     install_docker_compose
+    configure_auto_update_permissions
     compose__backup
     compose__run_update "${toVersion}"
     containers__run_update "${toVersion}"
@@ -728,7 +833,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.1) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.2) |"
     echo "+------------------------------------------------+"
     echo ""
 }
@@ -757,6 +862,14 @@ case "${key}" in
   -f|--force)
     echo "Setting FORCE_UPDATE=1"
     FORCE_UPDATE=1
+    ;;
+  --no-auto-update)
+    echo "Setting NO_AUTO_UPDATE=true"
+    NO_AUTO_UPDATE="true"
+    ;;
+  --cron)
+    echo "Setting CRON=true"
+    CRON="true"
     ;;
   *)
     echo "Setting UPDATE_TO_VERSION=$1"
