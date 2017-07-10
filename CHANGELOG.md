@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.5.2 (2017-07-10)
+
+### Added
+*	Service status now available in UCRM API.
+*	Added missing provinces for Canada.
+
+### Fixed
+*	Custom client attributes not shown in some cases when custom invoice template was used.
+*	No taxes applied automatically when adding a late fee to an invoice manually.
+*	Flag for "Separate invoicing of prorated period" was ignored in automatic recurring invoicing in some rare cases.
+*	Better error handling when setting up Stripe recurring payments.
+
 ## 2.5.1 (2017-06-30)
 
 ### Fixed
