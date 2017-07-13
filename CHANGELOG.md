@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.5.3 (2017-07-13)
+
+### Added
+*	PHP updated to version 7.1.7.
+
+### Fixed
+*	Failing HTTPS setup with custom SSL certificate upload.
+
 ## 2.5.2 (2017-07-10)
 
 ### Added
