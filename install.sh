@@ -475,7 +475,7 @@ download_docker_images() {
 }
 
 configure_wizard_user() {
-    if ! (is_updating_to_version "${INSTALL_VERSION}" "2006000" 0 0); then
+    if ! (is_updating_to_version "${INSTALL_VERSION}" "2006000" 0 1); then
         return 0
     fi
 
@@ -576,7 +576,7 @@ configure_auto_update_permissions() {
 }
 
 setup_auto_update() {
-    if ! (is_updating_to_version "${INSTALL_VERSION}" "2006000" 0 0); then
+    if ! (is_updating_to_version "${INSTALL_VERSION}" "2006000" 0 1); then
         return 0
     fi
 

@@ -712,7 +712,7 @@ get_ucrm_data_path() {
 }
 
 configure_auto_update_permissions() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 0); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 1); then
         return 0
     fi
 
@@ -753,7 +753,7 @@ configure_auto_update_permissions() {
 }
 
 setup_auto_update() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 0); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 1); then
         return 0
     fi
 
