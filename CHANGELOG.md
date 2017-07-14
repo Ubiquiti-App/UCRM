@@ -6,10 +6,11 @@
 *	Ticketing module. Ticket is automatically created when a client sends a request from the client zone. Features: keep track of the communication, assign it to an administrator, mark as solved, manage with API.
 *	Bulk emailing module. You can send an email to a subset of your clients in System > Tools > Mailing.
 *	Scheduling improvements. Now you can add tasks into a job which can be used as TODO list.
+*	Custom clients' tags. You can create a custom tag (such as VIP or Downloader) and associate it with client. Then you can also filter clients by these tags.
 *	Google calendar synchronization. Sync your UCRM jobs into your google calendar account.
 *	IPpay automatic subscription payments. Administrators or clients can set up recurring payments using IPpay.
 *	Shaping burst for airOS CPE devices. Define the download and upload burst for each service plan in System > Items.
-*	Custom clients' tags. You can create a custom tag (such as VIP or Downloader) and associate it with client. Then you can also filter clients by these tags.
+*	In-app upgrade feature. As of this version, you will be notified about a new version available and you can upgrade to it using a single button. 
 *	All important grids can be exported to CSV or PDF now.
 *	Now you can resend any email whose sending failed. Go to client's email log or system email log.
 *	New system notification settings - decide whether to send them by email or into the header notification status bar. Go to System > Notifications > Settings.
