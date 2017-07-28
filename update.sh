@@ -730,6 +730,8 @@ configure_auto_update_permissions() {
     if [[ "${NO_AUTO_UPDATE}" = "true" ]] || [[ "${CRON}" = "true" ]]; then
         echo "Skipping auto-update permissions setup."
     else
+        echo "Configuring auto-update permissions."
+
         UCRM_DATA_PATH=$(get_ucrm_data_path)
         UCRM_UPDATES_PATH="${UCRM_DATA_PATH}/updates"
 
@@ -760,6 +762,10 @@ configure_auto_update_permissions() {
         if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
             chown "${UCRM_USER}" "${UCRM_PATH}/docker-compose.env"
         fi
+
+        if [[ -f "${UCRM_PATH}/update.sh" ]]; then
+            chown "${UCRM_USER}" "${UCRM_PATH}/update.sh"
+        fi
     fi
 }
 
@@ -771,6 +777,8 @@ setup_auto_update() {
     if [[ "${NO_AUTO_UPDATE}" = "true" ]]; then
         echo "Skipping auto-update setup."
     else
+        echo "Configuring auto-update."
+
         if crontab -l -u "${UCRM_USER}"; then
             if ! crontab -u "${UCRM_USER}" -r; then
                 echo "Failed to clean crontab."
@@ -804,6 +812,7 @@ setup_auto_update() {
 
 do_update() {
     declare toVersion="${1}"
+    UPDATING_TO="${toVersion}"
 
     install_docker_compose
     configure_auto_update_permissions
@@ -890,7 +899,7 @@ esac
 shift # past argument key
 done
 
-if [[ "${FORCE_UPDATE}" = "1" ]]; then
+if [[ "${FORCE_UPDATE}" = "1" ]] && [[ "${UPDATE_TO_VERSION}" != "" ]]; then
     do_update "${UPDATE_TO_VERSION}"
 else
     main "${UPDATE_TO_VERSION}"
