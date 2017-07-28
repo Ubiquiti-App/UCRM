@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.6.0-beta2 (2017-07-28)
+
+### Added
+*	Payment subscriptions can be removed from UCRM even without connection to the payment gateway.
+*	App speed improvements for client's detail page having many log entries.
+
+### Changed
+*	NetFlow auto setup now available only for EdgeRouters.
+*	Ticket notifications are sent from the support email address now.
+
+### Fixed
+*	No shaping burst was set on airOS devices with egress only shaping.
+*	Payments coming from IPpay subscriptions are labeled correctly now.
+*	User-friendly notification shown when a client cannot be deleted due to an existing payment subscription.
+*	Minor data adjustments when submitting Authorize.Net payment form.
+*	Failing IPpay payments and subscriptions with CC expiration month in October.
+*	XSS vulnerability in scheduling timeline.
+*	UI fixes and improvements.
+
 ## 2.6.0-beta1 (2017-07-14)
 
 ### Added
