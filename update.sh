@@ -12,11 +12,18 @@ FORCE_UPDATE=0
 UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+UCRM_PATH="${UCRM_PATH:-}"
+if [[ "${UCRM_PATH}" = "" ]]; then
+    UCRM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
+fi
+if [[ "${UCRM_PATH}" = "" ]]; then
+    UCRM_PATH="."
+fi
 
 UCRM_USER="${UCRM_USER:-ucrm}"
-if [[ -f docker-compose.env ]]; then
-    if ( cat -vt docker-compose.env | grep -Eq "UCRM_USER=" ); then
-        UCRM_USER=$(cat -vt docker-compose.env | grep -E "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
+if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
+    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_USER=" ); then
+        UCRM_USER=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
     fi
 fi
 NO_AUTO_UPDATE="false"
@@ -44,7 +51,7 @@ install_docker_compose() {
         exit 1
     fi
 
-    if (cat -vt docker-compose.yml | grep -Eq "networks:") || [[ "${NETWORK_SUBNET}" != "" ]] || [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+    if (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:") || [[ "${NETWORK_SUBNET}" != "" ]] || [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
         local DOCKER_COMPOSE_VERSION
         local DOCKER_COMPOSE_MAJOR
         local DOCKER_COMPOSE_MINOR
@@ -100,38 +107,38 @@ check_yml() {
 
 compose__backup() {
     echo "Backing up docker compose files."
-    if [[ ! -d ./docker-compose-backups ]]; then
-        mkdir ./docker-compose-backups
-        chown -R "${UCRM_USER}" "./docker-compose-backups"
+    if [[ ! -d "${UCRM_PATH}/docker-compose-backups" ]]; then
+        mkdir "${UCRM_PATH}/docker-compose-backups"
+        chown -R "${UCRM_USER}" "${UCRM_PATH}/docker-compose-backups"
     fi
 
-    if [[ "" != "$(find . -maxdepth 1 -name 'docker-compose.env.*.backup' -print -quit)" ]]; then
-        mv -f docker-compose.env.*.backup ./docker-compose-backups
+    if [[ "" != "$(find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.env.*.backup' -print -quit)" ]]; then
+        mv -f "${UCRM_PATH}/docker-compose.env.*.backup" "${UCRM_PATH}/docker-compose-backups"
     fi
 
-    if [[ "" != "$(find . -maxdepth 1 -name 'docker-compose.yml.*.backup' -print -quit)" ]]; then
-        mv -f docker-compose.yml.*.backup ./docker-compose-backups
+    if [[ "" != "$(find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.yml.*.backup' -print -quit)" ]]; then
+        mv -f "${UCRM_PATH}/docker-compose.yml.*.backup" "${UCRM_PATH}/docker-compose-backups"
     fi
 
-    cp docker-compose.yml ./docker-compose-backups/docker-compose.yml."${DATE}".backup
-    cp docker-compose.env ./docker-compose-backups/docker-compose.env."${DATE}".backup
-    if [[ -f docker-compose.migrate.yml ]]; then
-        cp docker-compose.migrate.yml ./docker-compose-backups/docker-compose.migrate.yml."${DATE}".backup
+    cp "${UCRM_PATH}/docker-compose.yml" "${UCRM_PATH}/docker-compose-backups/docker-compose.yml.${DATE}.backup"
+    cp "${UCRM_PATH}/docker-compose.env" "${UCRM_PATH}/docker-compose-backups/docker-compose.env.${DATE}.backup"
+    if [[ -f "${UCRM_PATH}/docker-compose.migrate.yml" ]]; then
+        cp "${UCRM_PATH}/docker-compose.migrate.yml" "${UCRM_PATH}/docker-compose-backups/docker-compose.migrate.yml.${DATE}.backup"
     fi
-    if [[ -f docker-compose.version.yml ]]; then
-        cp docker-compose.version.yml ./docker-compose-backups/docker-compose.version.yml."${DATE}".backup
+    if [[ -f "${UCRM_PATH}/docker-compose.version.yml" ]]; then
+        cp "${UCRM_PATH}/docker-compose.version.yml" "${UCRM_PATH}/docker-compose-backups/docker-compose.version.yml.${DATE}.backup"
     fi
 }
 
 compose__restore() {
     echo "Reverting docker compose files."
-    cp -f ./docker-compose-backups/docker-compose.yml."${DATE}".backup docker-compose.yml
-    cp -f ./docker-compose-backups/docker-compose.env."${DATE}".backup docker-compose.env
-    if [[ -f docker-compose.migrate.yml."${DATE}".backup ]]; then
-        cp -f docker-compose.migrate.yml ./docker-compose-backups/docker-compose.migrate.yml."${DATE}".backup docker-compose.migrate.yml
+    cp -f "${UCRM_PATH}/docker-compose-backups/docker-compose.yml.${DATE}.backup" "${UCRM_PATH}/docker-compose.yml"
+    cp -f "${UCRM_PATH}/docker-compose-backups/docker-compose.env.${DATE}.backup" "${UCRM_PATH}/docker-compose.env"
+    if [[ -f "${UCRM_PATH}/docker-compose-backups/docker-compose.migrate.yml.${DATE}.backup" ]]; then
+        cp -f "${UCRM_PATH}/docker-compose-backups/docker-compose.migrate.yml.${DATE}.backup" "${UCRM_PATH}/docker-compose.migrate.yml"
     fi
-    if [[ -f docker-compose.version.yml."${DATE}".backup ]]; then
-        cp -f docker-compose.version.yml ./docker-compose-backups/docker-compose.version.yml."${DATE}".backup docker-compose.version.yml
+    if [[ -f "${UCRM_PATH}/docker-compose-backups/docker-compose.version.yml.${DATE}.backup" ]]; then
+        cp -f "${UCRM_PATH}/docker-compose-backups/docker-compose.version.yml.${DATE}.backup" "${UCRM_PATH}/docker-compose.version.yml"
     fi
 }
 
@@ -165,114 +172,114 @@ is_updating_to_version() {
 }
 
 patch__compose__add_elastic_section() {
-    if ! ( cat -vt docker-compose.yml | grep -Eq "  elastic:" );
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  elastic:" );
     then
         echo "Your docker-compose doesn't contain Elastic section. Trying to add."
-        echo -e "\n\n  elastic:\n    image: elasticsearch:2\n    restart: always" >> docker-compose.yml
+        echo -e "\n\n  elastic:\n    image: elasticsearch:2\n    restart: always" >> "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
 patch__compose__add_elastic_links() {
-    if ( cat -vt docker-compose.yml | tr -d '\n' | grep -Eq "      - postgresql {4}[a-z]" );
+    if ( cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Eq "      - postgresql {4}[a-z]" );
     then
         echo "Adding Elastic container links."
-        sed -i -e "/      - elastic/d" docker-compose.yml
-        sed -i -e "s/      - postgresql/&\n      - elastic/g" docker-compose.yml
+        sed -i -e "/      - elastic/d" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/      - postgresql/&\n      - elastic/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
 patch__compose__fix_postgres_restart() {
-    if ! ( grep 'image: postgres' -A1 docker-compose.yml | grep -q "restart" );
+    if ! ( grep 'image: postgres' -A1 "${UCRM_PATH}/docker-compose.yml" | grep -q "restart" );
     then
         echo "Updating postgres service"
-        sed -i -e "s/image: postgres:9.5/&\n    restart: always/g" docker-compose.yml
+        sed -i -e "s/image: postgres:9.5/&\n    restart: always/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
 patch__compose__fix_elastic_restart() {
-    if ! ( grep 'image: elasticsearch' -A1 docker-compose.yml | grep -q "restart" );
+    if ! ( grep 'image: elasticsearch' -A1 "${UCRM_PATH}/docker-compose.yml" | grep -q "restart" );
     then
         echo "Updating elastic service"
-        sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" docker-compose.yml
+        sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
 patch__compose__add_logging() {
-    if ! cat -vt docker-compose.yml | grep -Eq "    logging:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "    logging:";
     then
         echo "Updating logging configuration."
-        sed -i -e "s/^  [a-z_]\+:$/&\n    logging:\n      driver: \"json-file\"\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"/g" docker-compose.yml
+        sed -i -e "s/^  [a-z_]\+:$/&\n    logging:\n      driver: \"json-file\"\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
 patch__compose__add_networks() {
-    if ! cat -vt docker-compose.yml | grep -Eq "networks:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:";
     then
         echo "Updating docker-compose.yml networks configuration."
-        sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" docker-compose.yml
+        sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" "${UCRM_PATH}/docker-compose.yml"
 
-        sed -i -e "s/  postgresql:/&\n    networks:\n      - internal/g" docker-compose.yml
-        sed -i -e "s/  elastic:/&\n    networks:\n      - internal/g" docker-compose.yml
-        sed -i -e "s/  rabbitmq:/&\n    networks:\n      - internal/g" docker-compose.yml
+        sed -i -e "s/  postgresql:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  elastic:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  rabbitmq:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.yml"
 
-        sed -i -e "s/  web_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
-        sed -i -e "s/  supervisord:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
-        sed -i -e "s/  sync_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
-        sed -i -e "s/  crm_search_devices_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
-        sed -i -e "s/  crm_netflow_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
-        sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" docker-compose.yml
+        sed -i -e "s/  web_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  supervisord:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  sync_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  crm_search_devices_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  crm_netflow_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 
-    if ! cat -vt docker-compose.migrate.yml | grep -Eq "networks:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.migrate.yml" | grep -Eq "networks:";
     then
         echo "Updating docker-compose.migrate.yml networks configuration."
-        sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" docker-compose.migrate.yml
+        sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.migrate.yml"
     fi
 }
 
 patch__compose__configure_network_subnet() {
     if [[ "${NETWORK_SUBNET}" != "" ]]; then
-        if (cat -vt docker-compose.yml | tr -d '\n' | grep -Eq '  public:    internal: false    ipam:      config:        - subnet: '); then
+        if (cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Eq '  public:    internal: false    ipam:      config:        - subnet: '); then
             echo "Subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
 
             exit 1
         else
             patch__compose__add_networks
-            sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" docker-compose.yml
+            sed -i -e "s|    internal: false|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET}|g" "${UCRM_PATH}/docker-compose.yml"
         fi
     fi
 
     if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
-        if (cat -vt docker-compose.yml | tr -d '\n' | grep -Eq '  internal:    internal: true    ipam:      config:        - subnet: '); then
+        if (cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Eq '  internal:    internal: true    ipam:      config:        - subnet: '); then
             echo "Internal subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
 
             exit 1
         else
             patch__compose__add_networks
-            sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" docker-compose.yml
+            sed -i -e "s|    internal: true|&\n    ipam:\n      config:\n        - subnet: ${NETWORK_SUBNET_INTERNAL}|g" "${UCRM_PATH}/docker-compose.yml"
         fi
     fi
 }
 
 patch__compose__download_migrate_file() {
-    if [[ ! -f docker-compose.migrate.yml ]]; then
+    if [[ ! -f "${UCRM_PATH}/docker-compose.migrate.yml" ]]; then
         echo "Downloading docker compose migrate file."
-        curl -o docker-compose.migrate.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.migrate.yml"
-        check_yml docker-compose.migrate.yml docker-compose.yml
+        curl -o "${UCRM_PATH}/docker-compose.migrate.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.migrate.yml"
+        check_yml "${UCRM_PATH}/docker-compose.migrate.yml" "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
-        check_yml docker-compose.migrate.yml docker-compose.yml
+        check_yml "${UCRM_PATH}/docker-compose.migrate.yml" "${UCRM_PATH}/docker-compose.yml"
 
         return 1
     fi
 }
 
 patch__compose__add_search_devices_section() {
-    if ! ( cat -vt docker-compose.yml | grep -Eq "  crm_search_devices_app:" );
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_search_devices_app:" );
     then
         echo "Your docker-compose doesn't contain UCRM search devices section. Trying to add."
-        echo -e "\n  crm_search_devices_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_search_devices\"" >> docker-compose.yml
+        echo -e "\n  crm_search_devices_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_search_devices\"" >> "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -281,10 +288,10 @@ patch__compose__add_search_devices_section() {
 }
 
 patch__compose__add_netflow_section() {
-    if ! (cat -vt docker-compose.yml | grep -Eq "  crm_netflow_app:");
+    if ! (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_netflow_app:");
     then
         echo "Your docker-compose doesn't contain Netflow section. Trying to add."
-        echo -e "\n  crm_netflow_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    ports:\n      - 2055:2055/udp\n    command: \"crm_netflow\"" >> docker-compose.yml
+        echo -e "\n  crm_netflow_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    ports:\n      - 2055:2055/udp\n    command: \"crm_netflow\"" >> "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -293,10 +300,10 @@ patch__compose__add_netflow_section() {
 }
 
 patch__compose__add_ping_section() {
-    if ! cat -vt docker-compose.yml | grep -Eq "  crm_ping_app:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_ping_app:";
     then
         echo "Your docker-compose doesn't contain Ping section. Trying to add."
-        echo -e "\n  crm_ping_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_ping\"" >> docker-compose.yml
+        echo -e "\n  crm_ping_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_ping\"" >> "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -305,10 +312,10 @@ patch__compose__add_ping_section() {
 }
 
 patch__compose__add_elasticsearch_volumes() {
-    if ! cat -vt docker-compose.yml | grep -Eq "/usr/share/elasticsearch/data";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "/usr/share/elasticsearch/data";
     then
         echo "Updating Elasticsearch volumes configuration."
-        sed -i -e "s/image: elasticsearch:2/&\n    volumes:\n      - \.\/data\/elasticsearch:\/usr\/share\/elasticsearch\/data/g" docker-compose.yml
+        sed -i -e "s/image: elasticsearch:2/&\n    volumes:\n      - \.\/data\/elasticsearch:\/usr\/share\/elasticsearch\/data/g" "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -321,12 +328,12 @@ patch__compose__add_rabbitmq() {
         return 1
     fi
 
-    if ! cat -vt docker-compose.yml | grep -Eq "  rabbitmq:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  rabbitmq:";
     then
         echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
-        echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n    command: \"supervisord\"" >> docker-compose.yml
+        echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n    command: \"supervisord\"" >> "${UCRM_PATH}/docker-compose.yml"
         echo "Adding RabbitMQ container links."
-        sed -i -e "s/      - elastic/&\n      - rabbitmq/g" docker-compose.yml
+        sed -i -e "s/      - elastic/&\n      - rabbitmq/g" "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -339,11 +346,11 @@ patch__compose__remove_draft_approve() {
         return 1
     fi
 
-    if cat -vt docker-compose.yml | grep -Eq "  crm_draft_approve_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_draft_approve_app:";
     then
         echo "Your docker-compose contains obsolete section crm_draft_approve_app. Trying to remove."
-        sed -i -e '/crm_draft_approve_app/,/^  [^ ]/{//!d}' docker-compose.yml
-        sed -i -e '/crm_draft_approve_app/d' docker-compose.yml
+        sed -i -e '/crm_draft_approve_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/crm_draft_approve_app/d' "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -356,11 +363,11 @@ patch__compose__remove_invoice_send_email() {
         return 1
     fi
 
-    if cat -vt docker-compose.yml | grep -Eq "  crm_invoice_send_email_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_invoice_send_email_app:";
     then
         echo "Your docker-compose contains obsolete section crm_invoice_send_email_app. Trying to remove."
-        sed -i -e '/crm_invoice_send_email_app/,/^  [^ ]/{//!d}' docker-compose.yml
-        sed -i -e '/crm_invoice_send_email_app/d' docker-compose.yml
+        sed -i -e '/crm_invoice_send_email_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/crm_invoice_send_email_app/d' "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -372,34 +379,34 @@ patch__compose__correct_volumes() {
     declare newPath="${1}"
 
     echo "Correcting volumes path."
-    sed -i -e "s/      - .\/data\/ucrm:\/data/${newPath}/g" docker-compose.yml
-    sed -i -e "s/      - .\/data\/ucrm:\/data/${newPath}/g" docker-compose.migrate.yml
+    sed -i -e "s/      - .\/data\/ucrm:\/data/${newPath}/g" "${UCRM_PATH}/docker-compose.yml"
+    sed -i -e "s/      - .\/data\/ucrm:\/data/${newPath}/g" "${UCRM_PATH}/docker-compose.migrate.yml"
 }
 
 patch__compose_env__fix_server_port() {
-    if ! grep -q 'SERVER_PORT' docker-compose.env;
+    if ! grep -q 'SERVER_PORT' "${UCRM_PATH}/docker-compose.env";
     then
-        SERVER_PORT=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+        SERVER_PORT=$(grep -A 20 --color=never "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
         echo "Adding ${SERVER_PORT} as server port, you can change it in UCRM System > Settings > Application > Server port"
-        echo "#used only in installation" >> docker-compose.env
-        echo "SERVER_PORT=${SERVER_PORT}" >> docker-compose.env
+        echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
+        echo "SERVER_PORT=${SERVER_PORT}" >> "${UCRM_PATH}/docker-compose.env"
     fi
 }
 
 patch__compose_env__fix_suspend_port() {
-    if ! grep -q 'SERVER_SUSPEND_PORT' docker-compose.env;
+    if ! grep -q 'SERVER_SUSPEND_PORT' "${UCRM_PATH}/docker-compose.env";
     then
-        SERVER_SUSPEND_PORT=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1)
+        SERVER_SUSPEND_PORT=$(grep -A 20 --color=never "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1)
         echo "Adding ${SERVER_SUSPEND_PORT} as suspend port, you can change it in UCRM System > Settings > Application > Server suspend port"
-        echo "#used only in installation" >> docker-compose.env
-        echo "SERVER_SUSPEND_PORT=${SERVER_SUSPEND_PORT}" >> docker-compose.env
+        echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
+        echo "SERVER_SUSPEND_PORT=${SERVER_SUSPEND_PORT}" >> "${UCRM_PATH}/docker-compose.env"
     fi
 }
 
 compose__get_correct_volumes_path() {
-    if ! ( cat -vt docker-compose.yml | grep -Eq "\.\/data\/ucrm:\/data" );
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
     then
-        cat -vt docker-compose.yml | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
+        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
     else
         echo ""
     fi
@@ -452,7 +459,7 @@ compose__run_update() {
     patch__compose_env__fix_server_port
     patch__compose_env__fix_suspend_port
 
-    check_yml docker-compose.yml
+    check_yml "${UCRM_PATH}/docker-compose.yml"
 }
 
 containers__is_revert_supported() {
@@ -482,10 +489,10 @@ containers__run_update() {
     declare version="${1}"
     local revertVersion
 
-    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${version}/g" docker-compose.yml
-    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${version}/g" docker-compose.migrate.yml
+    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${version}/g" "${UCRM_PATH}/docker-compose.yml"
+    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${version}/g" "${UCRM_PATH}/docker-compose.migrate.yml"
 
-    if ! (docker-compose pull); then
+    if ! (docker-compose -f "${UCRM_PATH}/docker-compose.yml" pull); then
         if [[ "${FORCE_UPDATE}" = "0" ]]; then
             echo "Image for version \"${version}\" not found."
             compose__restore
@@ -493,14 +500,14 @@ containers__run_update() {
             exit 1
         fi
     fi
-    docker-compose -f docker-compose.yml -f docker-compose.migrate.yml stop
-    docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
     if containers__is_revert_supported "${version}";
     then
-        if ( docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app | tee "${MIGRATE_OUTPUT}" );
+        if ( docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" run migrate_app | tee "${MIGRATE_OUTPUT}" );
         then
-            docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
+            docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
         else
             revertVersion=$(grep --color=never 'UCRM will be reverted to version' "${MIGRATE_OUTPUT}" | awk ' {print $NF}')
             if [[ "${revertVersion}" != "" ]]; then
@@ -515,8 +522,8 @@ containers__run_update() {
                 echo "|                                                             |"
                 echo "| ########################################################### |"
 
-                docker-compose -f docker-compose.yml -f docker-compose.migrate.yml stop
-                docker-compose -f docker-compose.yml -f docker-compose.migrate.yml rm -af
+                docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
+                docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
                 exit 1
             fi
@@ -527,8 +534,8 @@ containers__run_update() {
     fi
 
     setup_auto_update
-    docker-compose up -d --remove-orphans
-    docker-compose ps
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" up -d --remove-orphans
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" ps
 }
 
 confirm_ucrm_running() {
@@ -536,7 +543,7 @@ confirm_ucrm_running() {
     local webAppPort
 
     ucrmRunning=false
-    webAppPort=$(grep -A 20 --color=never "web_app" docker-compose.yml | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+    webAppPort=$(grep -A 20 --color=never "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
     n=0
     until [ ${n} -ge 10 ]
     do
@@ -561,7 +568,7 @@ confirm_ucrm_running() {
 
 detect_update_finished() {
     # print web container log and wait for its initialization
-    containerName=$(docker-compose ps | grep -m1 "make server" | awk '{print $1}')
+    containerName=$(docker-compose -f "${UCRM_PATH}/docker-compose.yml" ps | grep -m1 "make server" | awk '{print $1}')
     docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
     		echo "UCRM is booting now, will be available soon"; \
     	else \
@@ -580,22 +587,22 @@ detect_update_finished() {
 get_from_version() {
     local fromVersion
 
-    if [[ ! -f docker-compose.version.yml ]]; then
-        curl -o docker-compose.version.yml "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
+    if [[ ! -f "${UCRM_PATH}/docker-compose.version.yml" ]]; then
+        curl -o "${UCRM_PATH}/docker-compose.version.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
 
-    if (cat -vt docker-compose.yml | grep -Eq "networks:") && ! (cat -vt docker-compose.version.yml | grep -Eq "networks:");
+    if (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:") && ! (cat -vt "${UCRM_PATH}/docker-compose.version.yml" | grep -Eq "networks:");
     then
-        sed -i -e "s/  get_version_app:/&\n    networks:\n      - internal/g" docker-compose.version.yml
+        sed -i -e "s/  get_version_app:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.version.yml"
     fi
 
-    check_yml docker-compose.version.yml docker-compose.yml
+    check_yml "${UCRM_PATH}/docker-compose.version.yml" "${UCRM_PATH}/docker-compose.yml"
 
-    currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" docker-compose.yml | head -1 | awk -F: '{print $NF}')"
-    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" docker-compose.version.yml
+    currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" "${UCRM_PATH}/docker-compose.yml" | head -1 | awk -F: '{print $NF}')"
+    sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" "${UCRM_PATH}/docker-compose.version.yml"
 
-    fromVersion=$(docker-compose -f docker-compose.yml -f docker-compose.version.yml run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
-    docker-compose -f docker-compose.yml -f docker-compose.version.yml rm -f get_version_app > /dev/null 2>&1
+    fromVersion=$(docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.version.yml" run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.version.yml" rm -f get_version_app > /dev/null 2>&1
 
     echo "${fromVersion}"
 }
@@ -692,10 +699,14 @@ cleanup_old_images() {
 }
 
 cleanup_old_backups() {
-    (find . -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find . -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find . -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find . -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
 }
 
 flush_udp_conntrack() {
@@ -703,9 +714,9 @@ flush_udp_conntrack() {
 }
 
 get_ucrm_data_path() {
-    if ! ( cat -vt "docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
     then
-        cat -vt "docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | awk ' {print $NF}' | awk -F: '{print $1}'
+        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | awk ' {print $NF}' | awk -F: '{print $1}'
     else
         echo "data/ucrm"
     fi
@@ -727,27 +738,27 @@ configure_auto_update_permissions() {
             chown -R "${UCRM_USER}" "${UCRM_UPDATES_PATH}"
         fi
 
-        if [[ -d "./docker-compose-backups" ]]; then
-            chown -R "${UCRM_USER}" "./docker-compose-backups"
+        if [[ -d "${UCRM_PATH}/docker-compose-backups" ]]; then
+            chown -R "${UCRM_USER}" "${UCRM_PATH}/docker-compose-backups"
         fi
 
         chown -R "${UCRM_USER}" "${UCRM_UPDATES_PATH}"
         chown -R "${UCRM_USER}" "${UCRM_DATA_PATH}" || true
 
-        if [[ -f docker-compose.yml ]]; then
-            chown "${UCRM_USER}" docker-compose.yml
+        if [[ -f "${UCRM_PATH}/docker-compose.yml" ]]; then
+            chown "${UCRM_USER}" "${UCRM_PATH}/docker-compose.yml"
         fi
 
-        if [[ -f docker-compose.migrate.yml ]]; then
-            chown "${UCRM_USER}" docker-compose.migrate.yml
+        if [[ -f "${UCRM_PATH}/docker-compose.migrate.yml" ]]; then
+            chown "${UCRM_USER}" "${UCRM_PATH}/docker-compose.migrate.yml"
         fi
 
-        if [[ -f docker-compose.version.yml ]]; then
-            chown "${UCRM_USER}" docker-compose.version.yml
+        if [[ -f "${UCRM_PATH}/docker-compose.version.yml" ]]; then
+            chown "${UCRM_USER}" "${UCRM_PATH}/docker-compose.version.yml"
         fi
 
-        if [[ -f docker-compose.env ]]; then
-            chown "${UCRM_USER}" docker-compose.env
+        if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
+            chown "${UCRM_USER}" "${UCRM_PATH}/docker-compose.env"
         fi
     fi
 }
@@ -768,7 +779,7 @@ setup_auto_update() {
             fi
         fi
 
-        UPDATE_CRON_SCRIPT="$(pwd)/update-cron.sh"
+        UPDATE_CRON_SCRIPT="${UCRM_PATH}/update-cron.sh"
         curl -o "${UPDATE_CRON_SCRIPT}" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/update-cron.sh"
 
         if ! (chown "${UCRM_USER}" "${UPDATE_CRON_SCRIPT}"); then
@@ -833,7 +844,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.2) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.3) |"
     echo "+------------------------------------------------+"
     echo ""
 }
