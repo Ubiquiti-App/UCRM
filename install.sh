@@ -471,7 +471,7 @@ configure_network_subnet() {
 
 download_docker_images() {
     echo "Downloading docker images."
-    cd "${UCRM_PATH}" && /usr/local/bin/docker-compose pull
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" pull
 }
 
 configure_wizard_user() {
@@ -508,10 +508,9 @@ print_wizard_login() {
 
 start_docker_images() {
     echo "Starting docker images."
-    cd "${UCRM_PATH}" && \
-    /usr/local/bin/docker-compose -f docker-compose.yml -f docker-compose.migrate.yml run migrate_app && \
-    /usr/local/bin/docker-compose up -d && \
-    /usr/local/bin/docker-compose ps
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" run migrate_app && \
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" up -d && \
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" ps
 }
 
 confirm_ucrm_running() {
@@ -542,7 +541,7 @@ confirm_ucrm_running() {
 
 detect_installation_finished() {
 	# print web container log and wait for its initialization
-    containerName=$(/usr/local/bin/docker-compose ps | grep -m1 "make server" | awk '{print $1}')
+    containerName=$(docker-compose -f "${UCRM_PATH}/docker-compose.yml" ps | grep -m1 "make server" | awk '{print $1}')
     docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
     		echo "UCRM is booting now, will be available soon"; \
     	else \
