@@ -7,7 +7,7 @@ set -o pipefail
 #set -o xtrace
 
 UCRM_PATH="${UCRM_PATH:-}"
-if [[ "${UCRM_PATH}" = "" ]]; then
+if [[ "${UCRM_PATH}" = "" ]] && [[ "${BASH_SOURCE+x}" = "x" ]]; then
     UCRM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
 fi
 if [[ "${UCRM_PATH}" = "" ]]; then
