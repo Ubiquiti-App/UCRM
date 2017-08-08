@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.6.0-beta3 (2017-08-08)
+
+### Added
+*	Tickets can be deleted now, in a batch also. Additionally, creating tickets from the client-zone support form can be turned off in System > Settings.
+*	Added SLL currency - Sierra Leonean leone.
+
+### Changed
+*	Organization name is shown instead of username in the ticket reply header in the client zone.
+*	"Use credit" toggle is now shown only when creating a new invoice or editing a draft invoice.
+*	PHP updated to version 7.1.8.
+
+### Fixed
+*	Periods in Data Usage table are shown correctly regardless of any changes in invoicing parameters made to a service.
+*	Access denied to ticketing module even for administrators with proper access rights.
+*	Buttons for edit / delete client logs not working.
+*	Shaping rules synchronization not working when the description of shaping queue was modified manually on the router.
+*	Device outages doubled in notification message in a specific case.
+*	Service suspended falsely when deferred change is applied.
+*	Failing PayPal subscription setup (appeared as of v. 2.6.0-beta1)
+*	Minor security fix (Content Security Policy) added to system notifications.
+*	Better search results for Elasticsearch.
+*	Several minor fixes and additional validations.
+
 ## 2.6.0-beta2 (2017-07-28)
 
 ### Added
