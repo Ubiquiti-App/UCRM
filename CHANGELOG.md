@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.6.0 (2017-08-10)
+
+### Added
+*	New currencies added: Central and West African CFA franc.
+
+### Fixed
+*	App security extensions.
+
 ## 2.6.0-beta3 (2017-08-08)
 
 ### Added
