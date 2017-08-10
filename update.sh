@@ -723,7 +723,7 @@ get_ucrm_data_path() {
 }
 
 configure_auto_update_permissions() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 1 1); then
         return 0
     fi
 
@@ -770,7 +770,7 @@ configure_auto_update_permissions() {
 }
 
 setup_auto_update() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2006000" 1 1); then
         return 0
     fi
 
@@ -853,7 +853,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.3) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.4) |"
     echo "+------------------------------------------------+"
     echo ""
 }
