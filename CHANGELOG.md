@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.6.1 (2017-08-16)
+
+### Fixed
+*	Failing Let's Encrypt tool.
+*	Several form fields validations added for security reasons.
+*	Better error handling while starting UCRM.
+*	Failing payment adding using API in case there are more organizations with different currencies in UCRM. Additionally, the payment currency can be set. If not set, it is derived from the client's organization.
+
+### Added
+
 ## 2.6.0 (2017-08-10)
 
 ### Added
