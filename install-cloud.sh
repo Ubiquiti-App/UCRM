@@ -7,6 +7,30 @@
 INSTALL_CLOUD=true
 CLOUD_CONF="/tmp/cloud_conf"
 
+# Init username and password
+UCRM_USERNAME="admin"
+UCRM_PASSWORD="admin"
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case "${key}" in
+  --username)
+    UCRM_USERNAME="$2"
+    shift # past argument value
+    ;;
+  --password)
+    UCRM_PASSWORD="$2"
+    shift # past argument value
+    ;;
+  *)
+    # unknown option
+    ;;
+esac
+shift # past argument key
+done
+echo "UCRM_USERNAME=${UCRM_USERNAME}" >> "${CLOUD_CONF}"
+echo "UCRM_PASSWORD=${UCRM_PASSWORD}" >> "${CLOUD_CONF}"
+
 # Set up swap file
 . /tmp/setup-swap.sh
 
