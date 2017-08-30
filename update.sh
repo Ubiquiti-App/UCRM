@@ -709,6 +709,15 @@ cleanup_old_backups() {
     (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
 }
 
+cleanup_auto_update() {
+    UCRM_DATA_PATH=$(get_ucrm_data_path)
+    UCRM_UPDATE_RUNNING_FILE="${UCRM_DATA_PATH}/updates/update_running"
+
+    if [[ -f "${UCRM_UPDATE_RUNNING_FILE}" ]]; then
+        rm -f "${UCRM_UPDATE_RUNNING_FILE}"
+    fi
+}
+
 flush_udp_conntrack() {
     docker run --net=host --privileged --rm ubnt/ucrm-conntrack
 }
@@ -824,6 +833,7 @@ do_update() {
 
     cleanup_old_images
     cleanup_old_backups
+    cleanup_auto_update
 }
 
 main() {
@@ -853,7 +863,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.4) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.5) |"
     echo "+------------------------------------------------+"
     echo ""
 }
