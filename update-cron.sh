@@ -62,10 +62,12 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     echo "$(date) --- Starting the update process."
     if ( bash "${UCRM_PATH}/update.sh" --version "${VERSION_TO_UPDATE}" --cron ); then
         echo "$(date) --- Update successful."
+        rm -f "${UCRM_UPDATE_RUNNING_FILE}"
 
         exit 0
     else
         echo "$(date) --- Update failed."
+        rm -f "${UCRM_UPDATE_RUNNING_FILE}"
 
         exit 1
     fi
