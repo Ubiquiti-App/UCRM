@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.6.2 (2017-09-05)
+
+### Added
+*	Troubleshooting guide for setting up Stripe payments.
+*	Better UX for CSV and PDF exports. Empty files are not marked as a failure.
+*	New currencies added: DZD, MAD.
+
+### Changed
+*	Current client email is used for Stripe payments instead of the email saved on the invoice.
+*	PHP updated to version 7.1.9.
+
+### Fixed
+*	Failing client export to CSV.
+*	Failing database restore in some cases.
+*	Possible SMTP timeouts bug with some servers.
+*	Possible problems with turning off the maintenance mode after UCRM upgrade.
+*	Broken FCC Broadband Subscription report generation.
+*	Fixed view permissions for some system settings pages.
+
 ## 2.6.1 (2017-08-16)
 
 ### Fixed
