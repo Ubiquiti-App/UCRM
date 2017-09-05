@@ -687,7 +687,7 @@ cleanup_old_images() {
     if [[ "${oldImages:-}" != "" ]]; then
         echo "Removing old UCRM images"
         # don't double quote, we need word splitting here
-        docker rmi ${oldImages}
+        docker rmi -f ${oldImages} || true
     fi
 
     if (docker system --help > /dev/null 2>&1);
@@ -863,7 +863,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.5) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.6) |"
     echo "+------------------------------------------------+"
     echo ""
 }
