@@ -20,7 +20,7 @@ if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
 fi
 
-UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep --color=never ":2055/udp" || echo "      - 2055:2055/udp")
+UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never ":2055/udp" || echo "      - 2055:2055/udp")
 
 UCRM_USER="${UCRM_USER:-ucrm}"
 if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
@@ -503,7 +503,7 @@ patch__compose__add_udp_to_web_app() {
     if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq ":2055/udp";
     then
         echo "Your docker-compose does not contain configuration for port 2055. Trying to add."
-        sed -i -e "s/      - 8443:443/&\n${UDP_PORT/\//\\\/}/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s|    ports:|&\n${UDP_PORT}|g" "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
