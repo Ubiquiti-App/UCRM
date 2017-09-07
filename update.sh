@@ -279,7 +279,7 @@ patch__compose__download_migrate_file() {
 }
 
 patch__compose__add_search_devices_section() {
-    if (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -295,7 +295,7 @@ patch__compose__add_search_devices_section() {
 }
 
 patch__compose__add_netflow_section() {
-    if (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -311,7 +311,7 @@ patch__compose__add_netflow_section() {
 }
 
 patch__compose__add_ping_section() {
-    if (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -361,7 +361,7 @@ patch__compose__add_supervisord() {
         return 1
     fi
 
-    if (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -411,7 +411,7 @@ patch__compose__remove_invoice_send_email() {
 }
 
 patch__compose__remove_supervisord() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -428,7 +428,7 @@ patch__compose__remove_supervisord() {
 }
 
 patch__compose__remove_sync_app() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -445,7 +445,7 @@ patch__compose__remove_sync_app() {
 }
 
 patch__compose__remove_crm_search_devices_app() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -462,7 +462,7 @@ patch__compose__remove_crm_search_devices_app() {
 }
 
 patch__compose__remove_crm_netflow_app() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -479,7 +479,7 @@ patch__compose__remove_crm_netflow_app() {
 }
 
 patch__compose__remove_crm_ping_app() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
@@ -496,7 +496,7 @@ patch__compose__remove_crm_ping_app() {
 }
 
 patch__compose__add_udp_to_web_app() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2007000" 0 1); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 1); then
         return 1
     fi
 
