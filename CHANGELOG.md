@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.7.0 (2017-09-11)
+
+### Added
+*	Automatic service setup fee and early-termination fee. Configurable in System > Items > Service plans. Also, note that Service contract length was renamed to Minimum contract length.
+*	IMAP Integration for Ticketing. You can bind your mailbox with the Ticketing module which will create a new ticket or ticket comment from every incoming email.
+*	MercadoPago payment gateway integrated to UCRM. Now you can use many payment methods like OXXO, Boleto and many other credit, debit, and cash payments, including payment subscriptions.
+*	Now, you can define taxes for service plans, products, surcharges or fees. If this tax is set, it will be always used for invoicing regardless of the taxes associated with the client. Typically, this is used in non-US countries.
+*	2-factor authentication. You can enhance the app security by enabling 2-factor authentication for your UCRM user account.
+*	UCRM Mobile app connectivity. Get your QR connection code from your personal account page.
+*	Better web responsivity, client zone adjusted for mobile usage.
+*	Major app speed improvements and better grids filtering and sorting.
+*	You can enable/disable clients to postpone their service suspension by 24 hours. In System > Billing > Suspension.
+*	Connection all payment gateways is checked. When an error occurs, a warning is shown on the dashboard.
+*	API extensions, new payments can be automatically attached to client's invoice, payment receipt can be sent using API, user's credentials authentication, and other API extensions.
+*	File attachments enabled for Tickets and Scheduled jobs.
+*	Services with postponed suspension are visibly labeled and the suspension can be repeatedly postponed by the administrator.
+*	Payment receipts are printable / downloadable now.
+*	Improved Batch Mailing module - placeholders, UX improvements.
+*	You can modify UCRM look using your own CSS. (Go to System > Tools > Custom CSS)
+*	Many UI/UX Improvements, more tooltips and in-app guides.
+
+### Changed
+*	Deferred change is available even for prepared services now.
+*	Assigning of administrators to a ticket is now visible in the ticket's log of communication and events.
+
+### Fixed
+*	Fixed job duration in my jobs agenda view.
+*	Fixed sending empty "invoice generated" notifications.
+*	Minor fixes.
+
 ## 2.6.2 (2017-09-05)
 
 ### Added
