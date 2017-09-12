@@ -29,6 +29,8 @@
 *	Fixed job duration in my jobs agenda view.
 *	Fixed sending empty "invoice generated" notifications.
 *	Minor fixes.
+*	Fixed minor security issues with uploading webroot files and restoring UCRM from a malicious backup file.
+*	Client's data usage table not including data for the first or last day of the billing period in some cases.
 
 ## 2.6.2 (2017-09-05)
 
