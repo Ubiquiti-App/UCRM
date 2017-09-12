@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.7.0-beta1 (2017-09-11)
+## 2.7.0-beta1 (2017-09-12)
 
 ### Added
 *	Automatic service setup fee and early-termination fee. Configurable in System > Items > Service plans. Also, note that Service contract length was renamed to Minimum contract length.
