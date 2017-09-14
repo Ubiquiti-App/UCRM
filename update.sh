@@ -500,6 +500,7 @@ containers__run_update() {
             exit 1
         fi
     fi
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" ps | tail -n +3 | awk '{print $1}' | grep --invert-match "elastic\|postgresql\|rabbitmq" | xargs docker stop
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
