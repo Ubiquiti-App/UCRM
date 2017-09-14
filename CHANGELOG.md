@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.7.0-beta2 (2017-09-14)
+
+### Fixed
+*	Failing MercadoPago IPN.
+*	Proper data pruning for UCRM sandbox termination.
+*	Fixed dashboard data permissions for the mobile app.
+*	Minor fixes in the Reporting section.
+*	Minor UI, UX fixes.
+
 ## 2.7.0-beta1 (2017-09-12)
 
 ### Added
