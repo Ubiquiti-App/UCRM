@@ -322,6 +322,13 @@ create_user() {
         fi
     fi
 
+    if (which groups > /dev/null 2>&1); then
+        if ! (groups "${UCRM_USER}" 2>/dev/null | grep -q "docker"); then
+            echo "Adding user \"${UCRM_USER}\" to \"docker\" group."
+            usermod -aG docker "${UCRM_USER}" || true
+        fi
+    fi
+
     if [[ ! -d "${UCRM_PATH}" ]]; then
         echo "Creating directory ${UCRM_PATH}."
         mkdir -p "${UCRM_PATH}"
@@ -561,7 +568,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.3) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.4) |"
     echo "+------------------------------------------------+"
     echo ""
 }
