@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.7.0-beta3 (2017-10-04)
+
+### Added
+*	IMAP connection check added to the dashboard.
+*	New troubleshooting guide for Unresolved host error (also related to outgoing emails failures).
+*	Improved Authorize.Net guide for recurring payments.
+*	You can view email original for each ticket comment sent by a client into the Ticketing IMAP inbox.
+*	API enhancements for Ticketing and Scheduling.
+*	Links in flash messages are now clickable.
+*	Translations updated.
+
+### Changed
+*	App speed improvements, static suspension redirect page added to minimize server load.
+*	Better shaping on airOS devices. Device restarts are no longer needed and device connection to UNMS is not affected.
+*	When the status of a queued job is changed, the job is automatically assigned to the current user and job datetime is set to the current timestamp.
+*	Recurring payments are off by default in new UCRM installations because it needs some additional paygate configuration before it's turned on in UCRM.
+*	PHP updated to version 7.1.10.
+
+### Fixed
+*	IPpay payments not delivered to UCRM.
+*	Fixed possible problem when UCRM boot hanged at "Initializing: Dirs".
+*	Fixed deleting clients with uninvoiced fees.
+*	Fixed creating tickets with attachments from IMAP integration.
+*	New UCRM Installer version 1.4. Fixing issue with the permissions when the user "ucrm" already exists.
+*	Fixed Service device modal window throwing error "Resource not found" when the associated network device has been deleted.
+*	Fixed matching and editation of payments with "Custom" method (created via API).
+*	Minor fixes and UI improvements.
+
 ## 2.7.0-beta2 (2017-09-14)
 
 ### Fixed
