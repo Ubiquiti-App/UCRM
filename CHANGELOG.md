@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.0 (2017-10-06)
+Incorporates all new features and fixes from 2.7.0-beta1 up to 2.7.0-beta4
+ 
+## 2.7.0-beta4 (2017-10-06)
+
+### Fixed
+*	Fixed placeholder usage in the New Ticket notification for admins and other minor fixes.
+
 ## 2.7.0-beta3 (2017-10-04)
 
 ### Added
