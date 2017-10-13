@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.7.1 (2017-10-13)
+
+### Changed
+*	Authorize.Net payment form in UCRM no longer requires CCV code.
+*	Improved server port tooltip to say SSL certificate must be set up before HTTPS can be used.
+
+### Fixed
+*	Fixed matching Stripe payments to wrong clients when they were not requested by UCRM.
+*	Fixed Authorize.Net subscription creation crashing in rare case.
+*	Fixed CSV import crashing without any error when item count over limit.
+*	Fixed XSS vulnerability in client zone support form and in more text toggle
+*	Fixed service taxes not showing in edit form when they were set up before.
+*	Reworked file permissions handling at UCRM boot fixing the hanging boot problem.
+
 ## 2.7.0 (2017-10-06)
 Incorporates all new features and fixes from 2.7.0-beta1 up to 2.7.0-beta4
  
