@@ -744,6 +744,12 @@ configure_auto_update_permissions() {
         UCRM_DATA_PATH=$(get_ucrm_data_path)
         UCRM_UPDATES_PATH="${UCRM_DATA_PATH}/updates"
 
+        chown "${UCRM_USER}" "${UCRM_PATH}"
+        if [[ "${UCRM_DATA_PATH}" = "data/ucrm" ]]; then
+            chown "${UCRM_USER}" "data"
+        fi
+        chown "${UCRM_USER}" "${UCRM_DATA_PATH}"
+
         if [[ ! -d "${UCRM_UPDATES_PATH}" ]]; then
             mkdir -p "${UCRM_UPDATES_PATH}"
             chown -R "${UCRM_USER}" "${UCRM_UPDATES_PATH}"
@@ -863,7 +869,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.6) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.7) |"
     echo "+------------------------------------------------+"
     echo ""
 }
