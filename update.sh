@@ -569,7 +569,25 @@ confirm_ucrm_running() {
 detect_update_finished() {
     # print web container log and wait for its initialization
     containerName=$(docker-compose -f "${UCRM_PATH}/docker-compose.yml" ps | grep -m1 "make server" | awk '{print $1}')
-    docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
+
+    if [[ "${CRON}" = "true" ]]; then
+        docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
+            echo "UCRM is booting now, will be available soon"; \
+        else \
+            echo "Booting UCRM"; \
+            previousLine=""; \
+            while true; \
+                do line=$(tail -1 /tmp/UCRM_init.log); \
+                if [[ "${previousLine}" != "${line}" ]]; then \
+                    echo "${line}"; \
+                    previousLine="${line}"; \
+                fi; \
+                [ "${line}" != "UCRM ready" ] || break; \
+                sleep 0.1; \
+            done; \
+        fi' || confirm_ucrm_running
+    else
+    	docker exec -t "${containerName}" bash -c 'if [[ ! -f /tmp/UCRM_init.log ]]; then \
     		echo "UCRM is booting now, will be available soon"; \
     	else \
     		echo "Booting UCRM"; spin="-\|/"; i=0; \
@@ -582,6 +600,7 @@ detect_update_finished() {
     		done; \
     		printf "\r%-55s\n" "UCRM ready"; \
     	fi' || confirm_ucrm_running
+    fi
 }
 
 get_from_version() {
@@ -869,7 +888,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.7) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.8) |"
     echo "+------------------------------------------------+"
     echo ""
 }
