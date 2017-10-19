@@ -6,6 +6,66 @@ set -o nounset
 set -o pipefail
 #set -o xtrace
 
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case "${key}" in
+  -v|--version)
+    echo "Setting INSTALL_VERSION=$2"
+    INSTALL_VERSION="$2"
+    shift # past argument value
+    ;;
+  --http-port)
+    echo "Setting PORT_HTTP=$2"
+    PORT_HTTP="$2"
+    shift # past argument value
+    ;;
+  --https-port)
+    echo "Setting PORT_HTTPS=$2"
+    PORT_HTTPS="$2"
+    shift # past argument value
+    ;;
+  --suspension-port)
+    echo "Setting PORT_SUSPENSION=$2"
+    PORT_SUSPENSION="$2"
+    shift # past argument value
+    ;;
+  --netflow-port)
+    echo "Setting PORT_NETFLOW=$2"
+    PORT_NETFLOW="$2"
+    shift # past argument value
+    ;;
+  --ucrm-user)
+    echo "Setting UCRM_USER=$2"
+    UCRM_USER="$2"
+    shift # past argument value
+    ;;
+  --subnet)
+    echo "Setting NETWORK_SUBNET=$2"
+    NETWORK_SUBNET="$2"
+    shift # past argument value
+    ;;
+  --subnet-internal)
+    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
+    NETWORK_SUBNET_INTERNAL="$2"
+    shift # past argument value
+    ;;
+  --skip-system-setup)
+    echo "Setting SKIP_SYSTEM_SETUP=true"
+    SKIP_SYSTEM_SETUP="true"
+    ;;
+  --no-auto-update)
+    echo "Setting NO_AUTO_UPDATE=true"
+    NO_AUTO_UPDATE="true"
+    ;;
+  *)
+    # unknown option
+    ;;
+esac
+shift # past argument key
+done
+
 UCRM_USER="${UCRM_USER:-ucrm}"
 UCRM_PATH="${UCRM_PATH:-/home/${UCRM_USER}}"
 UCRM_USERNAME=""
@@ -36,61 +96,13 @@ NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 PORT_HTTP="${PORT_HTTP:-80}"
 PORT_SUSPENSION="${PORT_SUSPENSION:-81}"
 PORT_HTTPS="${PORT_HTTPS:-443}"
+PORT_NETFLOW="${PORT_NETFLOW:-2055}"
 ALTERNATIVE_PORT_HTTP="${ALTERNATIVE_PORT_HTTP:-8080}"
 ALTERNATIVE_PORT_SUSPENSION="${ALTERNATIVE_PORT_SUSPENSION:-8081}"
 ALTERNATIVE_PORT_HTTPS="${ALTERNATIVE_PORT_HTTPS:-8443}"
+ALTERNATIVE_PORT_NETFLOW="${ALTERNATIVE_PORT_NETFLOW:-2056}"
 
 NO_AUTO_UPDATE="false"
-
-while [[ $# -gt 0 ]]
-do
-key="$1"
-
-case "${key}" in
-  -v|--version)
-    echo "Setting INSTALL_VERSION=$2"
-    INSTALL_VERSION="$2"
-    shift # past argument value
-    ;;
-  --http-port)
-    echo "Setting PORT_HTTP=$2"
-    PORT_HTTP="$2"
-    shift # past argument value
-    ;;
-  --https-port)
-    echo "Setting PORT_HTTPS=$2"
-    PORT_HTTPS="$2"
-    shift # past argument value
-    ;;
-  --suspension-port)
-    echo "Setting PORT_SUSPENSION=$2"
-    PORT_SUSPENSION="$2"
-    shift # past argument value
-    ;;
-  --subnet)
-    echo "Setting NETWORK_SUBNET=$2"
-    NETWORK_SUBNET="$2"
-    shift # past argument value
-    ;;
-  --subnet-internal)
-    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
-    NETWORK_SUBNET_INTERNAL="$2"
-    shift # past argument value
-    ;;
-  --skip-system-setup)
-    echo "Setting SKIP_SYSTEM_SETUP=true"
-    SKIP_SYSTEM_SETUP="true"
-    ;;
-  --no-auto-update)
-    echo "Setting NO_AUTO_UPDATE=true"
-    NO_AUTO_UPDATE="true"
-    ;;
-  *)
-    # unknown option
-    ;;
-esac
-shift # past argument key
-done
 
 version_equal_or_newer() {
     if [[ "$1" == "$2" ]]; then return 0; fi
@@ -414,16 +426,35 @@ check_port_https() {
     export PORT_HTTPS
 }
 
+check_port_netflow() {
+    while (nc -uz 127.0.0.1 "${PORT_NETFLOW}" >/dev/null 2>&1); do
+        if [ "${INSTALL_CLOUD}" = true ]; then
+            echo "ERROR: Port ${PORT_NETFLOW} is already in use."
+
+            exit 1;
+        fi
+        read -r -p "Port ${PORT_NETFLOW} is already in use, please choose a different suspension page port for UCRM. [${ALTERNATIVE_PORT_NETFLOW}]: " PORT_NETFLOW
+        PORT_NETFLOW=${PORT_NETFLOW:-$ALTERNATIVE_PORT_NETFLOW}
+        while ! [[ "${PORT_NETFLOW}" =~ ^[0-9]+$ ]] || [[ "${PORT_NETFLOW:-}" -le 0 ]] || [[ "${PORT_NETFLOW:-}" -ge 65536 ]]; do
+            read -r -p "Entered port is invalid, please try again: " PORT_NETFLOW
+        done
+    done
+
+    export PORT_SUSPENSION
+}
+
 check_ports() {
     echo "Checking available ports."
 
     check_port_http
     check_port_suspension
     check_port_https
+    check_port_netflow
 
     sed -i -e "s/- 8080:80/- ${PORT_HTTP}:80/g" "${UCRM_PATH}/docker-compose.yml"
     sed -i -e "s/- 8443:443/- ${PORT_HTTPS}:443/g" "${UCRM_PATH}/docker-compose.yml"
     sed -i -e "s/- 8081:81/- ${PORT_SUSPENSION}:81/g" "${UCRM_PATH}/docker-compose.yml"
+    sed -i -e "s/- 2055:2055/- ${PORT_NETFLOW}:2055/g" "${UCRM_PATH}/docker-compose.yml"
 
     echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
     echo "SERVER_PORT=${PORT_HTTP}" >> "${UCRM_PATH}/docker-compose.env"
@@ -568,7 +599,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.4) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.5) |"
     echo "+------------------------------------------------+"
     echo ""
 }
