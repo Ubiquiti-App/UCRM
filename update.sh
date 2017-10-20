@@ -92,7 +92,7 @@ check_yml() {
 
     if [[ "${appendFile}" != "" ]]; then
         if ! (docker-compose -f "${file}" -f "${appendFile}" config -q 2>/dev/null); then
-            echo "File ${file} is invalid. Try running the update script again and if it fails, contact UBNT support."
+            echo "File ${file} or ${appendFile} is invalid. Try running the update script again and if it fails, contact UBNT support."
 
             exit 1
         fi
@@ -866,7 +866,7 @@ main() {
     local fromVersion
 
     install_docker_compose
-    fromVersion=$(get_from_version)
+    fromVersion=$(get_from_version) || (echo "${fromVersion}" && exit 1)
     fromVersion="${fromVersion:-latest}"
     if [[ "${toVersion}" = "" ]]; then
         if (echo "${fromVersion}" | grep -q "beta");
@@ -888,7 +888,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.8) |"
+    echo "| https://ucrm.ubnt.com/          (updater v1.9) |"
     echo "+------------------------------------------------+"
     echo ""
 }
