@@ -70,7 +70,7 @@ UCRM_USER="${UCRM_USER:-ucrm}"
 UCRM_PATH="${UCRM_PATH:-/home/${UCRM_USER}}"
 UCRM_USERNAME=""
 UCRM_PASSWORD=""
-INSTALL_VERSION="latest"
+INSTALL_VERSION="${INSTALL_VERSION:-latest}"
 
 POSTGRES_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
@@ -270,7 +270,7 @@ install_docker() {
 
 download_docker_compose() {
     echo "Downloading and installing Docker Compose."
-    curl -L "https://github.com/docker/compose/releases/download/1.14.0/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose
+    curl -L "https://github.com/docker/compose/releases/download/1.16.1/docker-compose-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
 }
 
@@ -599,7 +599,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.5) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.6) |"
     echo "+------------------------------------------------+"
     echo ""
 }
