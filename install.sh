@@ -427,13 +427,13 @@ check_port_https() {
 }
 
 check_port_netflow() {
-    while (nc -uz 127.0.0.1 "${PORT_NETFLOW}" >/dev/null 2>&1); do
+    while (nc -zu 127.0.0.1 "${PORT_NETFLOW}" >/dev/null 2>&1); do
         if [ "${INSTALL_CLOUD}" = true ]; then
             echo "ERROR: Port ${PORT_NETFLOW} is already in use."
 
             exit 1;
         fi
-        read -r -p "Port ${PORT_NETFLOW} is already in use, please choose a different suspension page port for UCRM. [${ALTERNATIVE_PORT_NETFLOW}]: " PORT_NETFLOW
+        read -r -p "Port ${PORT_NETFLOW} is already in use, please choose a different NetFlow port for UCRM. [${ALTERNATIVE_PORT_NETFLOW}]: " PORT_NETFLOW
         PORT_NETFLOW=${PORT_NETFLOW:-$ALTERNATIVE_PORT_NETFLOW}
         while ! [[ "${PORT_NETFLOW}" =~ ^[0-9]+$ ]] || [[ "${PORT_NETFLOW:-}" -le 0 ]] || [[ "${PORT_NETFLOW:-}" -ge 65536 ]]; do
             read -r -p "Entered port is invalid, please try again: " PORT_NETFLOW
@@ -599,7 +599,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.6) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.7) |"
     echo "+------------------------------------------------+"
     echo ""
 }
