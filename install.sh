@@ -427,20 +427,26 @@ check_port_https() {
 }
 
 check_port_netflow() {
-    while (nc -zu 127.0.0.1 "${PORT_NETFLOW}" >/dev/null 2>&1); do
+    PORT_NETFLOW_ORIGINAL=${PORT_NETFLOW}
+    while (nc -z -u -v 127.0.0.1 "${PORT_NETFLOW}" >/dev/null 2>&1); do
         if [ "${INSTALL_CLOUD}" = true ]; then
             echo "ERROR: Port ${PORT_NETFLOW} is already in use."
 
             exit 1;
         fi
-        read -r -p "Port ${PORT_NETFLOW} is already in use, please choose a different NetFlow port for UCRM. [${ALTERNATIVE_PORT_NETFLOW}]: " PORT_NETFLOW
+        read -r -p "Port ${PORT_NETFLOW} is already in use, please choose a different NetFlow port for UCRM. [${ALTERNATIVE_PORT_NETFLOW}] (or skip connection test with \"s\"): " PORT_NETFLOW
         PORT_NETFLOW=${PORT_NETFLOW:-$ALTERNATIVE_PORT_NETFLOW}
-        while ! [[ "${PORT_NETFLOW}" =~ ^[0-9]+$ ]] || [[ "${PORT_NETFLOW:-}" -le 0 ]] || [[ "${PORT_NETFLOW:-}" -ge 65536 ]]; do
-            read -r -p "Entered port is invalid, please try again: " PORT_NETFLOW
+        while ! [[ "${PORT_NETFLOW}" =~ ^[s|S]{1}$ ]] && (! [[ "${PORT_NETFLOW}" =~ ^[0-9]+$ ]] || [[ "${PORT_NETFLOW:-}" -le 0 ]] || [[ "${PORT_NETFLOW:-}" -ge 65536 ]]); do
+            read -r -p "Entered port is invalid, please try again (or skip connection test with \"s\"): " PORT_NETFLOW
         done
+        if [[ "${PORT_NETFLOW}" =~ ^(s|S)$ ]]; then
+            PORT_NETFLOW=${PORT_NETFLOW_ORIGINAL}
+
+            break
+        fi
     done
 
-    export PORT_SUSPENSION
+    export PORT_NETFLOW
 }
 
 check_ports() {
