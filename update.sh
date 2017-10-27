@@ -113,11 +113,11 @@ compose__backup() {
     fi
 
     if [[ "" != "$(find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.env.*.backup' -print -quit)" ]]; then
-        mv -f "${UCRM_PATH}/docker-compose.env.*.backup" "${UCRM_PATH}/docker-compose-backups"
+        mv -f "${UCRM_PATH}"/docker-compose.env.*.backup "${UCRM_PATH}"/docker-compose-backups
     fi
 
     if [[ "" != "$(find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.yml.*.backup' -print -quit)" ]]; then
-        mv -f "${UCRM_PATH}/docker-compose.yml.*.backup" "${UCRM_PATH}/docker-compose-backups"
+        mv -f "${UCRM_PATH}"/docker-compose.yml.*.backup "${UCRM_PATH}"/docker-compose-backups
     fi
 
     cp "${UCRM_PATH}/docker-compose.yml" "${UCRM_PATH}/docker-compose-backups/docker-compose.yml.${DATE}.backup"
@@ -888,7 +888,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v1.9) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.0) |"
     echo "+------------------------------------------------+"
     echo ""
 }
