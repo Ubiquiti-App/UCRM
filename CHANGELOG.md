@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.7.2 (2017-10-31)
+
+### Added
+*	UX improvements.
+*	Added BDT currency.
+*	Improved searching by client's ID number.
+
+### Changed
+*	API improvements for Ticketing (added filters, sort and limit options) and ticket comments refactored to activities involving both comments and ticket log entries.
+*	PHP updated to version 7.1.11.
+
+### Fixed
+*	NetFlow data being labeled with wrong time in some cases when non-UTC timezone is used.
+*	Postponed suspension of a service is properly canceled when a new payment is created for past due invoice.
+*	Fixed searching invoices and payments by client's name.
+*	Fixed crashes caused by errors during generating invoice PDF.
+*	Fixed service suspension not being terminated automatically after a new payment in several cases.
+*	Minor fixes
+
 ## 2.7.1 (2017-10-13)
 
 ### Changed
