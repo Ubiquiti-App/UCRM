@@ -1035,7 +1035,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.0) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
