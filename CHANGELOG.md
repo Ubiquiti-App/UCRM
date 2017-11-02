@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.7.3 (2017-11-02)
+
+### Added
+*	More logs of device synchronization are now available on the device detail page.
+
+### Fixed
+*	Fixed issue with multiple overdue invoices with long suspension delay causing suspension not being terminated after a payment.
+*	Fixed job duration in exports.
+*	Fixed invalid errors with form submit with hidden elements (e.g. new job with empty task)
+*	IMAP ticket with attachments not created in some rare cases.
+*	Fixed device sync issues and issues with creating device backup file.
+*	Fixed creating ticket comment with empty attachment file through API.
+
 ## 2.7.2 (2017-10-31)
 
 ### Added
