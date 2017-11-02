@@ -9,7 +9,7 @@
 *	Fixed issue with multiple overdue invoices with long suspension delay causing suspension not being terminated after a payment.
 *	Fixed job duration in exports.
 *	Fixed invalid errors with form submit with hidden elements (e.g. new job with empty task)
-*	IMAP ticket with attachments not created in some rare cases.
+*	IMAP ticket with attachments not created in some rare cases and fixed attachments download for IMAP tickets.
 *	Fixed device sync issues and issues with creating device backup file.
 *	Fixed creating ticket comment with empty attachment file through API.
 
