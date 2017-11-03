@@ -384,6 +384,8 @@ patch__compose__remove_draft_approve() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_draft_approve_app:";
     then
         echo "Your docker-compose contains obsolete section crm_draft_approve_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_draft_approve_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_draft_approve_app || true
         sed -i -e '/crm_draft_approve_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_draft_approve_app/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -401,6 +403,8 @@ patch__compose__remove_invoice_send_email() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_invoice_send_email_app:";
     then
         echo "Your docker-compose contains obsolete section crm_invoice_send_email_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_invoice_send_email_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_invoice_send_email_app || true
         sed -i -e '/crm_invoice_send_email_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_invoice_send_email_app/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -418,6 +422,8 @@ patch__compose__remove_supervisord() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  supervisord:";
     then
         echo "Your docker-compose contains obsolete section supervisord. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop supervisord || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f supervisord || true
         sed -i -e '/supervisord/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/supervisord/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -435,6 +441,8 @@ patch__compose__remove_sync_app() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  sync_app:";
     then
         echo "Your docker-compose contains obsolete section sync_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop sync_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f sync_app || true
         sed -i -e '/sync_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/sync_app/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -452,6 +460,8 @@ patch__compose__remove_crm_search_devices_app() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_search_devices_app:";
     then
         echo "Your docker-compose contains obsolete section crm_search_devices_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_search_devices_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_search_devices_app || true
         sed -i -e '/crm_search_devices_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_search_devices_app/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -469,6 +479,8 @@ patch__compose__remove_crm_netflow_app() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_netflow_app:";
     then
         echo "Your docker-compose contains obsolete section crm_netflow_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_netflow_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_netflow_app || true
         sed -i -e '/crm_netflow_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_netflow_app/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -486,6 +498,8 @@ patch__compose__remove_crm_ping_app() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_ping_app:";
     then
         echo "Your docker-compose contains obsolete section crm_ping_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_ping_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_ping_app || true
         sed -i -e '/crm_ping_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_ping_app/d' "${UCRM_PATH}/docker-compose.yml"
 
