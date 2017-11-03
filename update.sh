@@ -627,13 +627,14 @@ containers__revert_update() {
     compose__restore
 
     echo "Reverting UCRM to version ${version}"
-    containers__run_update "${version}"
+    containers__run_update "${version}" "revert"
 
     echo "Revert complete."
 }
 
 containers__run_update() {
     declare version="${1}"
+    declare type="${2}"
     local revertVersion
 
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${version}/g" "${UCRM_PATH}/docker-compose.yml"
@@ -650,8 +651,7 @@ containers__run_update() {
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
-    if containers__is_revert_supported "${version}";
-    then
+    if [[ "${type}" = "update" ]] && (containers__is_revert_supported "${version}"); then
         if ( docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" run migrate_app | tee "${MIGRATE_OUTPUT}" );
         then
             docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
@@ -677,7 +677,6 @@ containers__run_update() {
 
             return
         fi
-
     fi
 
     setup_auto_update
@@ -999,7 +998,7 @@ do_update() {
     configure_auto_update_permissions
     compose__backup
     compose__run_update "${toVersion}"
-    containers__run_update "${toVersion}"
+    containers__run_update "${toVersion}" "update"
     flush_udp_conntrack || true
     detect_update_finished
 
