@@ -20,6 +20,8 @@ if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
 fi
 
+UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never ":2055/udp" || echo "      - 2055:2055/udp")
+
 UCRM_USER="${UCRM_USER:-ucrm}"
 if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
     if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_USER=" ); then
@@ -184,7 +186,8 @@ patch__compose__add_elastic_links() {
     then
         echo "Adding Elastic container links."
         sed -i -e "/      - elastic/d" "${UCRM_PATH}/docker-compose.yml"
-        sed -i -e "s/      - postgresql/&\n      - elastic/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/      - postgresql$/&\n      - elastic/g" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s/      - postgresql:postgresql$/&\n      - elastic/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 }
 
@@ -276,6 +279,10 @@ patch__compose__download_migrate_file() {
 }
 
 patch__compose__add_search_devices_section() {
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
     if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_search_devices_app:" );
     then
         echo "Your docker-compose doesn't contain UCRM search devices section. Trying to add."
@@ -288,6 +295,10 @@ patch__compose__add_search_devices_section() {
 }
 
 patch__compose__add_netflow_section() {
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
     if ! (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_netflow_app:");
     then
         echo "Your docker-compose doesn't contain Netflow section. Trying to add."
@@ -300,6 +311,10 @@ patch__compose__add_netflow_section() {
 }
 
 patch__compose__add_ping_section() {
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
     if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_ping_app:";
     then
         echo "Your docker-compose doesn't contain Ping section. Trying to add."
@@ -330,10 +345,30 @@ patch__compose__add_rabbitmq() {
 
     if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  rabbitmq:";
     then
-        echo "Your docker-compose doesn't contain RabbitMQ and supervisord sections. Trying to add."
-        echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n    command: \"supervisord\"" >> "${UCRM_PATH}/docker-compose.yml"
+        echo "Your docker-compose doesn't contain RabbitMQ section. Trying to add."
+        echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n" >> "${UCRM_PATH}/docker-compose.yml"
         echo "Adding RabbitMQ container links."
         sed -i -e "s/      - elastic/&\n      - rabbitmq/g" "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__add_supervisord() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2002002" 1); then
+        return 1
+    fi
+
+    if (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  supervisord:";
+    then
+        echo "Your docker-compose doesn't contain supervisord section. Trying to add."
+        echo -e "\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n      - rabbitmq\n    command: \"supervisord\"" >> "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -349,6 +384,8 @@ patch__compose__remove_draft_approve() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_draft_approve_app:";
     then
         echo "Your docker-compose contains obsolete section crm_draft_approve_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_draft_approve_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_draft_approve_app || true
         sed -i -e '/crm_draft_approve_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_draft_approve_app/d' "${UCRM_PATH}/docker-compose.yml"
 
@@ -366,8 +403,121 @@ patch__compose__remove_invoice_send_email() {
     if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_invoice_send_email_app:";
     then
         echo "Your docker-compose contains obsolete section crm_invoice_send_email_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_invoice_send_email_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_invoice_send_email_app || true
         sed -i -e '/crm_invoice_send_email_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
         sed -i -e '/crm_invoice_send_email_app/d' "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_supervisord() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  supervisord:";
+    then
+        echo "Your docker-compose contains obsolete section supervisord. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop supervisord || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f supervisord || true
+        sed -i -e '/supervisord/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/supervisord/d' "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_sync_app() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  sync_app:";
+    then
+        echo "Your docker-compose contains obsolete section sync_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop sync_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f sync_app || true
+        sed -i -e '/sync_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/sync_app/d' "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_crm_search_devices_app() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_search_devices_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_search_devices_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_search_devices_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_search_devices_app || true
+        sed -i -e '/crm_search_devices_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/crm_search_devices_app/d' "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_crm_netflow_app() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_netflow_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_netflow_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_netflow_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_netflow_app || true
+        sed -i -e '/crm_netflow_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/crm_netflow_app/d' "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__remove_crm_ping_app() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_ping_app:";
+    then
+        echo "Your docker-compose contains obsolete section crm_ping_app. Trying to remove."
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_ping_app || true
+        docker-compose -f "${UCRM_PATH}/docker-compose.yml" rm -f crm_ping_app || true
+        sed -i -e '/crm_ping_app/,/^  [^ ]/{//!d}' "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e '/crm_ping_app/d' "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
+patch__compose__add_udp_to_web_app() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2008000" 0 0); then
+        return 1
+    fi
+
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq ":2055/udp";
+    then
+        echo "Your docker-compose does not contain configuration for port 2055. Trying to add."
+        sed -i -e "s|    ports:|&\n${UDP_PORT}|g" "${UCRM_PATH}/docker-compose.yml"
 
         return 0
     else
@@ -446,11 +596,22 @@ compose__run_update() {
     if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
+    if patch__compose__add_supervisord; then
+        needsVolumesFix=1
+    fi
 
     patch__compose__configure_network_subnet
 
     patch__compose__remove_draft_approve || true
     patch__compose__remove_invoice_send_email || true
+
+    patch__compose__remove_supervisord || true
+    patch__compose__remove_sync_app || true
+    patch__compose__remove_crm_search_devices_app || true
+    patch__compose__remove_crm_netflow_app || true
+    patch__compose__remove_crm_ping_app || true
+
+    patch__compose__add_udp_to_web_app || true
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
@@ -480,13 +641,14 @@ containers__revert_update() {
     compose__restore
 
     echo "Reverting UCRM to version ${version}"
-    containers__run_update "${version}"
+    containers__run_update "${version}" "revert"
 
     echo "Revert complete."
 }
 
 containers__run_update() {
     declare version="${1}"
+    declare type="${2}"
     local revertVersion
 
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${version}/g" "${UCRM_PATH}/docker-compose.yml"
@@ -503,8 +665,7 @@ containers__run_update() {
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
-    if containers__is_revert_supported "${version}";
-    then
+    if [[ "${type}" = "update" ]] && (containers__is_revert_supported "${version}"); then
         if ( docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" run migrate_app | tee "${MIGRATE_OUTPUT}" );
         then
             docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
@@ -530,7 +691,6 @@ containers__run_update() {
 
             return
         fi
-
     fi
 
     setup_auto_update
@@ -852,7 +1012,7 @@ do_update() {
     configure_auto_update_permissions
     compose__backup
     compose__run_update "${toVersion}"
-    containers__run_update "${toVersion}"
+    containers__run_update "${toVersion}" "update"
     flush_udp_conntrack || true
     detect_update_finished
 
@@ -888,7 +1048,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.0) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
