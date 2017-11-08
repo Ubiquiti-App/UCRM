@@ -7,12 +7,10 @@
 
 ### Fixed
 *	Fixed slow dashboard loading.
-*	Stripe payment not matched to invoices. Instead, they were turned into client's credit in some cases.
+*	Stripe subscription payments not matched to invoices. Instead, they were turned into client's credit in some cases.
 *	Fixed termination of service suspension in some cases when a new payment is received but more than one invoice is overdue.
-*	Elasticsearch properly initialized after UCRM is restored from backup.
+*	Elasticsearch index properly initialized after UCRM is restored from backup.
 *	Minor fixes.
-
-### Added
 
 ## 2.7.3 (2017-11-02)
 
