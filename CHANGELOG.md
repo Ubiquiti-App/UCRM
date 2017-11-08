@@ -1,5 +1,49 @@
 # Changelog
 
+## 2.8.0-beta1 (2017-11-08)
+
+### Added
+*	Extended Data usage report.
+*	ACH payments enabled for Stripe.
+*	API enhancements: Services can be filtered by their status which may be useful to get the IPs of all suspended clients. Clients and Invoices can be filtered and sorted within the GET method. Unassigned jobs and tickets can be now filtered.
+*	New features for Ticketing: Automatic reply for client's tickets created through email sent to the IMAP inbox; Option to merge unknown email address from ticket reply into client's contacts.
+*	Major Ticketing UI/UX improvements. Chat style introduced.
+*	Major Suspension page improvement. Clients are now enabled to pay online directly from the suspension page without entering the client-zone. Clients just click on Postpone suspension and are redirected to the payment page. No login is required.
+*	Additionally, clients can reactivate their own terminated service. You can configure this in System > Settings > Client zone.
+*	Added more printing page sizes for Invoice, Payment receipt and General PDF export in System Settings.
+*	You can define your own shortcuts for frequently used pages, see the left-hand side panel.
+*	Scheduling UI improvements.
+*	As an administrator you can create private tickets now and ticket attachments are deletable now.
+*	Improved header search tool, company can be found by contact name.
+*	Date and time added to the new payment form.
+*	A new option in service plan settings to include its instances (i.e. client's services) in FCC reports.
+*	Improved client import tool for importing UCRM CSV files or any custom CSV files with multiple phones or emails in a single field separated by a comma.
+*	New notification templates: for ticket comments with enabled and disabled IMAP integration. You can define ticketing email template which suits you the most.
+*	You can now customize two versions of suspension page: for past due clients and for any other suspension reasons.
+*	Excluded NetFlow IPs. NetFlow traffic between clients and these IPs will not be involved in the client's data usage.
+*	New configuration for Client Zone and client-related features available in UCRM system settings. For example, you can enable service reactivation, suspension postponing, show more payment details, etc.
+*	New settings section: Customization (formerly: Notifications) where you can configure many email templates, invoice template, suspension page, UCRM appearance, etc.
+*	Custom favicon configurable in System > Customization > Appearance.
+*	Client contacts enhancements. Now, for each contact, you can set a name and a default or custom type.
+*	UX improvements and minor fixes.
+*	Improved app performance.
+
+### Changed
+*	Attaching a file without a text to a ticket is now possible.
+*	Client ID is now the primary ID used for clients (in the URL, in API, in client profile). You can still define client's Custom ID (formerly User Ident) and use both as placeholder in any notification and use it in the search bar.
+*	You can define 2 date formats in system settings: "Default date format" which is used for UCRM frontend and "Alternative date format" for printed documents such as invoices and payment receipts.
+*	Billing reports moved to new main menu section Reports.
+*	Client list is ordered by client ID (newest first) as default.
+*	An option to create a credit from an overpayment was removed from client's payment page. All invoices are paid by default in case of an overpayment created by client.
+*	Client's outstanding is now shown as a positive number.
+*	Subscription cancelled notification templates for each payment gateway were replaced with a single template with placeholders.
+*	Better UCRM anonymous statistics, read more in in-app user guide.
+*	Some docker containers removed.
+
+### Fixed
+*	Fixed creating new collection items in several forms.
+*	"Recognized suspension page" is correctly shown for clients having IP range assigned to the suspended service.
+
 ## 2.7.4 (2017-11-08)
 
 ### Added
