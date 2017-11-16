@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.7.5 (2017-11-16)
+
+### Added
+*	Improvements for CSV Import feature. Imported payment can be associated with a client. You can also use a sample CSV.
+
+### Fixed
+*	Failing service deferred change cancellation and deleting.
+*	Failing emails sending in case of an invalid email address (empty string values created in an older version or through API).
+*	Better results for the header search bar. (For example, results with exact invoice number match are always shown first. Client's service can be found by a note, etc.)
+*	Better validations for creating a ticket with API.
+*	Ticket comments created with API were always public.
+*	Fixed minor bug on invoice form. (Recalculation failed when created date was not set.)
+*	Minor fixes.
+
 ## 2.8.0-beta1 (2017-11-08)
 
 ### Added
