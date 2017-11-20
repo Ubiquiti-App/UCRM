@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.8.0-beta2 (2017-11-20)
+
+### Added
+*	Improved Stripe ACH guides and tooltips.
+*	UCRM with edgeOS v. 1.10+ is able to shape a higher number of clients now, around 16,000.
+
+### Changed
+*	Changed Elasticsearch priorities to show better results.
+*	Data usage report now contains suspended services as well.
+*	Organization logo and the banner is taken from the only configured organization automatically. In case there is more than one organization, it is taken from the one marked as "default".
+
+### Fixed
+*	Data usage report failing to generate in some cases.
+*	Dashboard financial information toggle is persistent even after a page reload.
+*	API fixes related to private tickets and other API improvements.
+*	Manually terminated suspensions (caused by past due invoices) are not reactivated automatically until a new past due invoice occurs.
+*	Fixed job edit when duration is empty.
+*	Fixed form submit in Microsoft Edge browser.
+*	Minor fixes.
+
 ## 2.7.5 (2017-11-16)
 
 ### Added
