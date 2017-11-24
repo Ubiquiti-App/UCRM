@@ -1,17 +1,11 @@
+<p>
+  <img src="https://raw.githubusercontent.com/U-CRM/billing/master/images/client.jpg?raw=true" width="290"/>
+  <img src="https://raw.githubusercontent.com/U-CRM/billing/master/images/report.jpg?raw=true" width="290"/>
+  <img src="https://raw.githubusercontent.com/U-CRM/billing/master/images/scheduling.jpg?raw=true" width="290"/>
+</p>
+
 # UCRM - Ubiquiti’s Complete ISP Management Platform
 
-UCRM is a streamlined billing and customer management system with recurring invoicing, credit card processing and automated features such as suspension and CPE outage detection. Try the online demo or download it for free.
+UCRM is a streamlined billing and customer management system with recurring invoicing, credit card processing and automated features such as suspension and CPE outage detection. All of that is for free, including upgrades.
 
-## Installation - [Download UCRM using this guide](https://github.com/U-CRM/billing/wiki/Installation-guide)
-
-## Update 
-Please follow this [Update guide](https://github.com/U-CRM/billing/wiki/Update-guide)
-
-## Bug reporting
-Please, use the [Community Forum](https://community.ubnt.com/t5/UCRM-Complete-WISP-Management/bd-p/UCRM) for bug reports to help us solve the bugs promptly. (Don't create an issue on this github project as it is not easily accessible for the whole community)
-
-## Feature requests
-Feel free to [create a feature request](https://community.ubnt.com/t5/UCRM-Feature-Requests/idb-p/UCRM-Ideas) you find important and still missing in UCRM.
-
-## Uninstall 
-Please follow this [Uninstall guide](https://github.com/U-CRM/billing/wiki/Uninstall-guide)
+[Installation](https://help.ubnt.com/hc/en-us/articles/115000994708-UCRM-Installation-Guide) | [Wiki](https://help.ubnt.com/hc/en-us/sections/204958307-UCRM-WISP-Management-Platform) | [Community](https://community.ubnt.com/t5/UCRM-Complete-WISP-Management/bd-p/UCRM) | [Changelog](https://github.com/U-CRM/billing/blob/master/CHANGELOG.md) | [Roadmap](https://ucrm.ubnt.com/)
