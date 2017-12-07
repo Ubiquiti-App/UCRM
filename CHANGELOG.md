@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.8.0-beta3 (2017-12-07)
+
+### Added
+*	"US half letter" format added to PDF export options.
+*	New link to client added to the invoice detail page.
+*	Unknown service devices are no longer synchronized.
+*	WalkMe guides added to UCRM online demo.
+*	Menu shortcuts UI/UX improvements.
+
+### Fixed
+*	Fixed failing QoS setup on EdgeOS of unknown version.
+*	No Ticketing search results are shown for users without appropriate permissions.
+*	Minor fixes.
+
 ## 2.7.6 (2017-12-07)
 
 ### Fixed
