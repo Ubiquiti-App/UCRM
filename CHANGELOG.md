@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.7.6 (2017-12-07)
+
+### Fixed
+*	Improved Client CSV validations preventing import failures.
+*	Taxes associated with service were always applied to surcharges despite the defined tax of the surcharge. Now the surcharge tax (when defined) overrides the taxes of the service or the client correctly.
+*	Help section is shown as the last one while using the header search bar tool.
+*	Better validations and minor fixes for Stripe webhooks and Client custom attributes.
+*	Possible bug with Authorize.Net post-dated payment not being imported into UCRM.
+*	HTML sanitized for email templates preview.
+*	More tooltips and guides improvements.
+*	Belarus currency code fixed from BYR to BYN.
+*	PHP upgraded to version 7.1.12.
+
 ## 2.8.0-beta2 (2017-11-20)
 
 ### Added
