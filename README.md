@@ -1,10 +1,4 @@
-<p>
-  <img src="https://raw.githubusercontent.com/U-CRM/billing/master/images/client.jpg?raw=true" width="290"/>
-  <img src="https://raw.githubusercontent.com/U-CRM/billing/master/images/report.jpg?raw=true" width="290"/>
-  <img src="https://raw.githubusercontent.com/U-CRM/billing/master/images/scheduling.jpg?raw=true" width="290"/>
-</p>
-
-# UCRM - Ubiquiti’s Complete ISP Management Platform
+# Installation Scripts for Ubiquiti's UCRM - Complete ISP Management Platform 
 
 UCRM is a streamlined billing and customer management system with recurring invoicing, credit card processing and automated features such as suspension and CPE outage detection. All of that is for free, including upgrades.
 
