@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.8.0-beta4 (2017-12-20)
+
+### Fixed
+*	Better results for the header search bar tool.
+*	Help guide updated.
+*	Minor UI fixes and improvements.
+
 ## 2.7.7 (2017-12-20)
 
 ### Fixed
