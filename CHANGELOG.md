@@ -5,6 +5,7 @@
 ### Fixed
 *	Better results for the header search bar tool.
 *	Help guide updated.
+* Fixed Payments CSV import in System > Tools > CSV Import.
 *	Minor UI fixes and improvements.
 
 ## 2.7.7 (2017-12-20)
