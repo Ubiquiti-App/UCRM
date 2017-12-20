@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.7.7 (2017-12-20)
+
+### Fixed
+*	Fixed permission check for several actions.
+*	Fixed client's outage badge disappearing for a short while after some service was edited.
+*	Fixed synchronisation of airOS traffic shaping for CPE devices.
+*	Suspension page fixes. Failures when two clients have the same IP. Fixes in URL generated on the suspension page in case HTTPS is used in UCRM.
+*	Creating erroneous jobs in the scheduling timeline with double-click was disabled.
+*	Service IP unique check was extended to client's detached devices (detached from services). Additionally, you can search clients with IP address of these detached devices now. API validation for unique client IP was also added for creating new service device.
+*	Fixed custom client attributes errors in Client CSV export.
+*	Fixed service editing form in case the related service plan's period is no longer available. (Existing services can still use it, but new service can be created only with enabled service plan periods.)
+*	Date picker not rendering correctly and other minor UI/UX fixes.
+*	Minor fixes in service "Contract section". Now, the displayed early termination fee price corresponds with service parameters, not previously created fee.
+*	Super admin account cannot be deactivated now.
+
 ## 2.8.0-beta3 (2017-12-07)
 
 ### Added
