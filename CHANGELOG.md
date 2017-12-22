@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.8 (2017-12-22)
+
+### Fixed
+*	Fixed import of Payments CSV file.
+
 ## 2.8.0-beta4 (2017-12-20)
 
 ### Fixed
