@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.8.0 (2018-01-05)
+
+### Added
+*	You can choose whether to use system default IDs for your clients (starting from 1) or a custom ID defined by you (starting from any number). Then, the selected ID will be shown everywhere throughout the system including the Client Zone. (Note, that all API data clients data remains to be identified be the default system ID.)
+
+### Fixed
+*	Errors in permanent deletion of client in some cases.
+*	Private ticket attachments were downloadable by clients (although they were not visible).
+*	Minor security fixes.
+*	Improved validation for Ticketing autoreply template.
+*	Fixed taxes overview in service detail and in invoice form (not all the taxes or previously removed taxes were shown in some rare cases).
+*	New lines in ticket comments are well formated also in related email notifications now.
+*	Email resending is now disabled in case the email log entry has no recipient defined.
+*	Wrong type of template was used for ticketing notifications working (in some cases when IMAP integration is enabled).
+*	State was ignored in Clients CSV import.
+*	Minor fixes.
+
 ## 2.7.8 (2017-12-22)
 
 ### Fixed
