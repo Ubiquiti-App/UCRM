@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.9.0-beta1 (2018-01-05)
+
+### Added
+*	Service Quotes. When creating a client's service, you can mark it as "Quoted". Then, you can create a quote (similar to invoice) and when the quote is accepted, the service will be automatically activated.
+*	Client's NetFlow data usage can be manually edited. Check out the client's service NetFlow - table view.
+*	New feature to create a new ticket from a client call log (manual client log entry).
+*	Multiple Ticketing IMAP inboxes are configurable now. Each inbox can be associated with some User Group which is responsible for handling related tickets.
+*	Check out the number at the ticket title indicating the count of new replies which you haven't read yet.
+*	New filters for Ticketing. Now, you can find tickets having the latest comment created by client, i.e. tickets which probably need some attention.
+*	API enhancements - IPpay payment subscription can be created in UCRM using the API.
+*	UX improvements (Surcharge tax is now visible when creating a new service, etc)
+*	UI/UX improvements, such as invoice pay button directly on the invoice grid, better service selection when invoicing ended or obsolete services, etc.
+*	New way how to print the payment. Use the print button on the payment detail page and modify the page layout etc. on your own.
+*	Notes added to UCRM payments are now editable.
+*	Improved Ticketing UI in Client Zone.
+*	New localizations added: Slovak, Danish.
+
+### Changed
+*	Improved Data Usage Report. Upload, download and period are now in separate columns.
+*	Configuration of the login page banner moved from Organization settings to the Appearance section.
+*	Service tax summary improved in the service details box. The service surcharge tax is always shown now. (Before, it was included only when the surcharge tax and the service tax were the same.)
+
 ## 2.8.0 (2018-01-05)
 
 ### Added
