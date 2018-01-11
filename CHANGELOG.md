@@ -1,5 +1,19 @@
 # Changelog
 
+### Added
+*	Now, the client's ID accompanies the client's name in every drop-down menu enabling you to choose the proper client.
+*	UX Improvements, such as a link to view all client's jobs on client's profile page.
+*	Translations updated.
+
+### Fixed
+*	Possibly failing upgrade to 2.9.0-beta1 in some rare cases.
+*	Fixed notification for a new ticket with only attachment and no text.
+*	Fixed private ticket headers visible in client zone (not the comments or attachments though) and other minor fixes for Ticketing.
+*	Fixed disappearing of the Ticketing IMAP settings.
+*	Errors in managing ticket attachments.
+*	Minor security fixes.
+*	Minor fixes.
+
 ## 2.8.1 (2018-01-11)
 
 ### Changed
