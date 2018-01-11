@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.9.0 (2018-01-11)
+## 2.9.0-beta2 (2018-01-11)
 
 ### Added
 *	Now, the client's ID accompanies the client's name in every drop-down menu enabling you to choose the proper client.
