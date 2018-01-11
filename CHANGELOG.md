@@ -6,13 +6,13 @@
 *	PHP updated to version 7.1.13.
 
 ### Fixed
+*	Several security fixes.
 *	Possible error when editing Service Plan.
-*	Minor security fixes.
 *	Failing job attachment upload for some rare mime types.
-*	Fixed Stripe ACH section being visible in client profile page and in create subscription page when ACH is disabled in the System Settings.
-*	Minor fixes
 *	Fix CSV import when zero date is present.
+*	Fixed Stripe ACH section being visible in client profile page and in create subscription page when ACH is disabled in the System Settings.
 *	Ending a service with pending deferred change is disabled now. The planned deferred change must be removed first to avoid inconsistent service state.
+*	Minor fixes
 
 ## 2.9.0-beta1 (2018-01-05)
 
