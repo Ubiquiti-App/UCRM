@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.8.2 (2018-01-19)
+
+### Added
+*	New currency TZS.
+
+### Changed
+*	Stronger SSL ciphers are now used in the built-in nginx server when UCRM HTTPS is enabled.
+
+### Fixed
+*	Search tool not giving proper results after batch import of Client CSV file.
+*	All imported clients from CSV file, have all billing attributes set as "use system default" now.
+*	Fixed client's email reply on "Ticket change status" notification triggering a new ticket. Now it creates a new comment in the existing ticket thread properly.
+*	Fixed drag & drop feature on the Scheduling Timeline. This issue appeared in Windows only.
+*	Fixed IPPay forms in browsers not supporting HTML5 validation. Causing crashes when the card num / expiration / cvv fields were sent empty.
+*	Minor fixes and UI/UX improvements.
+*	Security fixes.
+*	API doc fixes.
+
 ## 2.9.0-beta2 (2018-01-11)
 
 ### Added
