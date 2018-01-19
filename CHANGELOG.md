@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.9.0-beta3 (2018-01-19)
+
+### Added
+*	API extended with ticketing groups management.
+
+### Changed
+*	Bank account is now hidden in the Stripe ACH payment overview.
+*	"Portuguese PT" set as the default fallback language for missing "Portuguese BR" translations.
+
+### Fixed
+*	Fixed error in the manual editing of client's NetFlow data usage.
+*	Fixed disappearing IMAP inbox settings when a ticket is deleted.
+*	Fixed crashes when IMAP inbox settings are deleted and "Show original" or "Show attachment" is requested on a related ticket.
+*	Security fixes.
+*	Minor fixes.
+
 ## 2.8.2 (2018-01-19)
 
 ### Added
