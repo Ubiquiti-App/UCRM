@@ -836,15 +836,17 @@ check_update_possible() {
         exit 1
     fi
 
-    if (echo "${from}" | grep -q "beta");
-    then
+    if (echo "${from}" | grep -q "dev"); then
+        fromBeta=-1
+    elif (echo "${from}" | grep -q "beta"); then
         fromBeta=$(echo "${from}" | awk -F'-beta' '{ printf("%d\n", $2) }')
     else
         fromBeta=999
     fi
 
-    if (echo "${to}" | grep -q "beta");
-    then
+    if (echo "${to}" | grep -q "dev"); then
+        toBeta=-1
+    elif (echo "${to}" | grep -q "beta"); then
         toBeta=$(echo "${to}" | awk -F'-beta' '{ printf("%d\n", $2) }')
     else
         toBeta=999
