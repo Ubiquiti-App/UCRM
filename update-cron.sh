@@ -13,7 +13,7 @@ fi
 if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
 fi
-GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 
 if [[ ! -f "${UCRM_PATH}/docker-compose.yml" ]]; then
     echo "docker-compose.yml does not exist or is not readable in path ${UCRM_PATH}"

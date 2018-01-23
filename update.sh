@@ -11,7 +11,7 @@ MIGRATE_OUTPUT=$(mktemp)
 FORCE_UPDATE=0
 UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
-GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 UCRM_PATH="${UCRM_PATH:-}"
 if [[ "${UCRM_PATH}" = "" ]] && [[ "${BASH_SOURCE+x}" = "x" ]]; then
     UCRM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"

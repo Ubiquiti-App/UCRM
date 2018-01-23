@@ -77,7 +77,7 @@ SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 
 INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
 SKIP_SYSTEM_SETUP="false"
 
-GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-U-CRM/billing/master}"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 
 if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
     if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "PORT_HTTP=" ); then
