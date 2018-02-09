@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.9.0-beta4 (2018-02-09)
+
+### Added
+*	Ticket URL added to the default "ticket changed status" email notification.
+*	French localization added.
+
+### Changed
+*	Ticket ID added to all ticket notifications' subject and message body for a better merging of incoming emails to the right existing ticket (This kind of fallback merging is used when the mail server trims some email headers, applied only when the sender email matches some of the client's email).
+*	Client's quotes are shown on client profile page and in Billing > Quotes section (Quotes tab was removed from Client).
+*	PHP updated to version 7.1.14.
+
+### Fixed
+*	Fix permanent syncing of Mikrotik routers.
+*	Fixed airOS shaper causing Wireless Security misconfiguration in some rare cases.
+*	Fixed UI for the main menu on mobile view.
+*	Fixes and improvements for Ticketing API.
+*	Fixed version validation for the UCRM backup restore feature in the initial wizard.
+*	Improved validations for Client CSV import.
+*	New payment button not working on client's invoice detail page.
+*	Improved ACH payments, displaying the pending status now.
+*	Minor fixes, guide improvements.
+
 ## 2.9.0-beta3 (2018-01-19)
 
 ### Added
