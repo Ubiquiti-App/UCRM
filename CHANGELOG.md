@@ -1,9 +1,10 @@
 # Changelog
 
-## 2.9.0-beta4 (2018-02-09)
+## 2.9.0 (2018-02-12)
 
 ### Added
 *	Ticket URL added to the default "ticket changed status" email notification.
+*	Support for new Stripe API version "2018-02-05".
 *	French localization added.
 
 ### Changed
