@@ -6,6 +6,10 @@ set -o nounset
 set -o pipefail
 #set -o xtrace
 
+SECURE_FIRST_LOGIN="false"
+NO_AUTO_UPDATE="false"
+SKIP_SYSTEM_SETUP="false"
+
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -59,6 +63,10 @@ case "${key}" in
     echo "Setting NO_AUTO_UPDATE=true"
     NO_AUTO_UPDATE="true"
     ;;
+  --secure-first-login)
+    echo "Setting SECURE_FIRST_LOGIN=true"
+    SECURE_FIRST_LOGIN="true"
+    ;;
   *)
     # unknown option
     ;;
@@ -75,7 +83,6 @@ INSTALL_VERSION="${INSTALL_VERSION:-latest}"
 POSTGRES_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 SECRET="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 48 | head -n 1 || true)"
 INSTALL_CLOUD="${INSTALL_CLOUD:-false}"
-SKIP_SYSTEM_SETUP="false"
 
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 
@@ -101,8 +108,6 @@ ALTERNATIVE_PORT_HTTP="${ALTERNATIVE_PORT_HTTP:-8080}"
 ALTERNATIVE_PORT_SUSPENSION="${ALTERNATIVE_PORT_SUSPENSION:-8081}"
 ALTERNATIVE_PORT_HTTPS="${ALTERNATIVE_PORT_HTTPS:-8443}"
 ALTERNATIVE_PORT_NETFLOW="${ALTERNATIVE_PORT_NETFLOW:-2056}"
-
-NO_AUTO_UPDATE="false"
 
 version_equal_or_newer() {
     if [[ "$1" == "$2" ]]; then return 0; fi
@@ -523,16 +528,16 @@ configure_wizard_user() {
         return 0
     fi
 
-    if ! ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_USERNAME" ) && ! ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_PASSWORD" );
+    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_USERNAME" ) && ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_PASSWORD" );
     then
+        UCRM_USERNAME=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_USERNAME=" --color=never | awk -F= ' {print $NF}')
+        UCRM_PASSWORD=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_PASSWORD=" --color=never | awk -F= ' {print $NF}')
+    elif [[ "${SECURE_FIRST_LOGIN}" = "true" ]]; then
         UCRM_USERNAME="admin"
         UCRM_PASSWORD="$(LC_CTYPE=C tr -dc "a-zA-Z0-9" < /dev/urandom | fold -w 7 | head -n 1 || true)"
 
         echo "UCRM_USERNAME=${UCRM_USERNAME}" >> "${UCRM_PATH}/docker-compose.env"
         echo "UCRM_PASSWORD=${UCRM_PASSWORD}" >> "${UCRM_PATH}/docker-compose.env"
-    else
-        UCRM_USERNAME=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_USERNAME=" --color=never | awk -F= ' {print $NF}')
-        UCRM_PASSWORD=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_PASSWORD=" --color=never | awk -F= ' {print $NF}')
     fi
 }
 
@@ -605,7 +610,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.7) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.8) |"
     echo "+------------------------------------------------+"
     echo ""
 }
