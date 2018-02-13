@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.9.0 (2018-02-13)
+## 2.9.1 (2018-02-13)
 
 ### Fixed
 *	Some main menu items not accessible for some users even with sufficient permissions.
