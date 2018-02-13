@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.9.1 (2018-02-13)
+
+### Fixed
+*	Some main menu items not accessible for some users even with sufficient permissions.
+*	Creating a job with assigned client failing in some cases.
+*	Fixed for possible issues with Google Calendar sync.
+*	Minor fixes for add new payment form.
+
 ## 2.9.0 (2018-02-12)
 
 ### Added
