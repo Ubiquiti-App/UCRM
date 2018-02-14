@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.10.0-beta1 (2018-02-14)
+
+### Added
+*	Plugins - plugins are open source modules which can be uploaded into UCRM. Check out the [Plugins repository](https://github.com/Ubiquiti-App/UCRM-plugins).
+*	Webhooks - configurable URL endpoints which will be automatically triggered in case of actions related to invoicing (such as a new invoice or new payment created). Additionally, you can set any plugin (its public URL) as the webhook endpoint.
+*	Canned responses for Ticketing.
+*	Automatic remote backups for UCRM backup files (sync with Dropbox).
+*	New improved wizard and users onboarding for the first run.
+*	UX Improvements (SSL certificate near expiration date notification, creating a service plan while adding a client's service, etc.)
+*	New option for FCC reporting: use the GPS coordinates of the client's service as the primary source for FCC Census geocoder (instead of the address). Additionally, you can check, set or change the FCC Block ID manually for each client's service.
+*	More placeholders are now available in customizable notifications and bulk email tool.
+*	API enhancements: invoice email can be sent via API and the invoice emailSentDate attribute can be set or changed.
+*	Improved notifications in case of FCC Geocoder service outage.
+
+### Changed
+*	After tickets or ticket comments are imported to UCRM, they are automatically marked as read in the source IMAP inbox.
+*	Improved outgoing email format, the plain text version is attached to the email to prevent it from being marked as spam.
+
 ## 2.9.1 (2018-02-13)
 
 ### Fixed
