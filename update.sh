@@ -962,6 +962,13 @@ configure_auto_update_permissions() {
         if [[ -f "${UCRM_PATH}/update.sh" ]]; then
             chown "${UCRM_USER}" "${UCRM_PATH}/update.sh"
         fi
+
+        if (which groups > /dev/null 2>&1); then
+            if ! (groups "${UCRM_USER}" 2>/dev/null | grep -q "docker"); then
+                echo "Adding user \"${UCRM_USER}\" to \"docker\" group."
+                usermod -aG docker "${UCRM_USER}" || true
+            fi
+        fi
     fi
 }
 
@@ -1050,7 +1057,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.1) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.2) |"
     echo "+------------------------------------------------+"
     echo ""
 }
