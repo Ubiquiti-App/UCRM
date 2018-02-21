@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.9.2 (2018-02-21)
+
+### Fixed
+*	Fixed download of job attachments.
+*	Invoices not created automatically on time. A delay of several days occured in some cases in February for Forward invoicing.
+*	Improved FCC report generating which can handle thousands of clients.
+*	Fixed NetFlow chart not shown in client zone when the service has no service device.
+*	Invoice couldn't be edited due to missing invoicing address. Validation error is now shown properly in this case.
+*	Better file type recognition when uploading client's documents.
+*	Fix of possibly failing outgoing emails and other recurring backend tasks.
+*	Fixed created date validation on payment forms.
+*	Minor fixes.
+
 ## 2.10.0-beta1 (2018-02-14)
 
 ### Added
