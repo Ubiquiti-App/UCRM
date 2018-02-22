@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.10.0-beta2 (2018-02-22)
+
+### Added
+*	Improved design of the client log.
+*	Improvements to Service Device API. Now it's possible to edit service device and delete service IPs.
+*	Czech localization added.
+
+### Changed
+*	Custom SSL certificate can be now used with IP address only (with no server domain defined in system settings). Server domain remains required for Let's Encrypt. Also, when server IP / domain is changed, the server configuration is regenerated automatically (no need to re-upload the certificates or restart UCRM).
+
+### Fixed
+*	Creating a canned ticketing response failing when longer text was used.
+*	Client count is no longer displayed on dashboard for users without view permission for clients.
+*	Fixed permission error with canned responses in Client Zone Support section.
+*	Minor UI/UX fixes.
+
 ## 2.9.2 (2018-02-21)
 
 ### Fixed
