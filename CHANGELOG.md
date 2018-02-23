@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.10.0-beta3 (2018-02-23)
+
+### Fixed
+*	Fixed localization issue preventing login after update to 2.10.0-beta2.
+*	Fixed problem in FCC report generation.
+*	Fixed address not pre-filled, when new job is created from client's detail page.
+*	Fixed NetFlow charts not visible in admin zone in some cases, when there are data available.
+*	Minor UI fixes.
+
 ## 2.10.0-beta2 (2018-02-22)
 
 ### Added
