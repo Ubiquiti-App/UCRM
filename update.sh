@@ -525,6 +525,38 @@ patch__compose__add_udp_to_web_app() {
     fi
 }
 
+patch__compose__upgrade_elastic_622() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2011000" 0 0); then
+        return 1
+    fi
+
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -q "docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2";
+    then
+        echo "Your docker-compose contains old Elasticsearch image, trying to upgrade."
+        sed -i -e "s|elasticsearch:2|docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2|g" "${UCRM_PATH}/docker-compose.yml"
+
+        echo "Converting Elasticsearch volumes."
+        sed -i -e "$(grep -n -B 1 "/usr/share/elasticsearch/data" "${UCRM_PATH}/docker-compose.yml" | head -n 1 | sed 's/-..*//g')d" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "/\/usr\/share\/elasticsearch\/data/d" "${UCRM_PATH}/docker-compose.yml"
+        sed -i -e "s|    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2|&\n    volumes:\n      - ./data/elasticsearch6:/usr/share/elasticsearch/data|g" "${UCRM_PATH}/docker-compose.yml"
+
+        echo "Creating Elasticsearch data directory."
+        mkdir -p "${UCRM_PATH}/data/elasticsearch6"
+        chmod -R 777 "${UCRM_PATH}/data/elasticsearch6"
+
+        echo "Creating Elasticsearch config."
+        if [[ ! -f "${UCRM_PATH}/elasticsearch.yml" ]]; then
+            curl -o "${UCRM_PATH}/elasticsearch.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/elasticsearch.yml"
+            chmod 777 "${UCRM_PATH}/elasticsearch.yml"
+        fi
+        sed -i -e "s|/usr/share/elasticsearch/data|&\n      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml|g" "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
 patch__compose__correct_volumes() {
     declare newPath="${1}"
 
@@ -612,6 +644,7 @@ compose__run_update() {
     patch__compose__remove_crm_ping_app || true
 
     patch__compose__add_udp_to_web_app || true
+    patch__compose__upgrade_elastic_622 || true
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
@@ -1057,7 +1090,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.2) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.3) |"
     echo "+------------------------------------------------+"
     echo ""
 }

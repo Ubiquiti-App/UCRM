@@ -366,6 +366,9 @@ download_docker_compose_files() {
             curl -o "${UCRM_PATH}/docker-compose.env" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.env"
         fi
 
+        curl -o "${UCRM_PATH}/elasticsearch.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/elasticsearch.yml"
+        chmod 777 "${UCRM_PATH}/elasticsearch.yml"
+
         sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${INSTALL_VERSION}/g" "${UCRM_PATH}/docker-compose.yml"
         sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${INSTALL_VERSION}/g" "${UCRM_PATH}/docker-compose.migrate.yml"
 
@@ -610,7 +613,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.8) |"
+    echo "| https://ucrm.ubnt.com/        (installer v1.9) |"
     echo "+------------------------------------------------+"
     echo ""
 }
