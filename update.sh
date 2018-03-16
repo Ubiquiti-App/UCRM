@@ -895,9 +895,16 @@ check_update_possible() {
 }
 
 cleanup_old_images() {
+    declare fromImage="${1}"
     local oldImages
+    local imagePattern
+    if [[ "${fromImage}" != "" ]]; then
+        imagePattern="<none>\|${fromImage}"
+    else
+        imagePattern="<none>"
+    fi
 
-    oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "<none>" | awk '{print $3}' | tr '\r\n' ' ' | xargs) || true
+    oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "${imagePattern}" | awk '{print $3}' | tr '\r\n' ' ' | xargs) || true
     if [[ "${oldImages:-}" != "" ]]; then
         echo "Removing old UCRM images"
         # don't double quote, we need word splitting here
@@ -1050,6 +1057,8 @@ do_update() {
     declare toVersion="${1}"
     UPDATING_TO="${toVersion}"
 
+    local fromImage=$(cat "${UCRM_PATH}/docker-compose.yml" | grep "ubnt/ucrm-billing:" | awk -F: ' {print $NF}')
+
     install_docker_compose
     configure_auto_update_permissions
     compose__backup
@@ -1058,7 +1067,11 @@ do_update() {
     flush_udp_conntrack || true
     detect_update_finished
 
-    cleanup_old_images
+    if [[ "${fromImage}" != "${toVersion}" ]]; then
+        cleanup_old_images "${fromImage}"
+    else
+        cleanup_old_images ""
+    fi
     cleanup_old_backups
     cleanup_auto_update
 }
@@ -1090,7 +1103,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.3) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.4) |"
     echo "+------------------------------------------------+"
     echo ""
 }
