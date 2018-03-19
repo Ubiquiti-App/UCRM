@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.9.3 (2018-03-19)
+
+### Changed
+*	Client outstanding amount placeholders now show positive number everywhere.
+*	Failed services in FCC report now include reason of failure. Also, GPS geocoding is more resilient to geocoder service errors.
+*	PHP updated to version 7.1.15.
+
+### Fixed
+*	Data usage report fixes. Previous client's services are now included, fix issues with manually modified data. 
+*	Deleting organization with unused service plans is now enabled.
+*	Fixed fees being possibly invoiced twice in some cases. Additionally, if there are multiple services invoiced separately, the fees will appear on the proper invoice with the related service as expected.
+*	Fixed rendering and UI/UX issues on iPad.
+*	All recurring payment subscriptions are disabled properly now when the feature is turned off in system settings.
+*	When the super-admin's email is changed, it is now properly used as the recipient address for all outgoing emails while the UCRM demo mode is on.
+*	Fixed issues after demo mode factory reset.
+*	Fixed issues with HTML body of incoming ticketing email.
+*	Fixed "create invoice X days in advance" validation in billing settings.
+*	Fixed service charts rendering issue.
+*	Minor fixes.
+
 ## 2.10.0-beta3 (2018-02-23)
 
 ### Fixed
