@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.10.0-beta4 (2018-03-22)
+
+### Changed
+*	File upload limit increased from 150M to 500M.
+
+### Fixed
+*	FCC geocoding service outage detection improvements.
+*	Notifications sent by UCRM are no longer detected as a new ticket in any case now.
+*	Fixed problems with some pop-up windows, e.g. when modifying service period length on the invoice form.
+*	Minor fixes
+
 ## 2.9.3 (2018-03-19)
 
 ### Changed
