@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.10.0 (2018-04-03)
+
+### Changed
+*	Incoming ticketing emails containing "report-type=delivery-status" header are no longer ignored. Thus, new ticket detection on IMAP server will be improved. Detection of "undelivered emails notices" will be handled in v2.11 by configurable email blacklist.
+*	Now, when a tax for service plan is defined, it is always used for invoicing regardless of the tax defined in service settings.
+
+### Fixed
+*	Failing Authorize.Net sandbox payments. Authorize.Net SDK updated.
+*	Fixed ticketing email matching with clients. All client's emails besides those marked as "login" are now used for matching. Additionally, in case the client's email is not unique, the ticket is not matched to any client automatically.
+*	Broken email format when "email resend" was used.
+*	Order of services shown on automatically created invoices corresponds with the services shown in the client's profile page now.
+*	Sample client CSV for batch import extended to comprise all possible client's attributes which can be imported.
+*	Minor fixes.
+
 ## 2.10.0-beta4 (2018-03-22)
 
 ### Changed
