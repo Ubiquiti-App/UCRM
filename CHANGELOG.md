@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.11.0-beta1 (2018-04-05)
+
+### Added
+*	New "Linked Subscriptions" for Stripe. You or your client can create new subscription which always reflects any price change of the linked service. E.g. when a tax, surcharge or discount is added or modified, the new service price will be charged next time automatically.
+*	Customizable subpages for the Client zone. You can add and configure a custom subpage accessible by the clients while logged in the Client zone.
+*	Improvements for FCC reports. Configurable service type and Maximum Contractual Bandwidth per each service plan.
+*	Payment receipt templates. Configurable template of the payment receipt which can be used both for email and PDF.
+*	Customizable invoice attributes and placeholders. You can define custom attributes for each invoice, and include this into the invoice template. Using API/Plugins/Webhooks you can include any data from any 3rd party service (e.g. AFIP invoice codes needed in Argentina)
+*	Configurable email blacklist for automatic Ticket imports from IMAP server.
+*	Added an option to show / hide service shaping information (download / upload speed) in Client Zone.
+*	Added "Printed" filter to invoice lists.
+*	PDF preview now easily available for each invoice or quote.
+*	Option to enable/disable online payment amount change by client. Until now, clients can modify the payment amount, you can disable this.
+*	Manually canceled suspension (related to past due invoices) can be restored manually again.
+*	The next client ID value can be increased, during the application first run (in the app wizard) and even later when some clients already exist (in System > Settings)
+*	UX/UI Improvements (e.q. client's address automatically set when creating a new job, better tooltips, and warnings, etc.)
+*	Better UX for editing service. You can easily modify the price, period or service plan of any client's service. Click the edit button at "Invoice information" box.
+*	Now, you can view and delete any webroot file, uploaded in System > Tools > Webroot.
+*	Improved self-service Reactivation / Prepaid mode. Clients can set the length of reactivated service, they can prepay the specified number of billing periods.
+*	More placeholders available in customizable twig templates.
+*	Improved API responses. The new or edited entity is now included in the response content body.
+*	Improved mailer settings of Support email address and System notification address.
+*	Client log filter configuration is now remembered.
+*	Invoice API improvement - service invoice items now contain invoiced date period in item label.
+*	Dropbox sync improvements.
+*	Webhooks improvements.
+
+### Changed
+*	Improvements for FCC geocoding - codes are now geocoded automatically in the background, better handling of failed addresses.
+*	PHP updated to version 7.1.16.
+
+### Fixed
+*	Fixes and improvements of Ticketing IMAP emails importing.
+*	NetFlow not monitoring upload in some cases when the suspension DNAT rules are enabled on the router.
+*	Fixed pruning of old UCRM backup files.
+*	Minor fixes and improvements.
+
 ## 2.10.0 (2018-04-03)
 
 ### Changed
