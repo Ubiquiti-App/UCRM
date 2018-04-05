@@ -613,7 +613,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v2.0) |"
+    echo "| https://ucrm.ubnt.com/        (installer v2.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
@@ -693,7 +693,7 @@ main() {
     download_docker_images
     configure_wizard_user
     setup_auto_update
-    configure_elasticsearch6_permissions
+    configure_elasticsearch6_permissions || true
     start_docker_images
     detect_installation_finished
     print_wizard_login
