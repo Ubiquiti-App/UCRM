@@ -613,9 +613,21 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v1.9) |"
+    echo "| https://ucrm.ubnt.com/        (installer v2.0) |"
     echo "+------------------------------------------------+"
     echo ""
+}
+
+configure_elasticsearch6_permissions() {
+    if ! (is_updating_to_version "${INSTALL_VERSION}" "2011000" 0 1); then
+        return 1
+    fi
+
+    if [[ ! -d "${UCRM_PATH}/data/elasticsearch6" ]]; then
+        mkdir -p "${UCRM_PATH}/data/elasticsearch6"
+    fi
+
+    chmod -R 777 "${UCRM_PATH}/data/elasticsearch6"
 }
 
 configure_auto_update_permissions() {
@@ -681,6 +693,7 @@ main() {
     download_docker_images
     configure_wizard_user
     setup_auto_update
+    configure_elasticsearch6_permissions
     start_docker_images
     detect_installation_finished
     print_wizard_login

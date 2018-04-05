@@ -526,7 +526,7 @@ patch__compose__add_udp_to_web_app() {
 }
 
 patch__compose__upgrade_elastic_622() {
-    if ! (is_updating_to_version "${UPDATING_TO}" "2011000" 0 0); then
+    if ! (is_updating_to_version "${UPDATING_TO}" "2011000" 0 1); then
         return 1
     fi
 
@@ -1103,7 +1103,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.4) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.5) |"
     echo "+------------------------------------------------+"
     echo ""
 }
