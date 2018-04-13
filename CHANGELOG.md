@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.11.0-beta2 (2018-04-13)
+
+### Added
+*	Extensions for customizable templates. You can show billing period type (e.g. "backward", "forward") and show and modify dates (e.g. Invoice Due Date + 2 days).
+
+### Changed
+*	Tickets based on blacklisted emails are pruned but tickets associated with clients are excluded from this pruning now.
+
+### Fixed
+*	Fixed occasional image loading failures for invoices, login page, etc
+*	Fixed UCRM upgrade failures in case Elastica failed to start.
+
 ## 2.10.1 (2018-04-13)
 
 ### Added
