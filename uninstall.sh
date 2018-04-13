@@ -18,12 +18,14 @@ do_uninstall() {
     if (which docker > /dev/null 2>&1); then
         echo "Removing UCRM docker containers and images."
 
-        if [[ -f "${UCRM_PATH}/docker-compose.version.yml" ]]; then
-            docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" -f "${UCRM_PATH}/docker-compose.version.yml" stop
-            docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" -f "${UCRM_PATH}/docker-compose.version.yml" rm -af
-        else
-            docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
-            docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
+        if [[ -f "${UCRM_PATH}/docker-compose.yml" ]] && [[ -f "${UCRM_PATH}/docker-compose.migrate.yml" ]]; then
+            if [[ -f "${UCRM_PATH}/docker-compose.version.yml" ]]; then
+                docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" -f "${UCRM_PATH}/docker-compose.version.yml" stop
+                docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" -f "${UCRM_PATH}/docker-compose.version.yml" rm -af
+            else
+                docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
+                docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
+            fi
         fi
 
         docker rmi --force $(docker images -a | grep "^ubnt/ucrm-billing" | awk '{print $3}')
@@ -49,6 +51,12 @@ do_uninstall() {
     if [[ -f "${UCRM_PATH}/elasticsearch.yml" ]]; then
         echo "Removing ${UCRM_PATH}/elasticsearch.yml."
         rm -f "${UCRM_PATH}/elasticsearch.yml"
+    fi
+
+    if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
+        echo -e "\n---\n"
+        echo "File ${UCRM_PATH}/docker-compose.env is NOT removed and if you want to restore UCRM data in the future, you should do a backup."
+        echo "Password for PostgreSQL database is saved in this file and you will not be able to use the current database data without it."
     fi
 }
 
