@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.10.1 (2018-04-13)
+
+### Added
+*	Now, you can allow mail servers with self-signed certificate.
+
+### Fixed
+*	Fixed pruning of old UCRM backup files.
+*	Fixed UI responsivity for Ticketing section in the Client Zone.
+*	Fixed permanent deleting of a client having a payment subscription.
+*	Several minor fixes and improvements.
+
 ## 2.11.0-beta1 (2018-04-05)
 
 ### Added
