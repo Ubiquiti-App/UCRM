@@ -28,7 +28,11 @@ do_uninstall() {
             fi
         fi
 
-        docker rmi --force $(docker images -a | grep "^ubnt/ucrm-billing" | awk '{print $3}')
+        local oldImages
+        oldImages=$(docker images -a | grep "^ubnt/ucrm-billing" | awk '{print $3}') || true
+        if [[ "${oldImages:-}" != "" ]]; then
+            docker rmi --force $(docker images -a | grep "^ubnt/ucrm-billing" | awk '{print $3}')
+        fi
     else
         echo "Docker not installed, skipping removal of docker container and images."
     fi
