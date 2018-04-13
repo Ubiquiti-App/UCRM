@@ -151,6 +151,21 @@ is_updating_to_version() {
     return 1
 }
 
+check_ucrm_already_installed() {
+    if [[ ! -d "${UCRM_PATH}" ]]; then
+        return 0
+    fi
+
+    if [ ! -f "${UCRM_PATH}/docker-compose.yml" ]; then
+        return 0
+    fi
+
+    echo "Aborting installation, because UCRM files are already present in \"${UCRM_PATH}\"."
+    echo -e "If you want to update UCRM, use in-app update or check the update guide at https://help.ubnt.com/hc/en-us/articles/115002834888-UCRM-Beta-Update-Guide\n"
+
+    exit 1
+}
+
 check_system() {
     local architecture
     architecture="$(uname -m)"
@@ -613,7 +628,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v2.1) |"
+    echo "| https://ucrm.ubnt.com/        (installer v2.2) |"
     echo "+------------------------------------------------+"
     echo ""
 }
@@ -681,6 +696,8 @@ setup_auto_update() {
 
 main() {
     print_intro
+
+    check_ucrm_already_installed
 
     if [[ "${SKIP_SYSTEM_SETUP}" = "false" ]]; then
         check_system
