@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.11.0-beta3 (2018-04-24)
+
+### Added
+*	Italian localization added.
+
+### Fixed
+*	Fixed possible problems with IMAP ticket import after the IMAP configuration is changed.
+*	Nginx server updated to the latest version, fixing the error 502 occurring on several places incidentally.
+*	Minor UI fixes.
+
 ## 2.11.0-beta2 (2018-04-13)
 
 ### Added
