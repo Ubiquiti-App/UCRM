@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.10.2 (2018-05-04)
+
+### Fixed
+*	"Amount Paid" on invoice preview is now shown as a positive number, same as it is shown in invoice PDF.
+*	Fixed wrong URL generated for notification and emails in case a custom HTTPS port is used.
+*	Fixed tax report not containing all invoices whose created date didn't belong to specified date range due to UCRM time zone.
+*	Added support for CORS, fixing API error 405.
+*	Fixed issues with plugin update.
+*	Minor fixes and UI/UX improvements.
+
 ## 2.11.0-beta3 (2018-04-24)
 
 ### Added
