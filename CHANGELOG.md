@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.11.0-beta4 (2018-05-10)
+
+### Added
+*	Improved database performance.
+*	New tax summary placeholders. Added to the default invoice template in case tax inclusive pricing mode is on.
+*	API enhancement. Now, you can get Device Interfaces with their IPs.
+*	Improved troubleshooting guide with SMTP issues in cloud-hosted UCRM.
+
+### Changed
+*	PHP updated to version 7.1.17.
+
+### Fixed
+*	Fixes and validations for Payment CSV import.
+*	Fixed failing batch and manual invoice generating in some cases.
+*	Now, all services get suspended at the same time, i.e. soon after midnight. Before, some services could have been suspended later that day due to manually created invoices, which became overdue.
+*	Fixed broken chars in email subjects in some cases.
+*	Fixed deleting of a payment receipt template.
+*	Fixed possible issues with the factory reset during the Demo Mode termination.
+*	Minor fixes and improvements.
+
 ## 2.10.2 (2018-05-04)
 
 ### Fixed
