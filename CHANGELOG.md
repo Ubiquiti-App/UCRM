@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.11.0-beta5 (2018-05-17)
+
+### Changed
+*	Organization currency cannot be changed and client's organization cannot be changed to another organization having different currency when some financial data exist (e.g. invoices, payments) to prevent from inconsistent data.
+
+### Fixed
+*	Failing configuration page for payment receipt templates when other than USD currency is used on default organization.
+*	These invoice template placeholders were fixed: Account balance, Account credit, Account outstanding. Now, these placeholders contain the current invoice's due balance.
+*	Fixed permanent delete crash, when the client has subscription that can't be canceled (for multi-delete from client grid view only).
+*	Fixed issues with MercadoPago payments.
+*	Fixed plugin exception handling in several cases, e.g. failing UCRM boot due to a corrupted plugin.
+*	Fixed possible issues with the factory reset of UCRM demo mode.
+*	Improved speed of IMAP ticket importing.
+*	Fixed ticket import for IMAP emails having an empty body.
+*	Fixed "show email original" for tickets coming from some IMAP servers.
+*	Fixed header notifications for new tickets or ticket comments.
+
 ## 2.11.0-beta4 (2018-05-10)
 
 ### Added
