@@ -9,6 +9,7 @@ set -o pipefail
 SECURE_FIRST_LOGIN="false"
 NO_AUTO_UPDATE="false"
 SKIP_SYSTEM_SETUP="false"
+DOCKER_COMPOSE_YML_URL=""
 
 while [[ $# -gt 0 ]]
 do
@@ -66,6 +67,11 @@ case "${key}" in
   --secure-first-login)
     echo "Setting SECURE_FIRST_LOGIN=true"
     SECURE_FIRST_LOGIN="true"
+    ;;
+  --yml)
+    echo "Setting DOCKER_COMPOSE_YML_URL=$2"
+    DOCKER_COMPOSE_YML_URL="$2"
+    shift # past argument value
     ;;
   *)
     # unknown option
@@ -370,7 +376,9 @@ create_user() {
 download_docker_compose_files() {
     if [ ! -f "${UCRM_PATH}/docker-compose.yml" ]; then
         echo "Downloading docker compose files."
-        if (echo "${INSTALL_VERSION}" | grep -q "beta"); then
+        if [[ "${DOCKER_COMPOSE_YML_URL}" != "" ]]; then
+            curl -o "${UCRM_PATH}/docker-compose.yml" "${DOCKER_COMPOSE_YML_URL}"
+        elif (echo "${INSTALL_VERSION}" | grep -q "beta"); then
             curl -o "${UCRM_PATH}/docker-compose.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.beta.yml"
         else
             curl -o "${UCRM_PATH}/docker-compose.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.yml"
@@ -628,7 +636,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v2.2) |"
+    echo "| https://ucrm.ubnt.com/        (installer v2.3) |"
     echo "+------------------------------------------------+"
     echo ""
 }
