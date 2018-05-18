@@ -2,6 +2,15 @@
 
 ## 2.11.0 (2018-05-17)
 
+### Changed
+*	Client is now redirected to pay for the oldest unpaid invoice instead of newest in the walled-garden page after postponing the suspension.
+*	Late fees are now always generated at the same time every day, i.e. soon after midnight. Before, some fees could have been generated later that day due to manually created invoices.
+
+### Fixed
+*	Fixed rare crashes when editing client services.
+*	Fixed crash when creating new client in case no default organization was selected.
+*	Elasticsearch now does not cause crashes when index cannot be updated. This happened for example when there was not enough disk space left and indexes were automatically switched to read-only mode.
+
 ## 2.11.0-beta5 (2018-05-17)
 
 ### Changed
