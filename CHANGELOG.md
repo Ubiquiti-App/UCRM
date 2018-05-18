@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.11.0 (2018-05-17)
+## 2.11.0 (2018-05-18)
 
 ### Changed
 *	Client is now redirected to pay for the oldest unpaid invoice instead of newest in the walled-garden page after postponing the suspension.
