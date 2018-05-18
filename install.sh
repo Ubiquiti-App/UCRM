@@ -642,7 +642,7 @@ print_intro() {
 }
 
 configure_elasticsearch6_permissions() {
-    if ! (is_updating_to_version "${INSTALL_VERSION}" "2011000" 0 1); then
+    if ! (is_updating_to_version "${INSTALL_VERSION}" "2011000" 1 1); then
         return 1
     fi
 
