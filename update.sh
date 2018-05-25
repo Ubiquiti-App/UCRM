@@ -935,9 +935,14 @@ cleanup_old_backups() {
 cleanup_auto_update() {
     UCRM_DATA_PATH=$(get_ucrm_data_path)
     UCRM_UPDATE_RUNNING_FILE="${UCRM_DATA_PATH}/updates/update_running"
+    UCRM_UPDATE_REQUESTED_FILE="${UCRM_DATA_PATH}/updates/update_requested"
 
     if [[ -f "${UCRM_UPDATE_RUNNING_FILE}" ]]; then
         rm -f "${UCRM_UPDATE_RUNNING_FILE}"
+    fi
+
+    if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
+        rm -f "${UCRM_UPDATE_REQUESTED_FILE}"
     fi
 }
 
@@ -1105,7 +1110,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.6) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.7) |"
     echo "+------------------------------------------------+"
     echo ""
 }
