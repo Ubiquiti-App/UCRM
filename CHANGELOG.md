@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.12.0-beta1 (2018-05-28)
+
+### Added
+#### New Features
+*	Batch payments insertion. You can add multiple payments for several clients in a batch using a single form.
+*	Batch resend of failed emails. You can resend all failed emails in a batch from a specified date.
+*	Recreate Invoice PDF feature. Once the invoice PDF is created, it's not modified automatically. If you need to update the PDF manually, you can do so now. For example, it may be useful when you apply client's credit to already created invoice and you want to update the balance due on the invoice.
+*	You can find any option in the UCRM Settings using the header search bar.
+*	Recently failed emails shown in the dashboard now. Whenever an email failed to be sent from UCRM due to any reason, you will know it and you will be able to resend all of them in a batch.
+*	You can define the localization for organization's currency to control the currency format and code/sign.
+*	"2FA enabled" option visible in UCRM user grid.
+*	Data usage table added to the Client Zone.
+*	Improved system logs. More system log entries for IMAP import feature and for subscription canceling, some unimportant log messages are omitted.
+*	Now, in the data usage report, you can click on the client to jump directly to the client's profile or service page to view more details about the client's NetFlow data.
+*	New "Quantity (rounded)" invoice template placeholder and new allowed methods round and number_format. Use this to control the decimal places shown on invoice item if you don't like the default unrounded quantity values. This may be useful for prorated periods.
+*	Improved payment receipt default template with more placeholders showing details about online payment and subscription.
+#### Ticketing upgrades	
+*	Linking tickets and jobs. You can link ticket(s) with job(s) to monitor and schedule a job related to some client's tickets.
+*	UI upgrade for Ticketing section.
+*	As an administrator, when you click on ticket in client's email notification, you are now redirected to admin zone, instead of the client zone. (On condition, you are logged in)
+*	Now, you can modify the starting date of tickets import from IMAP inbox.
+*	Ticket attachments coming from IMAP email are stored in UCRM from now. You can define the maximum file size allowed.
+*	IMAP Import can be temporarily disabled now. You can use the turn on/off toggle.
+*	"Reply-to" header is now used for incoming ticket email processing. When used, it takes precedence over the From header attribute.
+*	Now, ticket creation timestamp is copied from the IMAP email received timestamp making the order of UCRM tickets more user friendly.
+#### API improvements	
+*	Now, you can get the list of all currencies in UCRM, set users/client avatar color.
+*	Added emailFromAddress and emailFromName to ticket and comments API endpoints to enable you to create tickets in the same way IMAP import does.
+*	Better docs and minor fixes.
+*	New API endpoints and enhancements. Now, you can manage client's invitation email to the Client Zone, refunds or service plan's data usage limit through API.
+
+### Changed
+*	Now, you can turn off the invoicing emails for a client by removing the "billing" tag from all the client's contacts. Previously, invoicing emails were sent to all the client's contacts in this case but this fallback feature has been removed.
+
+### Fixed
+*	When credit is being applied automatically to invoices, it is shown properly in the invoice preview now.
+
 ## 2.11.1 (2018-05-28)
 
 ### Fixed
