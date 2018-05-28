@@ -3,7 +3,7 @@
 ## 2.11.1 (2018-05-28)
 
 ### Fixed
-*	Stripe and Authorize.Net subscriptions are now deleted from the payment provider automatically as soon as the subscription or client is deleted in UCRM. Client's data created in v2.11.0 and prior must be deleted manually from the Stripe or Authorize.Net dashboard.
+*	Client data from Stripe and Authorize.Net are now deleted automatically as soon as the subscription or client is deleted in UCRM. This must be deleted manually from the Stripe or Authorize.Net dashboard for subscriptions/clients deleted in v2.11.0 and prior.
 *	Tax report fixes related to "tax inclusive pricing".
 *	Fixed possible issues with client edit form.
 *	Fixed ticket order for API and mobile app.
