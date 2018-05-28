@@ -4,6 +4,7 @@
 
 ### Fixed
 *	Client data from Stripe and Authorize.Net are now deleted automatically as soon as the subscription or client is deleted in UCRM. This must be deleted manually from the Stripe or Authorize.Net dashboard for subscriptions/clients deleted in v2.11.0 and prior.
+*	Fixed "prorated separately" option for service invoicing. First prorated period was always invoiced separately in case of forward invoicing.
 *	Tax report fixes related to "tax inclusive pricing".
 *	Fixed possible issues with client edit form.
 *	Fixed ticket order for API and mobile app.
