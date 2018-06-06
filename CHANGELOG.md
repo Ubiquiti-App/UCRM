@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.11.2 (2018-06-06)
+
+### Fixed
+*	Empty invoice or invoice drafts being created automatically for clients and services not eligible for invoicing, in some cases.
+*	Late fees issued and suspension applied at a wrong time (in UTC instead of the local time zone).
+*	IMAP Import stopped working in some rare cases due to invalid attachment's filename or mime type.
+*	Fixed issues with Billing > Refunds view.
+*	Minor fixes.
+
+### Changed
+*	PHP updated to version 7.1.18.
+
 ## 2.12.0-beta1 (2018-05-28)
 
 ### Added
