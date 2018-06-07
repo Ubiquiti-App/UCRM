@@ -12,12 +12,22 @@ FORCE_UPDATE=0
 UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
+
 UCRM_PATH="${UCRM_PATH:-}"
+if [ ! -d "${UCRM_PATH}" ]; then
+    UCRM_PATH=""
+fi
 if [[ "${UCRM_PATH}" = "" ]] && [[ "${BASH_SOURCE+x}" = "x" ]]; then
-    UCRM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
+    UCRM_PATH="$(dirname "${BASH_SOURCE[0]}")"
 fi
 if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
+fi
+REALPATH="$(which realpath)"
+if [ "$REALPATH" != "" ] && [ -x "$REALPATH" ]; then
+    UCRM_PATH="$(${REALPATH} "${UCRM_PATH}")"
+else
+    UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
 fi
 
 UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never ":2055/udp" || echo "      - 2055:2055/udp")
@@ -909,7 +919,7 @@ cleanup_old_images() {
     oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "${imagePattern}" | awk '{print $3}' | tr '\r\n' ' ' | xargs) || true
     if [[ "${oldImages:-}" != "" ]]; then
         echo "Removing old UCRM images"
-        # don't double quote, we need word splitting here
+        # don't double quote, we need word splitting here
         docker rmi -f ${oldImages} || true
     fi
 
