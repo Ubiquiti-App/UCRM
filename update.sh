@@ -14,7 +14,7 @@ UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 
 UCRM_PATH="${UCRM_PATH:-}"
-if [ ! -d "${UCRM_PATH}" ]; then
+if [[ ! -d "${UCRM_PATH}" ]]; then
     UCRM_PATH=""
 fi
 if [[ "${UCRM_PATH}" = "" ]] && [[ "${BASH_SOURCE+x}" = "x" ]]; then
@@ -23,9 +23,8 @@ fi
 if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
 fi
-REALPATH="$(which realpath)"
-if [ "$REALPATH" != "" ] && [ -x "$REALPATH" ]; then
-    UCRM_PATH="$(${REALPATH} "${UCRM_PATH}")"
+if (which realpath > /dev/null 2>&1); then
+    UCRM_PATH="$(realpath "${UCRM_PATH}")"
 else
     UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
 fi

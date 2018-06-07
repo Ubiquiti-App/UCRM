@@ -7,7 +7,7 @@ set -o pipefail
 #set -o xtrace
 
 UCRM_PATH="${UCRM_PATH:-}"
-if [ ! -d "${UCRM_PATH}" ]; then
+if [[ ! -d "${UCRM_PATH}" ]]; then
     UCRM_PATH=""
 fi
 if [[ "${UCRM_PATH}" = "" ]] && [[ "${BASH_SOURCE+x}" = "x" ]]; then
@@ -17,9 +17,8 @@ if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
 fi
 
-REALPATH="$(which realpath)"
-if [ "$REALPATH" != "" ] && [ -x "$REALPATH" ]; then
-    UCRM_PATH="$(${REALPATH} "${UCRM_PATH}")"
+if (which realpath > /dev/null 2>&1); then
+    UCRM_PATH="$(realpath "${UCRM_PATH}")"
 else
     UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
 fi
@@ -78,7 +77,6 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     curl -o "${UCRM_PATH}/update.sh" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/update.sh"
     export PATH="/usr/local/bin:$PATH"
     echo "$(date) --- Starting the update process."
-    export UCRM_PATH
     if ( bash "${UCRM_PATH}/update.sh" --version "${VERSION_TO_UPDATE}" --cron ); then
         echo "$(date) --- Update successful."
 
