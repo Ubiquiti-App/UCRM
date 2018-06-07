@@ -52,13 +52,10 @@ if [ ! -w "${UCRM_UPDATES_PATH}" ]; then
 fi
 
 UCRM_UPDATE_REQUESTED_FILE="${UCRM_UPDATES_PATH}/update_requested"
-UCRM_UPDATE_RUNNING_LOCK_DIR="${UCRM_UPDATES_PATH}/update_running"
+UCRM_UPDATE_RUNNING_FILE="${UCRM_UPDATES_PATH}/update_running"
 UCRM_UPDATE_LOG_FILE="${UCRM_UPDATES_PATH}/update.log"
 
-# mkdir lock_dir is atomic, test -f lock_file && touch lock_file has a race condition
-if ( mkdir "${UCRM_UPDATE_RUNNING_LOCK_DIR}" ); then
-    trap 'rm -rf "${UCRM_UPDATE_RUNNING_LOCK_DIR}"; exit' INT TERM EXIT
-else
+if [[ -f "${UCRM_UPDATE_RUNNING_FILE}" ]]; then
     echo "$(date) --- Update process is already running."
 
     exit 1
@@ -71,6 +68,8 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     VERSION_TO_UPDATE=$(cat "${UCRM_UPDATE_REQUESTED_FILE}")
     echo "$(date) --- Initializing UCRM update to version ${VERSION_TO_UPDATE}."
 
+    touch "${UCRM_UPDATE_RUNNING_FILE}"
+    trap 'rm -f "${UCRM_UPDATE_RUNNING_FILE}"; exit' INT TERM EXIT
     rm "${UCRM_UPDATE_REQUESTED_FILE}"
 
     echo "$(date) --- Downloading current updater."
@@ -79,10 +78,12 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     echo "$(date) --- Starting the update process."
     if ( bash "${UCRM_PATH}/update.sh" --version "${VERSION_TO_UPDATE}" --cron ); then
         echo "$(date) --- Update successful."
+        rm -f "${UCRM_UPDATE_RUNNING_FILE}"
 
         exit 0
     else
         echo "$(date) --- Update failed."
+        rm -f "${UCRM_UPDATE_RUNNING_FILE}"
 
         exit 1
     fi
