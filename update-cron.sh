@@ -7,13 +7,23 @@ set -o pipefail
 #set -o xtrace
 
 UCRM_PATH="${UCRM_PATH:-}"
+if [[ ! -d "${UCRM_PATH}" ]]; then
+    UCRM_PATH=""
+fi
 if [[ "${UCRM_PATH}" = "" ]] && [[ "${BASH_SOURCE+x}" = "x" ]]; then
-    UCRM_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
+    UCRM_PATH="$(dirname "${BASH_SOURCE[0]}")"
 fi
 if [[ "${UCRM_PATH}" = "" ]]; then
     UCRM_PATH="."
 fi
-GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
+
+if (which realpath > /dev/null 2>&1); then
+    UCRM_PATH="$(realpath "${UCRM_PATH}")"
+else
+    UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
+fi
+
+export GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 
 if [[ ! -f "${UCRM_PATH}/docker-compose.yml" ]]; then
     echo "docker-compose.yml does not exist or is not readable in path ${UCRM_PATH}"
@@ -35,6 +45,12 @@ UCRM_UPDATES_PATH="${UCRM_DATA_PATH}/updates"
 if [[ ! -d "${UCRM_UPDATES_PATH}" ]]; then
     mkdir -p "${UCRM_UPDATES_PATH}"
 fi
+
+if [ ! -w "${UCRM_UPDATES_PATH}" ]; then
+    echo "Cannot write into path ${UCRM_UPDATES_PATH}"
+    exit 1
+fi
+
 UCRM_UPDATE_REQUESTED_FILE="${UCRM_UPDATES_PATH}/update_requested"
 UCRM_UPDATE_RUNNING_FILE="${UCRM_UPDATES_PATH}/update_running"
 UCRM_UPDATE_LOG_FILE="${UCRM_UPDATES_PATH}/update.log"
