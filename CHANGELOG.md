@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.12.0-beta2 (2018-06-11)
+
+### Added
+*	Improved CSV import enabling you to create clients along with their services in a single batch. See the sample CSV file in System > Tools > Client import.
+*	Quotes are now shown in the Client Zone.
+*	UCRM plugins are now included in the UCRM backup file.
+*	Bach payments improvements, UI fixes, and better validations.
+*	Batch invoice sending improvements, UI upgrade.
+*	Improved configuration of UCRM backup sync on Dropbox.
+*	Downloaded ticket attachments are now included in the UCRM backup file. If you delete downloaded attachment from UCRM, it will not be included, but can still be downloaded from the IMAP inbox.
+
+### Changed
+*	Symfony updated to 3.4.11.
+
+### Fixed
+*	Some tickets not visible in the list in some cases when there are many tickets in the list already (both for the global ticket list and client's ticket list).
+*	Empty invoices or invoice drafts being created automatically for clients and services not eligible for invoicing, in some cases.
+*	Permissions of non-admin groups for newly added UCRM features, after UCRM is upgraded, were shown as "view" while they were actually "denied" in System > Security section. Now, it's shown as denied properly.
+*	Minor bug fixes, UI improvements and tooltips.
+*	Fixes in apiary docs.
+
 ## 2.11.2 (2018-06-06)
 
 ### Fixed
