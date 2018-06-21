@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.12.0-beta3 (2018-06-21)
+
+### Added 
+*	Russian localization added.
+*	UI improvements for Client import.
+
+### Fixed
+*	Fixed ticketing crash in Client Zone in case client had more than 10 tickets.
+*	Minor fixes.
+
 ## 2.11.3 (2018-06-21)
 
 ### Fixed
