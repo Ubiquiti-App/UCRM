@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.11.3 (2018-06-21)
+
+### Fixed
+*	Failing batch invoicing. Automatic invoicing and manual batch invoicing button may not be working in some cases.
+*	Missing button for cancel subscription in some cases.
+*	Fixed EdgeRouter™ PRO connection issues.
+*	Failing QoS configuration on ER v1.10.
+*	Fixed possible errors with batch deleting of archived clients.
+*	Fixed crashes when client uses browser back button to modify just created IPpay subscriptions.
+*	Fixed Authorize.Net subscription start date moved 1 day backwards in some cases.
+*	Fixed crash in client's ticketing section in some rare cases.
+*	District of Columbia missing in the list of states.
+*	Fixed failing batch emailing.
+*	Other minor fixes.
+
+### Changed
+*	UCRM error reporting form is now displayed only to admins, never in the client zone.
+
 ## 2.12.0-beta2 (2018-06-11)
 
 ### Added
