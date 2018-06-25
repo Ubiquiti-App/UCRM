@@ -33,8 +33,8 @@ UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never "
 
 UCRM_USER="${UCRM_USER:-ucrm}"
 if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
-    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Eq "UCRM_USER=" ); then
-        UCRM_USER=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
+    if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Fq "UCRM_USER=" ); then
+        UCRM_USER=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -F "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
     fi
 fi
 NO_AUTO_UPDATE="false"
@@ -62,7 +62,7 @@ install_docker_compose() {
         exit 1
     fi
 
-    if (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:") || [[ "${NETWORK_SUBNET}" != "" ]] || [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
+    if (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "networks:") || [[ "${NETWORK_SUBNET}" != "" ]] || [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
         local DOCKER_COMPOSE_VERSION
         local DOCKER_COMPOSE_MAJOR
         local DOCKER_COMPOSE_MINOR
@@ -183,7 +183,7 @@ is_updating_to_version() {
 }
 
 patch__compose__add_elastic_section() {
-    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  elastic:" );
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  elastic:" );
     then
         echo "Your docker-compose doesn't contain Elastic section. Trying to add."
         echo -e "\n\n  elastic:\n    image: elasticsearch:2\n    restart: always" >> "${UCRM_PATH}/docker-compose.yml"
@@ -201,7 +201,7 @@ patch__compose__add_elastic_links() {
 }
 
 patch__compose__fix_postgres_restart() {
-    if ! ( grep 'image: postgres' -A1 "${UCRM_PATH}/docker-compose.yml" | grep -q "restart" );
+    if ! ( grep 'image: postgres' -A1 "${UCRM_PATH}/docker-compose.yml" | grep -Fq "restart" );
     then
         echo "Updating postgres service"
         sed -i -e "s/image: postgres:9.5/&\n    restart: always/g" "${UCRM_PATH}/docker-compose.yml"
@@ -209,7 +209,7 @@ patch__compose__fix_postgres_restart() {
 }
 
 patch__compose__fix_elastic_restart() {
-    if ! ( grep 'image: elasticsearch' -A1 "${UCRM_PATH}/docker-compose.yml" | grep -q "restart" );
+    if ! ( grep 'image: elasticsearch' -A1 "${UCRM_PATH}/docker-compose.yml" | grep -Fq "restart" );
     then
         echo "Updating elastic service"
         sed -i -e "s/image: elasticsearch:2/&\n    restart: always/g" "${UCRM_PATH}/docker-compose.yml"
@@ -217,7 +217,7 @@ patch__compose__fix_elastic_restart() {
 }
 
 patch__compose__add_logging() {
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "    logging:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "    logging:";
     then
         echo "Updating logging configuration."
         sed -i -e "s/^  [a-z_]\+:$/&\n    logging:\n      driver: \"json-file\"\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"/g" "${UCRM_PATH}/docker-compose.yml"
@@ -225,7 +225,7 @@ patch__compose__add_logging() {
 }
 
 patch__compose__add_networks() {
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "networks:";
     then
         echo "Updating docker-compose.yml networks configuration."
         sed -i -e "s/version: '2'/&\n\nnetworks:\n  public:\n    internal: false\n  internal:\n    internal: true\n/g" "${UCRM_PATH}/docker-compose.yml"
@@ -242,7 +242,7 @@ patch__compose__add_networks() {
         sed -i -e "s/  crm_ping_app:/&\n    networks:\n      - internal\n      - public/g" "${UCRM_PATH}/docker-compose.yml"
     fi
 
-    if ! cat -vt "${UCRM_PATH}/docker-compose.migrate.yml" | grep -Eq "networks:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.migrate.yml" | grep -Fq "networks:";
     then
         echo "Updating docker-compose.migrate.yml networks configuration."
         sed -i -e "s/  migrate_app:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.migrate.yml"
@@ -251,7 +251,7 @@ patch__compose__add_networks() {
 
 patch__compose__configure_network_subnet() {
     if [[ "${NETWORK_SUBNET}" != "" ]]; then
-        if (cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Eq '  public:    internal: false    ipam:      config:        - subnet: '); then
+        if (cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Fq '  public:    internal: false    ipam:      config:        - subnet: '); then
             echo "Subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
 
             exit 1
@@ -262,7 +262,7 @@ patch__compose__configure_network_subnet() {
     fi
 
     if [[ "${NETWORK_SUBNET_INTERNAL}" != "" ]]; then
-        if (cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Eq '  internal:    internal: true    ipam:      config:        - subnet: '); then
+        if (cat -vt "${UCRM_PATH}/docker-compose.yml" | tr -d '\n' | grep -Fq '  internal:    internal: true    ipam:      config:        - subnet: '); then
             echo "Internal subnet is already configured. Please update the docker-compose.yml file manually, if you need to change it."
 
             exit 1
@@ -292,7 +292,7 @@ patch__compose__add_search_devices_section() {
         return 1
     fi
 
-    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_search_devices_app:" );
+    if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_search_devices_app:" );
     then
         echo "Your docker-compose doesn't contain UCRM search devices section. Trying to add."
         echo -e "\n  crm_search_devices_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_search_devices\"" >> "${UCRM_PATH}/docker-compose.yml"
@@ -308,7 +308,7 @@ patch__compose__add_netflow_section() {
         return 1
     fi
 
-    if ! (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_netflow_app:");
+    if ! (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_netflow_app:");
     then
         echo "Your docker-compose doesn't contain Netflow section. Trying to add."
         echo -e "\n  crm_netflow_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    ports:\n      - 2055:2055/udp\n    command: \"crm_netflow\"" >> "${UCRM_PATH}/docker-compose.yml"
@@ -324,7 +324,7 @@ patch__compose__add_ping_section() {
         return 1
     fi
 
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_ping_app:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_ping_app:";
     then
         echo "Your docker-compose doesn't contain Ping section. Trying to add."
         echo -e "\n  crm_ping_app:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n    command: \"crm_ping\"" >> "${UCRM_PATH}/docker-compose.yml"
@@ -336,7 +336,7 @@ patch__compose__add_ping_section() {
 }
 
 patch__compose__add_elasticsearch_volumes() {
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "/usr/share/elasticsearch/data";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "/usr/share/elasticsearch/data";
     then
         echo "Updating Elasticsearch volumes configuration."
         sed -i -e "s/image: elasticsearch:2/&\n    volumes:\n      - \.\/data\/elasticsearch:\/usr\/share\/elasticsearch\/data/g" "${UCRM_PATH}/docker-compose.yml"
@@ -352,7 +352,7 @@ patch__compose__add_rabbitmq() {
         return 1
     fi
 
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  rabbitmq:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  rabbitmq:";
     then
         echo "Your docker-compose doesn't contain RabbitMQ section. Trying to add."
         echo -e "\n  rabbitmq:\n    image: rabbitmq:3\n    restart: always\n    volumes:\n      - ./data/rabbitmq:/var/lib/rabbitmq\n" >> "${UCRM_PATH}/docker-compose.yml"
@@ -374,7 +374,7 @@ patch__compose__add_supervisord() {
         return 1
     fi
 
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  supervisord:";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  supervisord:";
     then
         echo "Your docker-compose doesn't contain supervisord section. Trying to add."
         echo -e "\n  supervisord:\n    image: ubnt/ucrm-billing:latest\n    restart: always\n    env_file: docker-compose.env\n    volumes:\n      - ./data/ucrm:/data\n    links:\n      - postgresql\n      - elastic\n      - rabbitmq\n    command: \"supervisord\"" >> "${UCRM_PATH}/docker-compose.yml"
@@ -390,7 +390,7 @@ patch__compose__remove_draft_approve() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_draft_approve_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_draft_approve_app:";
     then
         echo "Your docker-compose contains obsolete section crm_draft_approve_app. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_draft_approve_app || true
@@ -409,7 +409,7 @@ patch__compose__remove_invoice_send_email() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_invoice_send_email_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_invoice_send_email_app:";
     then
         echo "Your docker-compose contains obsolete section crm_invoice_send_email_app. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_invoice_send_email_app || true
@@ -428,7 +428,7 @@ patch__compose__remove_supervisord() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  supervisord:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  supervisord:";
     then
         echo "Your docker-compose contains obsolete section supervisord. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop supervisord || true
@@ -447,7 +447,7 @@ patch__compose__remove_sync_app() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  sync_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  sync_app:";
     then
         echo "Your docker-compose contains obsolete section sync_app. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop sync_app || true
@@ -466,7 +466,7 @@ patch__compose__remove_crm_search_devices_app() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_search_devices_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_search_devices_app:";
     then
         echo "Your docker-compose contains obsolete section crm_search_devices_app. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_search_devices_app || true
@@ -485,7 +485,7 @@ patch__compose__remove_crm_netflow_app() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_netflow_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_netflow_app:";
     then
         echo "Your docker-compose contains obsolete section crm_netflow_app. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_netflow_app || true
@@ -504,7 +504,7 @@ patch__compose__remove_crm_ping_app() {
         return 1
     fi
 
-    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "  crm_ping_app:";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "  crm_ping_app:";
     then
         echo "Your docker-compose contains obsolete section crm_ping_app. Trying to remove."
         docker-compose -f "${UCRM_PATH}/docker-compose.yml" stop crm_ping_app || true
@@ -523,7 +523,7 @@ patch__compose__add_udp_to_web_app() {
         return 1
     fi
 
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq ":2055/udp";
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq ":2055/udp";
     then
         echo "Your docker-compose does not contain configuration for port 2055. Trying to add."
         sed -i -e "s|    ports:|&\n${UDP_PORT}|g" "${UCRM_PATH}/docker-compose.yml"
@@ -814,7 +814,7 @@ get_from_version() {
         curl -o "${UCRM_PATH}/docker-compose.version.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/docker-compose.version.yml"
     fi
 
-    if (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "networks:") && ! (cat -vt "${UCRM_PATH}/docker-compose.version.yml" | grep -Eq "networks:");
+    if (cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fq "networks:") && ! (cat -vt "${UCRM_PATH}/docker-compose.version.yml" | grep -Fq "networks:");
     then
         sed -i -e "s/  get_version_app:/&\n    networks:\n      - internal/g" "${UCRM_PATH}/docker-compose.version.yml"
     fi
