@@ -27,8 +27,9 @@ fi
 if (which realpath > /dev/null 2>&1); then
     UCRM_PATH="$(realpath "${UCRM_PATH}")"
 else
-    UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
+    UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && (pwd -P || pwd -L))"
 fi
+readonly UCRM_PATH
 
 UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fm 1 ":2055/udp" || echo "      - 2055:2055/udp")
 

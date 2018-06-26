@@ -22,8 +22,9 @@ fi
 if (which realpath > /dev/null 2>&1); then
     UCRM_PATH="$(realpath "${UCRM_PATH}")"
 else
-    UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
+    UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && (pwd -P || pwd -L))"
 fi
+readonly UCRM_PATH
 
 export GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
 
