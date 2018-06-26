@@ -12,6 +12,7 @@ FORCE_UPDATE=0
 UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-Ubiquiti-App/UCRM/master}"
+export GREP_OPTIONS='--color=never'
 
 UCRM_PATH="${UCRM_PATH:-}"
 if [[ ! -d "${UCRM_PATH}" ]]; then
@@ -29,12 +30,12 @@ else
     UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
 fi
 
-UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never ":2055/udp" || echo "      - 2055:2055/udp")
+UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Fm 1 ":2055/udp" || echo "      - 2055:2055/udp")
 
 UCRM_USER="${UCRM_USER:-ucrm}"
 if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
     if ( cat -vt "${UCRM_PATH}/docker-compose.env" | grep -Fq "UCRM_USER=" ); then
-        UCRM_USER=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -F "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
+        UCRM_USER=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -F "UCRM_USER=" | awk -F= ' {print $NF}')
     fi
 fi
 NO_AUTO_UPDATE="false"
@@ -579,7 +580,7 @@ patch__compose__correct_volumes() {
 patch__compose_env__fix_server_port() {
     if ! grep -q 'SERVER_PORT' "${UCRM_PATH}/docker-compose.env";
     then
-        SERVER_PORT=$(grep -A 20 --color=never "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+        SERVER_PORT=$(grep -A 20 "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
         echo "Adding ${SERVER_PORT} as server port, you can change it in UCRM System > Settings > Application > Server port"
         echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
         echo "SERVER_PORT=${SERVER_PORT}" >> "${UCRM_PATH}/docker-compose.env"
@@ -589,7 +590,7 @@ patch__compose_env__fix_server_port() {
 patch__compose_env__fix_suspend_port() {
     if ! grep -q 'SERVER_SUSPEND_PORT' "${UCRM_PATH}/docker-compose.env";
     then
-        SERVER_SUSPEND_PORT=$(grep -A 20 --color=never "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1)
+        SERVER_SUSPEND_PORT=$(grep -A 20 "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:81/{print $2}' | cut -d ':' -f1)
         echo "Adding ${SERVER_SUSPEND_PORT} as suspend port, you can change it in UCRM System > Settings > Application > Server suspend port"
         echo "#used only in installation" >> "${UCRM_PATH}/docker-compose.env"
         echo "SERVER_SUSPEND_PORT=${SERVER_SUSPEND_PORT}" >> "${UCRM_PATH}/docker-compose.env"
@@ -599,7 +600,7 @@ patch__compose_env__fix_suspend_port() {
 compose__get_correct_volumes_path() {
     if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
     then
-        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
+        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g'
     else
         echo ""
     fi
@@ -714,7 +715,7 @@ containers__run_update() {
         then
             docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
         else
-            revertVersion=$(grep --color=never 'UCRM will be reverted to version' "${MIGRATE_OUTPUT}" | awk ' {print $NF}')
+            revertVersion=$(grep 'UCRM will be reverted to version' "${MIGRATE_OUTPUT}" | awk ' {print $NF}')
             if [[ "${revertVersion}" != "" ]]; then
                 containers__revert_update "${revertVersion}"
             else
@@ -747,7 +748,7 @@ confirm_ucrm_running() {
     local webAppPort
 
     ucrmRunning=false
-    webAppPort=$(grep -A 20 --color=never "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 --color=never 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
+    webAppPort=$(grep -A 20 "web_app" "${UCRM_PATH}/docker-compose.yml" | grep -B 20 'command: "server"' | awk '/\-\ ([0-9]+)\:80/{print $2}' | cut -d ':' -f1)
     n=0
     until [ ${n} -ge 10 ]
     do
@@ -821,10 +822,10 @@ get_from_version() {
 
     check_yml "${UCRM_PATH}/docker-compose.version.yml" "${UCRM_PATH}/docker-compose.yml"
 
-    currentComposeImage="$(grep -Eo --color=never "ucrm-billing:.+" "${UCRM_PATH}/docker-compose.yml" | head -1 | awk -F: '{print $NF}')"
+    currentComposeImage="$(grep -Eo "ucrm-billing:.+" "${UCRM_PATH}/docker-compose.yml" | head -1 | awk -F: '{print $NF}')"
     sed -i -e "s/    image: ubnt\/ucrm-billing:.*/    image: ubnt\/ucrm-billing:${currentComposeImage}/g" "${UCRM_PATH}/docker-compose.version.yml"
 
-    fromVersion=$(docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.version.yml" run get_version_app | tr -d '\n' | grep -Eo --color=never "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
+    fromVersion=$(docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.version.yml" run get_version_app | tr -d '\n' | grep -Eo "version:.+" | awk -F: '{print $NF}' | tr -d '[:space:]')
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.version.yml" rm -f get_version_app > /dev/null 2>&1
 
     echo "${fromVersion}"
@@ -915,7 +916,7 @@ cleanup_old_images() {
         imagePattern="<none>"
     fi
 
-    oldImages=$(docker images | grep --color=never "ubnt/ucrm-billing" | grep --color=never "${imagePattern}" | awk '{print $3}' | tr '\r\n' ' ' | xargs) || true
+    oldImages=$(docker images | grep "ubnt/ucrm-billing" | grep "${imagePattern}" | awk '{print $3}' | tr '\r\n' ' ' | xargs) || true
     if [[ "${oldImages:-}" != "" ]]; then
         echo "Removing old UCRM images"
         # don't double quote, we need word splitting here
@@ -962,7 +963,7 @@ flush_udp_conntrack() {
 get_ucrm_data_path() {
     if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
     then
-        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | awk ' {print $NF}' | awk -F: '{print $1}'
+        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 | awk ' {print $NF}' | awk -F: '{print $1}'
     else
         echo "data/ucrm"
     fi

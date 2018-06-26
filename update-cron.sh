@@ -6,6 +6,8 @@ set -o nounset
 set -o pipefail
 #set -o xtrace
 
+export GREP_OPTIONS='--color=never'
+
 UCRM_PATH="${UCRM_PATH:-}"
 if [[ ! -d "${UCRM_PATH}" ]]; then
     UCRM_PATH=""
@@ -34,7 +36,7 @@ fi
 get_ucrm_data_path() {
     if ! ( cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "\.\/data\/ucrm:\/data" );
     then
-        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 --color=never | awk ' {print $NF}' | awk -F: '{print $1}'
+        cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -E "^      \- \/home\/.+:\/data$" -m 1 | awk ' {print $NF}' | awk -F: '{print $1}'
     else
         echo "${UCRM_PATH}/data/ucrm"
     fi
