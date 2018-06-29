@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.12.0-beta4 (2018-06-29)
+
+### Added 
+*	Improved application performance.
+*	UI, UX Improvements for CSV import of clients & services. Additionally, client's note (description) can be imported now as well.
+*	New header notification after successful UCRM update with a link to the changelog.
+*	Archiving/Deleting a batch of clients is now processed in the background.
+*	Translations updated.
+
+### Changed
+*	Changes in the first run wizard, demo mode is turned on by default.
+*	PHP updated to version 7.1.19.
+
+### Fixed
+*	Online payment now available again for logged out clients (after suspension postponing or service reactivation).
+*	Fixed failing logging out from client zone.
+*	Plugins are now executed in their own directory.
+*	Prevention from "Chrome save password popup" while creating a new ticket.
+*	Minor fixes and improvements.
+
 ## 2.12.0-beta3 (2018-06-21)
 
 ### Added 
