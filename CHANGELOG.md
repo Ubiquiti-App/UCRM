@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.12.0 (2018-07-03)
+
+### Fixed
+*	Fixed invoicing issues for services having a deferred change set for the future.
+*	Service surcharge invoice item not visible on invoice in some rare cases (related to the last invoice created before deferred service change is applied). The invoice total balance is not affected though.
+*	Minor fixes.
+
 ## 2.12.0-beta4 (2018-06-29)
 
 ### Added 
