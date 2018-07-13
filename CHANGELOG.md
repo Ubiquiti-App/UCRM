@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.12.1 (2018-07-13)
+
+### Added
+*	New feature: regenerate PDF for Quote (similar to regenerate invoice PDF feature).
+*	Street or satellite view remembered by the system.
+
+### Fixed
+*	Invoice/Quote PDF files were overwritten when multiple organizations are configured with the same invoice/quote numbering.
+*	Fixed NetFlow data disappearing after deferred change or reactivation of a service.
+*	Fixed filter for Batch Emailing - clients with no services were not included.
+*	Fixed minor permission issue - client search could be used even without permissions to view clients. Client profile was correctly inaccessible though.
+*	Only one email address is now allowed in all "email address" fields. Previously more addresses could be filled in, but mailer crashed on it.
+*	Fixed duplicate header notifications about new ticket comment.
+*	Better error message in case resending email fails.
+*	CSS for all email notifications fixed for MS Outlook.
+*	Fixed modal close in Safari.
+*	Minor fixes and UX improvements.
+
 ## 2.12.0 (2018-07-03)
 
 ### Fixed
