@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.12.2 (2018-07-30)
+
+### Changed
+*	PHP updated to version 7.1.20.
+
+### Fixed
+*	Fixed grid sorting in Custom Attributes configuration in System Settings.
+*	Fixed submitting an empty message in Client Zone support form crashing UCRM (in case Ticketing is turned off)
+*	Fixed some cases, where suspension synchronization was triggered even though it was not needed.
+*	Fixed surcharges disappearing on old invoices, when service was changed by deferred change feature.
+*	Fixed behavior of mailer AntiFlood.
+*	Fixed minor bug in job form - wrong autocomplete of GPS, address fields.
+*	Possible fix for mailer failing with: Expected response code 250 but got code ""
+*	Fixed import of tickets missing "udate" header.
+*	Failing PayPal subscription creating/cancellation due to PayPal BC changes.
+*	Minor fixes.
+
 ## 2.12.1 (2018-07-13)
 
 ### Added
