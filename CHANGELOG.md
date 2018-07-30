@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.13.0-beta1 (2018-07-30)
+
+### Added
+*	Client Leads - potential clients are now shown separately from active clients. Add leads individually, import leads as CSV or via API (from a custom online sign-up form). Invoicing for a lead is inactive until you the lead is turned into an active client (manually or by adding a regular service). Leads are also visible on the Network map.
+*	Paying online is now easier for your clients – accessible even without logging in. Just add this link into your invoice email template: <a href="%ONLINE_PAYMENT_LINK%">Pay online</a> (Go to System → Customization → Email Templates and paste the link there.)
+*	Account statements were added – view (or export) client's account statement to understand balance changes in time. (Also visible in Client Zone.)
+*	Improved Import of payments – CSV imports from banks or other systems are now simpler and faster. And clients can be matched by Custom client IDs or Custom attributes.
+*	We added Top Uploaders to the Dashboard and improved these charts.
+*	Now, you can create a new job directly from the ticket screen.
+*	Plugin enhancements - now, you can define types of plugin parameters, e.g. checkbox, datetime, choice, file, textarea.
+*	New: Mark an invoice as uncollectible. These invoices will be omitted from the Overdue Invoices list.
+*	New feature: hide failed email warnings from the dashboard notification box. Once you solve an unsent email, you can hide this warning.
+*	New permission for Client's financial information. Now configurable separately from permission for global financial info on the dashboard.
+*	HTTP 2.0 supported and other app speed improvements.
+*	Nice looking maintenance page when UCRM update is running.
+*	More details included in the export of client's log entries into CSV file.
+*	Better UX for UCRM backups. The backup file name can now contain a custom prefix.
+*	Page size of the client log box is configurable now.
+*	New currencies added: AED, BIF, CDF, CVE, DJF, ETB, GEL, GHS, GMD, GNF, HTG, KMF, LSL, MDL, MGA, MMK, MOP, MVR, MWK, RWF, TJS, TOP, UGX, VEB, WST, XPF, ZMW
+*	Better UX for new client form - "save and send invitation" button is disabled in case the client has no email address.
+*	Send invoices improvement - unsent invoices can be marked as already sent if you don't want to see them again in the send dialog.
+*	Updated Google maps API guide.
+*	UX Improvement - deactivated administrators are hidden in all select-boxes and in the Scheduling view. Log entries are not affected by user deactivation.
+*	UX improvements, minor fixes.
+
+### Changed
+*	Obsolete services (after a deferred change or after reactivation) will no longer bother you in the new invoice form while creating a new invoice manually.
+*	Clients can now only add a bank account in the Client Zone if you have enabled Stripe ACH feature.
+
+### Fixed
+*	Zero-decimal currencies are now handled correctly for Stripe.
+
 ## 2.12.2 (2018-07-30)
 
 ### Changed
