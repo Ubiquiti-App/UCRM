@@ -10,7 +10,7 @@
 *	We added Top Uploaders to the Dashboard and improved these charts.
 *	Now, you can create a new job directly from the ticket screen.
 *	Plugin enhancements - now, you can define types of plugin parameters, e.g. checkbox, datetime, choice, file, textarea.
-*	New: Mark an invoice as uncollectible. These invoices will be omitted from the Overdue Invoices list.
+*	New: When you use the batch sending of unsent invoices, you can mark some invoices as "already sent" so they won't be shown in the list any more.
 *	New feature: hide failed email warnings from the dashboard notification box. Once you solve an unsent email, you can hide this warning.
 *	New permission for Client's financial information. Now configurable separately from permission for global financial info on the dashboard.
 *	HTTP 2.0 supported and other app speed improvements.
