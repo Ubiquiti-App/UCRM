@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.13.0-beta2 (2018-08-06)
+
+### Changed
+*	Network map optimization - when zoomed out, multiple clients in the immediate vicinity are clustered using a single marker. Links between clusters and Network Sites are not rendered in Google maps from now.
+
+### Fixed
+*	Fixed failures of "Multiple payment form".
+*	Fixed Initial and Final Balance in the Account Statement view - wrong values in some cases.
+*	Fixed error 500 in client edit form, when a new contact type is added.
+*	Fixed possible failures of NetFlow data chart.
+*	Fixed failures of payment subscription creating for Authorize.Net, MercadoPago, PayPal.
+*	UX improvements and minor fixes - better URLs in notification preview, fixed validation of Clients CSV Import, UI fixes in Ticketing section, Fixed sorting of Backup files list.
+
 ## 2.13.0-beta1 (2018-07-30)
 
 ### Added
