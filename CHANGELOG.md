@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.12.3 (2018-08-08)
+
+### Fixed
+*	Fixed IMAP ticket loader for emails coming from Office 365.
+*	"Linked subscription" now visible in the Client Zone.
+*	These email placeholders were empty for business customers: %CLIENT_FIRST_NAME% and %CLIENT_LAST_NAME% Now, company contact person's first name and last name are used for these placeholders.
+*	Fixed failing IPpay subscription creating in some rare cases.
+*	Minor fixes.
+
 ## 2.13.0-beta2 (2018-08-06)
 
 ### Changed
