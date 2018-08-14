@@ -534,7 +534,7 @@ patch__compose__add_udp_to_web_app() {
     fi
 }
 
-patch__compose__upgrade_elastic_622() {
+patch__compose__upgrade_elastic_62() {
     if ! (is_updating_to_version "${UPDATING_TO}" "2011000" 1 1); then
         return 1
     fi
@@ -566,6 +566,24 @@ patch__compose__upgrade_elastic_622() {
     else
         return 1
     fi
+}
+
+patch__compose__upgrade_elastic_docker_hub() {
+    if ! (is_updating_to_version "${UPDATING_TO}" "2011000" 1 1); then
+        return 1
+    fi
+
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -q "elastic/elasticsearch:6.2.4";
+    then
+        echo "Your docker-compose contains old Elasticsearch image, trying to upgrade."
+        sed -i -e "s|docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2|elastic/elasticsearch:6.2.4|g" "${UCRM_PATH}/docker-compose.yml"
+    fi
+
+    if ! cat -vt "${UCRM_PATH}/elasticsearch.yml" | grep -q "xpack.security.enabled: false"; then
+        echo "xpack.security.enabled: false" >> "${UCRM_PATH}/elasticsearch.yml"
+    fi
+
+    return 0
 }
 
 patch__compose__correct_volumes() {
@@ -655,7 +673,8 @@ compose__run_update() {
     patch__compose__remove_crm_ping_app || true
 
     patch__compose__add_udp_to_web_app || true
-    patch__compose__upgrade_elastic_622 || true
+    patch__compose__upgrade_elastic_62 || true
+    patch__compose__upgrade_elastic_docker_hub || true
 
     if [[ "${needsVolumesFix}" = "1" ]] && [[ "${volumesPath}" != "" ]]; then
         patch__compose__correct_volumes "${volumesPath}"
@@ -1119,7 +1138,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.7) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.8) |"
     echo "+------------------------------------------------+"
     echo ""
 }
