@@ -545,22 +545,29 @@ patch__compose__upgrade_elastic_62() {
         chmod -R 777 "${UCRM_PATH}/data/elasticsearch6"
     fi
 
-    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -q "docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2";
+    if cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -q "elasticsearch:2";
     then
         echo "Your docker-compose contains old Elasticsearch image, trying to upgrade."
         sed -i -e "s|elasticsearch:2|docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2|g" "${UCRM_PATH}/docker-compose.yml"
 
-        echo "Converting Elasticsearch volumes."
-        sed -i -e "$(grep -n -B 1 "/usr/share/elasticsearch/data" "${UCRM_PATH}/docker-compose.yml" | head -n 1 | sed 's/-..*//g')d" "${UCRM_PATH}/docker-compose.yml"
-        sed -i -e "/\/usr\/share\/elasticsearch\/data/d" "${UCRM_PATH}/docker-compose.yml"
-        sed -i -e "s|    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2|&\n    volumes:\n      - ./data/elasticsearch6:/usr/share/elasticsearch/data|g" "${UCRM_PATH}/docker-compose.yml"
+        if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -q "elasticsearch6:/usr/share/elasticsearch/data";
+        then
+            echo "Converting Elasticsearch volumes."
+            sed -i -e "$(grep -n -B 1 "/usr/share/elasticsearch/data" "${UCRM_PATH}/docker-compose.yml" | head -n 1 | sed 's/-..*//g')d" "${UCRM_PATH}/docker-compose.yml"
+            sed -i -e "/\/usr\/share\/elasticsearch\/data/d" "${UCRM_PATH}/docker-compose.yml"
+            sed -i -e "s|    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.2|&\n    volumes:\n      - ./data/elasticsearch6:/usr/share/elasticsearch/data|g" "${UCRM_PATH}/docker-compose.yml"
+        fi
 
-        echo "Creating Elasticsearch config."
         if [[ ! -f "${UCRM_PATH}/elasticsearch.yml" ]]; then
+            echo "Creating Elasticsearch config."
             curl -o "${UCRM_PATH}/elasticsearch.yml" "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/elasticsearch.yml"
             chmod 777 "${UCRM_PATH}/elasticsearch.yml"
         fi
-        sed -i -e "s|/usr/share/elasticsearch/data|&\n      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml|g" "${UCRM_PATH}/docker-compose.yml"
+
+        if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -q "elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml";
+        then
+            sed -i -e "s|/usr/share/elasticsearch/data|&\n      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml|g" "${UCRM_PATH}/docker-compose.yml"
+        fi
 
         return 0
     else
@@ -1138,7 +1145,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.8) |"
+    echo "| https://ucrm.ubnt.com/          (updater v2.9) |"
     echo "+------------------------------------------------+"
     echo ""
 }
