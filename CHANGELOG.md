@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.12.4 (2018-08-17)
+
+### Changed
+*	During the Client CSV import, the first client's email is always marked with Billing and General tag and it's also used as the client's username for the client zone (if not already in use by another client).
+
+### Fixed
+*	Fixed compatibility with new Stripe API version (2018-07-27).
+*	Fixed issues with reset password feature (password reset token is now deleted after expired or after used; user is no longer logged in automatically after password reset, this fixes bypassing 2FA).
+*	Fixed linked Stripe subscription being removed or changed incorrectly when related service was changed.
+*	Fixed issues with taxes on invoice. It was not possible to remove all taxes from an invoice item while manually editing an existing invoice; taxes not automatically applied when adding invoice item for manual invoicing.
+*	Preventing from crashes when sending a payment receipt when the custom receipt template is corrupted.
+*	Fixed failing client delete action in case some client's email has been resent to them.
+*	Fixed possible crashes of Network > Device view page.
+*	Minor fixes.
+
 ## 2.12.3 (2018-08-08)
 
 ### Fixed
