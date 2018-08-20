@@ -608,7 +608,7 @@ confirm_ucrm_running() {
         sleep 3s
 
         printf "\r%-55s\n" "UCRM ready";
-        printf "\r%-55s\n" "Go to http://localhost:${PORT_HTTP}";
+        printf "\r%-55s\n" "Go to http://localhost:${PORT_HTTP} or use the server IP instead of localhost if you installed UCRM remotely";
 
         return 0
     else
@@ -634,7 +634,7 @@ detect_installation_finished() {
     		done; \
     		sleep 3s; \
     		printf "\r%-55s\n" "UCRM ready"; \
-    		printf "\r%-55s\n" "Go to http://localhost:'"${PORT_HTTP}"'"; \
+    		printf "\r%-55s\n" "Go to http://localhost:'"${PORT_HTTP}"' or use the server IP instead of localhost if you installed UCRM remotely"; \
     	fi' || confirm_ucrm_running
 }
 
