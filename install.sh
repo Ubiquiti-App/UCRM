@@ -604,7 +604,11 @@ confirm_ucrm_running() {
     done
 
     if [[ "${ucrmRunning}" = true ]]; then
+        # some fservices are booting (
+        sleep 3s
+
         printf "\r%-55s\n" "UCRM ready";
+        printf "\r%-55s\n" "Go to http://localhost:${PORT_HTTP}";
 
         return 0
     else
@@ -628,7 +632,9 @@ detect_installation_finished() {
     			[ "$line" != "UCRM ready" ] || break; \
     			sleep 0.1; \
     		done; \
+    		sleep 3s; \
     		printf "\r%-55s\n" "UCRM ready"; \
+    		printf "\r%-55s\n" "Go to http://localhost:'"${PORT_HTTP}"'"; \
     	fi' || confirm_ucrm_running
 }
 
