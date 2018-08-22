@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.13.0-beta3 (2018-08-22)
+
+### Added
+*	Clients CSV import improvements: address is no longer required, a better overview of invalid records, support for importing thousands of records.
+*	Network map optimization - when zoomed out, multiple clients in the immediate vicinity are clustered using a single marker. Links between clusters and Network Sites are not rendered - for MapBox maps.
+*	New system status checks for invalid templates for invoices and receipts.
+*	New VES currency (Bs.S.) added.
+
+### Changed
+*	Commenting and job assigning is now enabled for closed tickets.
+
+### Fixed
+*	Fixed memory issues and performance for generating thousands of invoices.
+*	Fixed possible failures when deleting or voiding multiple invoices.
+*	Fixed possible failures when deleting multiple tickets.
+*	Fixed resending of emails having an attachment.
+*	Account statement tab hidden for non-superadmins even when they have proper permissions.
+*	Fixed service validation in service edit form.
+*	Minor fixes, UX improvements, app speed improvements.
+
 ## 2.12.4 (2018-08-17)
 
 ### Changed
