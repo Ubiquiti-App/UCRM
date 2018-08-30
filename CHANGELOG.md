@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.13.0-beta4 (2018-08-30)
+
+### Changed
+*	The default Suspension delay and Late fee delay is set to 1 day (for new UCRM installations only) because when 0 is used, the suspension and late fee is triggered on the due date of an unpaid invoice.
+*	PHP updated to version 7.1.21.
+
+### Fixed
+*	Fixed Indian rupee symbol.
+*	Fixed job drag&drop in the scheduling timeline.
+
 ## 2.13.0-beta3 (2018-08-22)
 
 ### Added
