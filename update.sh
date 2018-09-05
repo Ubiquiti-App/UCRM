@@ -43,7 +43,7 @@ CRON="false"
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
 NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 
-trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
+trap 'rm -f "${MIGRATE_OUTPUT}"; cleanup_auto_update; exit' INT TERM EXIT
 
 download_docker_compose() {
     echo "Downloading and installing Docker Compose."
