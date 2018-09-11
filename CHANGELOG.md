@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.13.1 (2018-09-11)
+
+### Added
+*	New placeholder "Online Payment Link" enabled in the Invoice PDF template. Similarly to the "new invoice email" placeholder introduced in 2.13.0 this can be used for a direct redirection to the payment page with no need to log in to the client zone.
+
+### Fixed
+*	Frozen client edit page caused by Geocoding API being disabled in the user's Google account. UCRM can now prevent the page from being frozen in this case.
+*	Payment ID placeholder not working in the payment receipt template.
+*	Better PayPal validation errors and unsupported currency error. Additionally, these currencies are now supported in UCRM PayPal integration: HUF, JPY, TWD.
+*	Fixed error when editing client's data usage manually.
+*	Minor fixes, improved validations.
+
 ## 2.13.0 (2018-08-30)
 
 ## 2.13.0-beta4 (2018-08-30)
