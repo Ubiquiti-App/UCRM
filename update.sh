@@ -43,7 +43,7 @@ CRON="false"
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
 NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
 
-trap 'rm -f "${MIGRATE_OUTPUT}"; exit' INT TERM EXIT
+trap 'rm -f "${MIGRATE_OUTPUT}"; cleanup_auto_update; exit' INT TERM EXIT
 
 download_docker_compose() {
     echo "Downloading and installing Docker Compose."
@@ -1145,7 +1145,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v2.9) |"
+    echo "| https://ucrm.ubnt.com/         (updater v2.10) |"
     echo "+------------------------------------------------+"
     echo ""
 }
