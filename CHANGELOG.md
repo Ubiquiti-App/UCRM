@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.13.2 (2018-09-25)
+
+### Added
+*	"Go to Client Zone" button on the Payment Page shown only for clients having access to the Client Zone.
+*	API extensions comprising Client Leads.
+
+### Changed
+*	PHP updated to version 7.1.22.
+
+### Fixed
+*	Top Downloaders/Uploaders view contains manual data-usage changes now.
+*	Fixed service reactivation crashes.
+*	Proper client's credit shown when creating a new refund.
+*	Fixed FCC geocoder crash in some rare cases.
+*	Fixed possible issues with PayPal payments.
+*	Client Leads now supported by UCRM mobile app.
+*	Fixed possible issues with Stripe ACH subscriptions.
+*	Minor fix in user's permission check.
+*	UX Fixes and improvements.
+
 ## 2.13.1 (2018-09-11)
 
 ### Added
