@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.13.3 (2018-09-26)
+
+### Fixed
+*	Fixed UI in plugin configuration.
+*	Fixed failing subscription creation.
+
 ## 2.13.2 (2018-09-25)
 
 ### Added
