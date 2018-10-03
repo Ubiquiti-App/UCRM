@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.13.4 (2018-10-03)
+
+### Fixed
+*	Fixed possible duplicate payments from PayPal and Stripe which could have been created in some rare cases.
+*	API security fix. After removing API key, a previously authenticated API user was able to continue using API until the session expired.
+*	Fixed client's API endpoints. Now, client leads are included, leads can be recognized and filtered by isLead attribute.
+*	Missing attributes added to API docs.
+*	Fixed Client CSV import issues when the CSV contains 0% tax.
+*	Fixed possibly failing payment delete and client action.
+*	Fixed surcharge quantity calculation in invoice preview in the New Service form.
+*	UI fixes.
+
+### Changed
+*	Elasticsearch index is created after UCRM boot which is completed faster now.
+
 ## 2.13.3 (2018-09-26)
 
 ### Fixed
