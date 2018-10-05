@@ -1,5 +1,38 @@
 # Changelog
 
+## 2.14.0-beta1 (2018-10-05)
+
+### Added
+
+#### Main Improvements
+*	AirLink integrated to UCRM. For an easier survey of the link between a client lead and the nearest Site.
+*	API Improvements, this can be managed with API now: client's password, contacts and tags, job's tasks, ticket's jobs, FCC block ID, last invoiced data and data usage of client's services, pagination added to get clients endpoint, new client archive/delete endpoints, etc.
+*	Mobile view improved, UCRM admin zone can be used on mobile phones now.
+*	Improved Sandbox termination giving user more control of which data to keep and which data to drop.
+*	Accessibility improvements, many forms usable with keyboard only and other UX improvements.
+*	Brute force protection for 2FA.
+
+#### Plugins, API, Webhooks	
+*	New UCRM Plugin integrating SMS gateway.
+*	Plugins boosted. Now, the plugins can be used to create a new in-app page accessible only for logged users. It can be used for custom reporting, data exports, etc.
+*	Now, you can associate any UCRM Plugin with any UCRM webhook more easily.
+*	Webhooks improvements - you can set a different webhook URL for each action now. This extends the possibilities of hooked scripts and plugins.
+
+#### Other Improvements
+*	Increased password strength requirements.
+*	Improved Client CSV batch import. Now, you can set client's username, GPS coordinates, client's taxes or service's taxes. See the CSV samples suitable for USA or Europe.
+*	New placeholders enabled for the suspension notification template: service Active From and Active To date.
+*	More placeholders added to several email templates, enabling to paste various organization related attributes.
+*	More formatting options for email templates, check out the placeholder variables and their formatting in System > Customization > Email Templates and Invoice Templates.
+*	UX improvements, better validations, better error messages improved with links to system settings.
+*	Better UX for creating a new canned response from existing ticket reply.
+*	App speed improvements.
+
+### Fixed
+*	Minor fixes and UI improvements.
+*	Postpone suspension link might redirected client to pay the oldest invoice, now it redirects to the invoice that triggered the suspension.
+*	Fixed Elasticsearch not working for more than 10 000 items.
+
 ## 2.13.4 (2018-10-03)
 
 ### Fixed
