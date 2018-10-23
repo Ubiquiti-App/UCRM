@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.13.5 (2018-10-23)
+
+### Added
+*	API Improvements, new client archive/delete endpoints, pagination added to get clients endpoint.
+*	API documentation updated.
+
+### Changed
+*	PHP updated to version 7.1.22.
+
+### Fixed
+*	Precautions for MercadoPago payments to ensure a new payment is received regardless of incorrect behavior of MercadoPago server.
+*	Failing organization edit form in some cases.
+*	Fixed reactivation of suspension caused by an unpaid invoice.
+*	UI fix: amount paid properly updated when creating a new invoice with "use credit" flag
+*	Minor bug fixes.
+
 ## 2.14.0-beta1 (2018-10-05)
 
 ### Added
