@@ -6,6 +6,9 @@
 *	API Improvements, new client archive/delete endpoints, pagination added to get clients endpoint.
 *	API documentation updated.
 
+### Changed
+*	PHP updated to version 7.1.22.
+
 ### Fixed
 *	Precautions for MercadoPago payments to ensure a new payment is received regardless of incorrect behavior of MercadoPago server.
 *	Failing organization edit form in some cases.
