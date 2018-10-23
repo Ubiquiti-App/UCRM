@@ -7,7 +7,7 @@
 *	API documentation updated.
 
 ### Changed
-*	PHP updated to version 7.1.22.
+*	PHP updated to version 7.1.23.
 
 ### Fixed
 *	Precautions for MercadoPago payments to ensure a new payment is received regardless of incorrect behavior of MercadoPago server.
