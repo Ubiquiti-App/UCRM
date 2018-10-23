@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.14.0-beta2 (2018-10-23)
+
+### Added
+*	API endpoints enhancements (more parameters and filters for getting invoices, invoice items, clients and services).
+*	UCRM Backup file of any size can be uploaded and restored.
+*	CSS hint added to the Invoice template for an easy adjustment of the invoice PDF margins.
+*	Translations updated
+
+### Fixed
+*	Fixed removing a ticketing group from a ticket.
+*	Webhooks linked to UCRM Plugins are now using "localhost" instead of UCRM Public URL. Additionally, SSL cert verification can be turned off, which enables you to use self-signed certificates.
+*	Minor bug fixes.
+
 ## 2.13.5 (2018-10-23)
 
 ### Added
