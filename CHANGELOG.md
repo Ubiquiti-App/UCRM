@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.13.6 (2018-11-07)
+
+### Added
+*	UI, UX improvements: ZIP code shown after State (for USA and Canada).
+*	Uncollectible invoices hidden from Client's profile page (the same way they are hidden from the dashboard).
+
+### Fixed 
+*	Stripe payment - rounding error fixed.
+*	Crashes while creating a new invoice in some rare cases.
+*	Invoice grid filter "Send by post" working properly now (even for clients having the system default value set for this option).
+*	Fixed "Select all" button not selecting all grid items, only the items on the current page.
+*	Search fields optimized for mobile view.
+*	Minor bug fixes.
+
 ## 2.14.0-beta2 (2018-10-23)
 
 ### Added
