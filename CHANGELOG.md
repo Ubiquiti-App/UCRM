@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.14.0-beta3 (2018-11-09)
+
+### Added
+*	Pagination enabled for more API endpoints (use offset and limit parameters).
+
+### Fixed
+*	Crashes of client service page due to malformed GPS coordinates.
+*	Webhook improvements and fixes. New events added: job add, edit and delete event, "ticket changed status" event fixed, fixed duplicate ticket add event on IMAP import.
+*	Better prevention from duplicate invoice numbers which could appear in case of simultaneous manual and automatic invoicing.
+*	Fixed uploading of backup file in the UCRM initial wizard.
+*	Plugins dev improvements and fixes: Parameter "pluginPublicUrl" is now correctly set in plugin config file automatically. Besides, ucrmLocalUrl is also generated to the plugin's config now. It can be used instead of the public URL.
+*	New API endpoint to trigger address geolocation of the client and client's service: PATCH /clients/{id}/geocode; PATCH /clients/services/{id}/geocode.
+*	Fixed user grid in System > Security > Users.
+*	"Ticket changed status" email notification not working.
+*	Minor improvements and fixes.
+
 ## 2.13.6 (2018-11-07)
 
 ### Added
