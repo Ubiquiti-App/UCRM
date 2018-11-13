@@ -53,6 +53,7 @@ fi
 
 UCRM_UPDATE_REQUESTED_FILE="${UCRM_UPDATES_PATH}/update_requested"
 UCRM_UPDATE_RUNNING_FILE="${UCRM_UPDATES_PATH}/update_running"
+UCRM_UPDATE_MAINTENANCE_FILE="${UCRM_UPDATES_PATH}/update_maintenance"
 UCRM_UPDATE_LOG_FILE="${UCRM_UPDATES_PATH}/update.log"
 
 if [[ -f "${UCRM_UPDATE_RUNNING_FILE}" ]]; then
@@ -69,7 +70,7 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     echo "$(date) --- Initializing UCRM update to version ${VERSION_TO_UPDATE}."
 
     touch "${UCRM_UPDATE_RUNNING_FILE}"
-    trap 'rm -f "${UCRM_UPDATE_RUNNING_FILE}"; exit' INT TERM EXIT
+    trap 'rm -f "${UCRM_UPDATE_RUNNING_FILE}"; rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"; exit' INT TERM EXIT
     rm "${UCRM_UPDATE_REQUESTED_FILE}"
 
     echo "$(date) --- Downloading current updater."
@@ -79,11 +80,13 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     if ( bash "${UCRM_PATH}/update.sh" --version "${VERSION_TO_UPDATE}" --cron ); then
         echo "$(date) --- Update successful."
         rm -f "${UCRM_UPDATE_RUNNING_FILE}"
+        rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"
 
         exit 0
     else
         echo "$(date) --- Update failed."
         rm -f "${UCRM_UPDATE_RUNNING_FILE}"
+        rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"
 
         exit 1
     fi
