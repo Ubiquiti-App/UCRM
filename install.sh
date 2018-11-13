@@ -10,6 +10,7 @@ SECURE_FIRST_LOGIN="false"
 NO_AUTO_UPDATE="false"
 SKIP_SYSTEM_SETUP="false"
 DOCKER_COMPOSE_YML_URL=""
+FORCE_INSTALL=0
 
 while [[ $# -gt 0 ]]
 do
@@ -72,6 +73,10 @@ case "${key}" in
     echo "Setting DOCKER_COMPOSE_YML_URL=$2"
     DOCKER_COMPOSE_YML_URL="$2"
     shift # past argument value
+    ;;
+  -f|--force)
+    echo "Setting FORCE_INSTALL=1"
+    FORCE_INSTALL=1
     ;;
   *)
     # unknown option
@@ -546,7 +551,13 @@ configure_network_subnet() {
 
 download_docker_images() {
     echo "Downloading docker images."
-    docker-compose -f "${UCRM_PATH}/docker-compose.yml" pull
+    if ! (docker-compose -f "${UCRM_PATH}/docker-compose.yml" pull); then
+        if [[ "${FORCE_INSTALL}" = "0" ]]; then
+            echo "Image for version \"${version}\" not found."
+
+            exit 1
+        fi
+    fi
 }
 
 configure_wizard_user() {
@@ -642,7 +653,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/        (installer v2.4) |"
+    echo "| https://ucrm.ubnt.com/        (installer v2.5) |"
     echo "+------------------------------------------------+"
     echo ""
 }
