@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.14.0-beta4 (2018-11-15)
+
+### Added
+*	UCRM Plugins can now contain a whole public directory, whose content is publically accessible. Read more at https://github.com/Ubiquiti-App/UCRM-plugins/blob/master/docs/file-structure.md
+
+### Changed
+*	"Subscriptions" renamed to "Payment Subscriptions" to avoid frequent confusions.
+*	PHP updated to version 7.1.24.
+
+### Fixed
+*	Fixed job IDs always being null in API endpoints.
+*	Fixed possible issues with invoice PDF rendering.
+*	NetFlow chart is properly hidden now when no NetFlow data are available.
+*	Fixed crash on service detail in case the service has some taxes.
+*	Job's attachments are properly deleted from the filesystem when the job is deleted.
+*	Better UI of webhook log formatting.
+*	Improved UCRM update process.
+*	Minor fixes.
+
 ## 2.14.0-beta3 (2018-11-09)
 
 ### Added
