@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.14.0 (2018-11-15)
+Incorporates all new features and fixes from 2.14.0-beta1 up to 2.14.0-beta4
+
 ## 2.14.0-beta4 (2018-11-15)
 
 ### Added
