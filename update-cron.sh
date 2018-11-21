@@ -63,7 +63,7 @@ if [[ -f "${UCRM_UPDATE_RUNNING_FILE}" ]]; then
 fi
 
 cleanup_old_logs() {
-    (find "${UCRM_UPDATES_PATH}/logs" -maxdepth 1 -name 'update_*.log' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_UPDATES_PATH}/logs" -maxdepth 1 -name 'update_*.log' -type f -printf "${UCRM_UPDATES_PATH}/logs/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
 }
 
 backup_log_file() {
