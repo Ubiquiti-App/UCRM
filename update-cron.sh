@@ -75,7 +75,7 @@ backup_log_file() {
         fi
 
         DATE=$(date +"%s")
-        cp -f "${UCRM_UPDATE_LOG_FILE}" "${UCRM_UPDATES_PATH}/logs/update_${toVersion}_${DATE}.log"
+        cp -f "${UCRM_UPDATE_LOG_FILE}" "${UCRM_UPDATES_PATH}/logs/update_${DATE}_${toVersion}.log"
 
         cleanup_old_logs
     fi
