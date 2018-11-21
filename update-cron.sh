@@ -62,15 +62,35 @@ if [[ -f "${UCRM_UPDATE_RUNNING_FILE}" ]]; then
     exit 1
 fi
 
+cleanup_old_logs() {
+    (find "${UCRM_UPDATES_PATH}/logs" -maxdepth 1 -name 'update_*.log' -type f -printf "%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+}
+
+backup_log_file() {
+    declare toVersion="${1}"
+
+    if [[ -f "${UCRM_UPDATE_LOG_FILE}" ]]; then
+        if [[ ! -d "${UCRM_UPDATES_PATH}/logs" ]]; then
+            mkdir -p "${UCRM_UPDATES_PATH}/logs"
+        fi
+
+        DATE=$(date +"%s")
+        cp -f "${UCRM_UPDATE_LOG_FILE}" "${UCRM_UPDATES_PATH}/logs/update_${toVersion}_${DATE}.log"
+
+        cleanup_old_logs
+    fi
+}
+
 if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     # redirect output to log file
     exec > "${UCRM_UPDATE_LOG_FILE}" 2>&1
 
     VERSION_TO_UPDATE=$(cat "${UCRM_UPDATE_REQUESTED_FILE}")
+
     echo "$(date) --- Initializing UCRM update to version ${VERSION_TO_UPDATE}."
 
     touch "${UCRM_UPDATE_RUNNING_FILE}"
-    trap 'rm -f "${UCRM_UPDATE_RUNNING_FILE}"; rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"; exit' INT TERM EXIT
+    trap 'rm -f "${UCRM_UPDATE_RUNNING_FILE}"; rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"; backup_log_file "${VERSION_TO_UPDATE}"; exit' INT TERM EXIT
     rm "${UCRM_UPDATE_REQUESTED_FILE}"
 
     echo "$(date) --- Downloading current updater."
@@ -81,12 +101,14 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
         echo "$(date) --- Update successful."
         rm -f "${UCRM_UPDATE_RUNNING_FILE}"
         rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"
+        backup_log_file "${VERSION_TO_UPDATE}"
 
         exit 0
     else
         echo "$(date) --- Update failed."
         rm -f "${UCRM_UPDATE_RUNNING_FILE}"
         rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"
+        backup_log_file "${VERSION_TO_UPDATE}"
 
         exit 1
     fi
