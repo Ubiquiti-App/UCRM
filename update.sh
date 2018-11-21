@@ -957,14 +957,14 @@ cleanup_old_images() {
 }
 
 cleanup_old_backups() {
-    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
-    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "${UCRM_PATH}/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.env.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.yml.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.migrate.yml.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
+    (find "${UCRM_PATH}/docker-compose-backups" -maxdepth 1 -name 'docker-compose.version.yml.*.backup' -type f -printf "${UCRM_PATH}/docker-compose-backups/%f\n" | sort -r | tail -n +61 | xargs -I {} rm -- {})
 }
 
 cleanup_auto_update() {
