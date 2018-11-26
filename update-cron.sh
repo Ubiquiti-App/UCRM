@@ -88,6 +88,7 @@ if [[ -f "${UCRM_UPDATE_REQUESTED_FILE}" ]]; then
     VERSION_TO_UPDATE=$(cat "${UCRM_UPDATE_REQUESTED_FILE}")
 
     echo "$(date) --- Initializing UCRM update to version ${VERSION_TO_UPDATE}."
+    echo "$(date) --- Using update-cron.sh v1.0"
 
     touch "${UCRM_UPDATE_RUNNING_FILE}"
     trap 'rm -f "${UCRM_UPDATE_RUNNING_FILE}"; rm -f "${UCRM_UPDATE_MAINTENANCE_FILE}"; backup_log_file "${VERSION_TO_UPDATE}"; exit' INT TERM EXIT
