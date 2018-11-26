@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.14.1 (2018-11-26)
+
+### Fixed
+*	Missing placeholders for client's custom attributes are now shown and can be added to the invoice template and account statement template.
+*	Online payment for remaining amount of partially paid invoice is now enabled in the Client Zone, even when "Payment amount change" is not allowed (in System > Settings > Client zone).
+*	Client's attribute "isArchived" now available through API, apiary docs updated.
+*	Webhook for "service edit" action is now triggered correctly.
+*	Fixed new invoice form crashes while the automatic invoicing is being processed in the background.
+*	Fixed crashes caused by missing plugin files in case plugin was extending UCRM menu.
+*	Improved new UCRM release notifications. You can now choose between stable and beta channels (in System > Tools > Updates) and if you are on beta channel you will always get notified about the newest available release.
+*	Better Dropbox error handling and logging.
+*	Fixed issues with MercadoPago online payments.
+*	Fixed failing sync with several device types.
+*	Minor fixes.
+
 ## 2.14.0 (2018-11-15)
 Incorporates all new features and fixes from 2.14.0-beta1 up to 2.14.0-beta4
 
