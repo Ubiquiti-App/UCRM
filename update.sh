@@ -1095,6 +1095,21 @@ setup_auto_update() {
     fi
 }
 
+check_free_space() {
+    dockerRootDir="$(docker info --format='{{ print .DockerRootDir }}')"
+    freeSpace="$(df --block-size=1M "${dockerRootDir}" | tail -1 | awk '{print $4}')"
+
+    if [[ "${freeSpace}" -lt 800 ]]; then
+        echo "There is not enough disk space available to safely update UCRM. At least 800 MB is required for update."
+        echo "You have ${freeSpace} MB of available disk space in ${dockerRootDir}"
+        echo -e "\n----------------\n"
+        echo "We recommend running \"docker system prune\" once in a while to clean unused containers, images, etc."
+        echo "You can determine how much space can be cleaned up by running \"docker system df\""
+
+        exit 1
+    fi
+}
+
 do_update() {
     declare toVersion="${1}"
     UPDATING_TO="${toVersion}"
@@ -1122,6 +1137,7 @@ main() {
     declare toVersion="${1}"
     local fromVersion
 
+    check_free_space
     install_docker_compose
     fromVersion=$(get_from_version) || (echo "${fromVersion}" && exit 1)
     fromVersion="${fromVersion:-latest}"
@@ -1145,7 +1161,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/         (updater v2.11) |"
+    echo "| https://ucrm.ubnt.com/          (updater v3.0) |"
     echo "+------------------------------------------------+"
     echo ""
 }
