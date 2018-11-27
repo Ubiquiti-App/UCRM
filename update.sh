@@ -1097,7 +1097,7 @@ setup_auto_update() {
 
 check_free_space() {
     dockerRootDir="$(docker info --format='{{ print .DockerRootDir }}')"
-    freeSpace="$(df --block-size=1M "${dockerRootDir}" | tail -1 | awk '{print $4}')"
+    freeSpace="$(df -m "${dockerRootDir}" | tail -1 | awk '{print $4}')"
 
     if [[ "${freeSpace}" -lt 800 ]]; then
         echo "There is not enough disk space available to safely update UCRM. At least 800 MB is required for update."
