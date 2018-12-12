@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.14.2 (2018-12-12)
+
+#### Changed
+*	TLS 1.0 no longer supported by UCRM web server.
+*	Server domain name is automatically lowercased from now on, to prevent various issues with SSL certificates.
+*	PHP updated to version 7.1.25.
+
+### Fixed
+*	Account statements now correctly contain today's invoices and payments.
+*	Drag and drop of service's map pin was broken for leaflet (mapbox) maps.
+*	Fixed issues with deactivating and deleting plugins.
+*	Fixed failing backup file creation in case there are malformed plugin files.
+*	Fixed missing "data/config.json" file for plugins with only optional parameters.
+*	Fixed failing issuing of invoices due to duplicate invoice number.
+*	Client filters now include client leads in Scheduling Agenda and Quote lists.
+*	Fixed some receipt template placeholders.
+*	Minor bug fixes in GET Device API endpoint.
+*	Fixed issues with device sync.
+*	Minor fixes, UI/UX improvements, in-app guides and translation updates.
+
 ## 2.14.1 (2018-11-26)
 
 ### Fixed
