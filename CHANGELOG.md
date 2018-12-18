@@ -5,7 +5,7 @@
 ### Added
 
 #### Major Improvements
-*	Pro-forma invoice, Payment Notice. Feel free to send pro-forma invoices instead of real invoices to your clients. The regular invoices will be generated automatically (in the paid status), once the pro-forma invoice gets paid.
+*	Pro-forma invoice. Feel free to send pro-forma invoices (for example as a "payment notice") instead of real invoices to your clients. The regular invoices will be generated automatically (in the paid status), once the pro-forma invoice gets paid.
 *	New simplified forms for Client, Service, and Service Plan.
 *	Easy plugin installation. View all available plugins inside the UCRM app, download and install any using a single click.
 
