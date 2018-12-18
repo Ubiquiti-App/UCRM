@@ -1,8 +1,54 @@
 # Changelog
 
+## 2.15.0-beta1 (2018-12-18)
+
+### Added
+
+#### Major Improvements
+*	Pro-forma invoice, Payment Notice. Feel free to send pro-forma invoices instead of real invoices to your clients. The regular invoices will be generated automatically (in the paid status), once the pro-forma invoice gets paid.
+*	New simplified forms for Client, Service, and Service Plan.
+*	Easy plugin installation. View all available plugins inside the UCRM app, download and install any using a single click.
+
+#### Improvements for Billing
+*	Customizable rounding of invoice total. For example, this may be used if you don't want to charge cents to your clients. Set it up in System > Organizations > edit your organization's billing options.
+*	Payment receipts can be numbered using a custom sequence (similarly to invoice numbering). If you want to show the number on recept PDF, go to System > Customization > Receipts and put the number placeholder to the template.
+*	Configure how to display client's credit/debit balance (positive or negative sign can be used for client's credit, the opposite sign will be used in case of client's debit). Go to System > Settings > Application.
+
+#### Other new features
+*	Improved CSV Import. Now you can import thousands of clients (and their services) using a single CSV file. Additionally, GPS coordinates are automatically computed from the client's address.
+*	Tickets having subject only are enabled now (the ticket body can be left empty).
+*	Job's attachments are now included in UCRM backups.
+*	Payment list now contains the name of the user who added the payment into the system.
+*	More options for the Sandbox Termination. Now, you can choose whether the invoicing should continue or start over when you delete all the invoices during the sandbox termination.
+*	Variable for "Invoice amount due" is now available in the "New Invoice Email" template.
+*	UI/UX Improvements: "Super admin" visibly marked in the user list, more tooltips and improvements enhancing intuitive usage, better customization of invoice/quote/proforma number sequence.
+*	Now, a closed ticket is reopened automatically when the client adds a comment to the ticket.
+*	Placeholder for "Taxable supply date" is now available for invoice templates.
+*	Better default Client Zone invitation email text, client's username is now included. If you are using customized text, you can add the username placeholder on your own.
+*	API Enhancements: payment ordering and filtering enabled; client's and invoice's custom attributes editable; new API endpoints to void, delete invoice and to download invoice PDF; New option to create a quoted service; New "apply credit" option while creating invoice via API, true by default.
+*	Webhooks triggered by "delete actions" are now sending the deleted entity, instead of just the id. Better json formating in webhook logs.
+*	CSS for custom UCRM look is included in the backup file now.
+*	Client's log improvements.
+
+### Changed
+*	UX Improvements in the main menu structure. Invoices and Payments are now easily accessible. Some more useful features are more accessible now, e.g. the Batch Mailing tool button above the clients grid.
+*	Now, the internal ticketing notifications (to the support email address) are sent even when the comment or ticket is created by an administrator (and not only by a client).
+*	EULA and Privacy Policy moved from the login screen to avoid confusions among WISP's clients.
+*	Global settings option "Approve invoices automatically" is now applied to all existing client's services, not only to the newly created ones. This is applied only to services having "Approve invoices automatically" set to "use system default".
+*	The dashboard overview now comprises all organizations.
+*	PHP upgraded to version 7.2.13
+
+### Fixed
+*	Account statements now include today's activities.
+*	Fixes and improvements related to the webhooks for ticketing.
+*	Crashes of Client Zone invitation emails when sent in a batch to a big number of clients.
+*	Fixed period invoicing suppressed till the next auto-create process in the situation, when "prorated separately" option is used. Now, both the prorated and the following period are invoiced separately, though at the same time, as they should.
+*	Fix for Office365 shared email accounts linked for IMAP Ticketing.
+*	Minor fixes and improvements.
+
 ## 2.14.2 (2018-12-12)
 
-#### Changed
+### Changed
 *	TLS 1.0 no longer supported by UCRM web server.
 *	Server domain name is automatically lowercased from now on, to prevent various issues with SSL certificates.
 *	PHP updated to version 7.1.25.
