@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.15.0-beta2 (2018-12-20)
+
+### Fixed
+*	Fixed search in the client grid.
+*	Fixed failing payment grid ordering by username.
+*	Fixed crash when adding payment linked to 2 or more proforma invoices.
+*	Fixed wrong auto-updates of service GPS when user edits the service.
+*	Help guide for Proforma invoicing is now indexed by the quick search tool.
+*	Minor fixes, UI improvements.
+
 ## 2.14.3 (2018-12-20)
 
 ### Fixed
