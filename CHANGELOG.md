@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.14.3 (2018-12-20)
+
+### Fixed
+*	Fixed crashes on some pages when no client or no lead exists yet. (scheduling agenda page, quotes page).
+*	Client CSV file (created as client grid export) can be imported back to UCRM without no issues now.
+*	Fix for NetFlow data collector, the data records are no longer pruned after 100 days.
+*	Fixed issues with FCC reporting. Some client's addresses which couldn't be geocoded were not shown in the resulting "error file".
+*	Minor fixes and improvements, speed improvements of some pages and modal windows.
+
 ## 2.15.0-beta1 (2018-12-18)
 
 ### Added
