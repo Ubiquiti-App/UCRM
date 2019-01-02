@@ -732,6 +732,7 @@ containers__run_update() {
             exit 1
         fi
     fi
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop web_app || true
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
@@ -1161,7 +1162,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v3.0) |"
+    echo "| https://ucrm.ubnt.com/          (updater v3.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
