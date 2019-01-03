@@ -732,6 +732,7 @@ containers__run_update() {
             exit 1
         fi
     fi
+    docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop web_app || true
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" stop
     docker-compose -f "${UCRM_PATH}/docker-compose.yml" -f "${UCRM_PATH}/docker-compose.migrate.yml" rm -af
 
@@ -1096,7 +1097,10 @@ setup_auto_update() {
 }
 
 check_free_space() {
-    dockerRootDir="$(docker info --format='{{ print .DockerRootDir }}')"
+    dockerRootDir="$(docker info --format='{{ print .DockerRootDir }}' 2>/dev/null || echo 'OLD_DOCKER')"
+    if [[ "${dockerRootDir}" = 'OLD_DOCKER' ]]; then
+        return 0;
+    fi
     freeSpace="$(df -m "${dockerRootDir}" | tail -1 | awk '{print $4}')"
 
     if [[ "${freeSpace}" -lt 800 ]]; then
@@ -1161,7 +1165,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v3.0) |"
+    echo "| https://ucrm.ubnt.com/          (updater v3.1) |"
     echo "+------------------------------------------------+"
     echo ""
 }
