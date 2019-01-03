@@ -1097,7 +1097,10 @@ setup_auto_update() {
 }
 
 check_free_space() {
-    dockerRootDir="$(docker info --format='{{ print .DockerRootDir }}')"
+    dockerRootDir="$(docker info --format='{{ print .DockerRootDir }}' 2>/dev/null || echo 'OLD_DOCKER')"
+    if [[ "${dockerRootDir}" = 'OLD_DOCKER' ]]; then
+        return 0;
+    fi
     freeSpace="$(df -m "${dockerRootDir}" | tail -1 | awk '{print $4}')"
 
     if [[ "${freeSpace}" -lt 800 ]]; then
