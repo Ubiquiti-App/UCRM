@@ -7,6 +7,7 @@
 *	Improved client's address validation when PayPal subscription is being created.
 *	UX improvements and fixes for Client CSV batch import.
 *	API - Added two attributes to Clients endpoint related to proforma invoicing.
+*	PHP Soap enabled for UCRM Plugins.
 
 ### Changed
 *	NetFlow Auto-setup feature has been removed, the NetFlow config can now only be set manually using the how-to guide which has been added.
