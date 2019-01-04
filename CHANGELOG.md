@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.15.0-beta3 (2018-01-04)
+
+### Added
+*	Payment methods filter for payment grid is simplified, unused items are hidden now.
+*	Improved client's address validation when PayPal subscription is being created.
+*	UX improvements and fixes for Client CSV batch import.
+*	API - Added two attributes to Clients endpoint related to proforma invoicing.
+*	PHP Soap enabled for UCRM Plugins.
+
+### Changed
+*	NetFlow Auto-setup feature has been removed, the NetFlow config can now only be set manually using the how-to guide which has been added.
+
+### Fixed
+*	Fixed "Separate invoicing" toggle couldn't be switched off in service's billing options.
+*	Fixed issues with "failed emails batch resend" when a huge amount of emails were to be resent.
+*	Fix for client's account statement. Today's items were not visible when UCRM was used in some specific time zones.
+*	UI/UX fixes and improvements.
+
 ## 2.14.4 (2019-01-04)
 
 ### Fixed
