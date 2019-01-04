@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.14.4 (2019-01-04)
+
+### Fixed
+*	Client's Custom ID autoincrement fixed.
+*	Fixed crashes when enabling Let's Encrypt certificate.
+*	Fix for UCRM creating multiple invoices for a single service's prorated period in some rare cases.
+*	Now it's possible to create a new invoice more than 30 days in advance (before the period start).
+*	Invoices having the same number are renumbered in UCRM, prefix D01_, D02_ etc. is added to such invoices which could have been created in older UCRM versions. Invoice PDFs are not affected by this fix.
+*	Fixed possible problem with PayPal subscriptions.
+*	Fixed issues with manual update script.
+*	UI/UX fixes and improvements.
+
 ## 2.15.0-beta2 (2018-12-20)
 
 ### Fixed
