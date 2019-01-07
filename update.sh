@@ -6,7 +6,7 @@ set -o nounset
 set -o pipefail
 #set -o xtrace
 
-DATE="$(date +"%s")"
+DATE=$(date +"%s")
 MIGRATE_OUTPUT="$(mktemp)"
 FORCE_UPDATE=0
 UPDATE_TO_VERSION=""
