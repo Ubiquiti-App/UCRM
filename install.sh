@@ -18,43 +18,43 @@ key="$1"
 
 case "${key}" in
   -v|--version)
-    echo "Setting INSTALL_VERSION=$2"
-    INSTALL_VERSION="$2"
+    echo "Setting INSTALL_VERSION=${2:-}"
+    INSTALL_VERSION="${2:-}"
     shift # past argument value
     ;;
   --http-port)
-    echo "Setting PORT_HTTP=$2"
-    PORT_HTTP="$2"
+    echo "Setting PORT_HTTP=${2:-}"
+    PORT_HTTP="${2:-}"
     shift # past argument value
     ;;
   --https-port)
-    echo "Setting PORT_HTTPS=$2"
-    PORT_HTTPS="$2"
+    echo "Setting PORT_HTTPS=${2:-}"
+    PORT_HTTPS="${2:-}"
     shift # past argument value
     ;;
   --suspension-port)
-    echo "Setting PORT_SUSPENSION=$2"
-    PORT_SUSPENSION="$2"
+    echo "Setting PORT_SUSPENSION=${2:-}"
+    PORT_SUSPENSION="${2:-}"
     shift # past argument value
     ;;
   --netflow-port)
-    echo "Setting PORT_NETFLOW=$2"
-    PORT_NETFLOW="$2"
+    echo "Setting PORT_NETFLOW=${2:-}"
+    PORT_NETFLOW="${2:-}"
     shift # past argument value
     ;;
   --ucrm-user)
-    echo "Setting UCRM_USER=$2"
-    UCRM_USER="$2"
+    echo "Setting UCRM_USER=${2:-}"
+    UCRM_USER="${2:-}"
     shift # past argument value
     ;;
   --subnet)
-    echo "Setting NETWORK_SUBNET=$2"
-    NETWORK_SUBNET="$2"
+    echo "Setting NETWORK_SUBNET=${2:-}"
+    NETWORK_SUBNET="${2:-}"
     shift # past argument value
     ;;
   --subnet-internal)
-    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
-    NETWORK_SUBNET_INTERNAL="$2"
+    echo "Setting NETWORK_SUBNET_INTERNAL=${2:-}"
+    NETWORK_SUBNET_INTERNAL="${2:-}"
     shift # past argument value
     ;;
   --skip-system-setup)
@@ -70,8 +70,8 @@ case "${key}" in
     SECURE_FIRST_LOGIN="true"
     ;;
   --yml)
-    echo "Setting DOCKER_COMPOSE_YML_URL=$2"
-    DOCKER_COMPOSE_YML_URL="$2"
+    echo "Setting DOCKER_COMPOSE_YML_URL=${2:-}"
+    DOCKER_COMPOSE_YML_URL="${2:-}"
     shift # past argument value
     ;;
   -f|--force)
@@ -86,6 +86,7 @@ shift # past argument key
 done
 
 UCRM_USER="${UCRM_USER:-ucrm}"
+UCRM_USER="$(echo -n "${UCRM_USER}" | head -n1)"
 UCRM_PATH="${UCRM_PATH:-/home/${UCRM_USER}}"
 UCRM_USERNAME=""
 UCRM_PASSWORD=""
