@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.15.0-beta4 (2018-01-08)
+
+### Fixed
+*	No "new invoice" email notification generated for automatic invoicing. (All unset invoices can be sent manually though - using the batch emailing for all unsent invoices)
+*	Fixed batch emailing of a large amount of unsent invoices.
+*	Fixed resending of a large amount of failed emails in "Resend failed emails since" dialog.
+*	Other minor fixes.
+
 ## 2.15.0-beta3 (2018-01-04)
 
 ### Added
