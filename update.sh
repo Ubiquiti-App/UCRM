@@ -7,7 +7,7 @@ set -o pipefail
 #set -o xtrace
 
 DATE=$(date +"%s")
-MIGRATE_OUTPUT=$(mktemp)
+MIGRATE_OUTPUT="$(mktemp)"
 FORCE_UPDATE=0
 UPDATE_TO_VERSION=""
 UPDATING_TO="latest"
@@ -29,7 +29,7 @@ else
     UCRM_PATH="$(cd "${UCRM_PATH}" > /dev/null && pwd)"
 fi
 
-UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never ":2055/udp" || echo "      - 2055:2055/udp")
+UDP_PORT=$(cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -m 1 --color=never ":2055/udp" | head -n1 || echo "      - 2055:2055/udp")
 
 UCRM_USER="${UCRM_USER:-ucrm}"
 if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
@@ -37,11 +37,14 @@ if [[ -f "${UCRM_PATH}/docker-compose.env" ]]; then
         UCRM_USER=$(cat -vt "${UCRM_PATH}/docker-compose.env" | grep -E "UCRM_USER=" --color=never | awk -F= ' {print $NF}')
     fi
 fi
+UCRM_USER="$(echo -n "${UCRM_USER}" | head -n1)"
 NO_AUTO_UPDATE="false"
 CRON="false"
 
 NETWORK_SUBNET="${NETWORK_SUBNET:-}"
+NETWORK_SUBNET="$(echo -n "${NETWORK_SUBNET}" | head -n1)"
 NETWORK_SUBNET_INTERNAL="${NETWORK_SUBNET_INTERNAL:-}"
+NETWORK_SUBNET_INTERNAL="$(echo -n "${NETWORK_SUBNET_INTERNAL}" | head -n1)"
 
 trap 'rm -f "${MIGRATE_OUTPUT}"; cleanup_auto_update; exit' INT TERM EXIT
 
@@ -76,7 +79,7 @@ install_docker_compose() {
             DOCKER_COMPOSE_MINOR="0"
         fi
 
-        if [ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ] && [ "${DOCKER_COMPOSE_MINOR}" -lt 9 ] || [ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]; then
+        if [[ "${DOCKER_COMPOSE_MAJOR}" -lt 2 ]] && [[ "${DOCKER_COMPOSE_MINOR}" -lt 9 ]] || [[ "${DOCKER_COMPOSE_MAJOR}" -lt 1 ]]; then
             echo "Docker Compose version ${DOCKER_COMPOSE_VERSION} is not supported. Please upgrade to version 1.9 or newer."
             echo "You can use following commands to upgrade:"
             echo ""
@@ -1165,7 +1168,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v3.1) |"
+    echo "| https://ucrm.ubnt.com/          (updater v3.2) |"
     echo "+------------------------------------------------+"
     echo ""
 }
@@ -1177,18 +1180,18 @@ key="$1"
 
 case "${key}" in
   -v|--version)
-    echo "Setting UPDATE_TO_VERSION=$2"
-    UPDATE_TO_VERSION="$2"
+    echo "Setting UPDATE_TO_VERSION=${2:-}"
+    UPDATE_TO_VERSION="${2:-}"
     shift # past argument value
     ;;
   --subnet)
-    echo "Setting NETWORK_SUBNET=$2"
-    NETWORK_SUBNET="$2"
+    echo "Setting NETWORK_SUBNET=${2:-}"
+    NETWORK_SUBNET="${2:-}"
     shift # past argument value
     ;;
   --subnet-internal)
-    echo "Setting NETWORK_SUBNET_INTERNAL=$2"
-    NETWORK_SUBNET_INTERNAL="$2"
+    echo "Setting NETWORK_SUBNET_INTERNAL=${2:-}"
+    NETWORK_SUBNET_INTERNAL="${2:-}"
     shift # past argument value
     ;;
   -f|--force)
