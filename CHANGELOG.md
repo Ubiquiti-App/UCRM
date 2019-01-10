@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.14.5 (2019-01-10)
+
+### Fixed
+*	Fixed form validation for "created date" in manual invoice form.
+*	UX Optimization - slow ticket view and failing ticketing assignments in case UCRM contains a huge number of clients.
+
 ## 2.15.0-beta4 (2018-01-08)
 
 ### Fixed
