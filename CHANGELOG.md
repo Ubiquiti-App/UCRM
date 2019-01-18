@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.14.6 (2019-01-18)
+
+### Added
+*	Implemented SHA-512 hash support for Authorize.Net. Signature Key is now required for proper functionality of the Authorize.Net payment gateway as the MD5 hash will be phased out soon.
+
+### Changed
+*	PHP upgraded to version 7.1.26
+
+### Fixed
+*	UI/UX fixes and improvements.
+*	Fixed filtering in client's log export tool.
+*	Improved API endpoints for managing client's and invoice's custom attributes.
+*	Tickets related to a black-listed email are now properly deleted.
+*	Speed up "Invoices Overview PDF" generation.
+
 ## 2.14.5 (2019-01-10)
 
 ### Fixed
