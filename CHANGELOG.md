@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.15.0-beta5 (2018-01-21)
+
+### Added
+*	Translations updated - thanks to the community translators.
+*	Added invoice.draft_approved webhook event.
+
+### Changed
+*	PHP upgraded to version 7.2.14
+
+### Fixed
+*	Fixed possible crash on the organization detail page.
+*	Export of payment receipt PDF is now correctly ordered based on the order used in the payment grid.
+*	Fixed failing API endpoint: GET webhook-event.
+*	Fix for automatic payment receipts not being generated for Authorize.net payments and for payments imported via CSV file.
+*	Geocoding not automatically triggered in some cases after Client CSV import, additionally, more improvements and validations were added to this feature.
+*	Fixed failing manual invoice edit in some rare cases.
+*	Fixes and improvements for Proforma invoicing (client zone - processed proforma no longer has "pay online" button, processed proformas are now included in "send unsent invoices" modal)
+*	Fixed services being created by changing "Create invoice X days in advance" value in new service form.
+*	Fixed long PDF generation when containing large overview tables.
+*	Fix invoices sent twice when using "send all unsent invoices" modal as of 2.15.0-beta4.
+*	UI/UX improvements.
+
 ## 2.14.6 (2019-01-18)
 
 ### Added
