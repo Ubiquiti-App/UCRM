@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.14.7 (2019-01-30)
+
+### Fixed
+*	Fixed long PDF generation when containing large overview tables.
+*	Minor fixes in CSV payment import.
+*	Fixed next month included in invoiced period when it shouldn't in a rare case.
+
 ## 2.15.0-beta5 (2018-01-21)
 
 ### Added
