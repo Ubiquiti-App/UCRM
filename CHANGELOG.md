@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.15.0-beta6 (2019-01-30)
+
+### Added
+*	Plugin ID is now available in ucrm.json file for each plugin.
+
+### Fixed
+*	Button to apply credit no longer shows on proforma invoices if not applicable.
+*	Fixed changing service plan via service's price summary.
+
 ## 2.14.7 (2019-01-30)
 
 ### Fixed
