@@ -16,7 +16,7 @@
 *	Minor fixes in CSV payment import.
 *	Fixed next month included in invoiced period when it shouldn't in a rare case.
 
-## 2.15.0-beta5 (2018-01-21)
+## 2.15.0-beta5 (2019-01-21)
 
 ### Added
 *	Translations updated - thanks to the community translators.
@@ -59,7 +59,7 @@
 *	Fixed form validation for "created date" in manual invoice form.
 *	UX Optimization - slow ticket view and failing ticketing assignments in case UCRM contains a huge number of clients.
 
-## 2.15.0-beta4 (2018-01-08)
+## 2.15.0-beta4 (2019-01-08)
 
 ### Fixed
 *	No "new invoice" email notification generated for automatic invoicing. (All unsent invoices can be sent manually though - using the batch emailing for all unsent invoices)
@@ -67,7 +67,7 @@
 *	Fixed resending of a large amount of failed emails in "Resend failed emails since" dialog.
 *	Other minor fixes.
 
-## 2.15.0-beta3 (2018-01-04)
+## 2.15.0-beta3 (2019-01-04)
 
 ### Added
 *	Payment methods filter for payment grid is simplified, unused items are hidden now.
