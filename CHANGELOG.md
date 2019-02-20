@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.14.8 (2019-02-20)
+
+### Added
+*	Improved app performance (for example: faster ticket assignment form).
+*	Client Account Number is now obfuscated in the client's log.
+
+### Fixed
+*	Terminated services are no longer included in the FCC reporting.
+*	Minor fix in the service's billing overview.
+*	Improvements for the Data Usage Report, the usage of terminated services is shown properly now.
+*	Fixed export button of client's data.
+*	Bug fix for /clients/authenticated endpoint.
+*	Improved client log export (timestamp instead of date is now attached to the log items).
+*	Minor fixes and improvements.
+
 ## 2.15.0-beta6 (2019-01-30)
 
 ### Added
