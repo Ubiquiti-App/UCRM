@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.15.0-beta7 (2019-02-22)
+
+### Added
+*	Invoices with zero balance amount are always editable now.
+*	Now, it's always possible to override the service taxes regardless of the tax config set for the related service plan.
+*	Customizable order of the invoice items for all new invoices.
+*	Improved UX for the Google calendar sync feature.
+*	Improved handling of errors in custom invoice templates.
+*	Log of failed email now shows the related client enabling you to jump into the client's profile page.
+*	App speed optimizations.
+
+### Changed
+*	Proforma invoices are now shown on a new tab separately from regular invoices.
+*	PHP upgraded to version 7.2.15
+
+### Fixed
+*	Fixed for several API endpoints. GET /ticketing/tickets/activities, GET /proforma-invoice-templates, GET /scheduling/jobs.
+*	Fixed credit applying to proforma when creating a new proforma invoice manually.
+*	Fixed rare crashes of the Batch Mailing tool.
+*	Fixed pushing of amount change for linked payment subscriptions (issues with this appeared only in 2.15-beta branch).
+*	Fixed displaying rounding difference on invoices with no custom rounding.
+*	Minor API docs fixes.
+*	Minor fixes, UX improvements.
+
 ## 2.14.8 (2019-02-20)
 
 ### Added
