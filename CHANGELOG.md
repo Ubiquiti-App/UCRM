@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.15.0-beta8 (2019-02-28)
+
+### Added
+*	New permission "Allow creating payments" available for users with view permission on Payments. This can be granted to cashiers to enable create payments only while disabling edit/delete.
+
+### Changed
+*	Plugins: Custom plugin's github URL is no longer required. Useful for custom private plugins or for the dev purposes.
+
+### Fixed
+*	Fixed edit of invoices and quotes created prior to the previous beta with more than one invoice item.
+*	Minor fixes: incorrect service status displayed in rare cases, UI fixes for IE, and other minor fixes.
+
+
 ## 2.15.0-beta7 (2019-02-22)
 
 ### Added
