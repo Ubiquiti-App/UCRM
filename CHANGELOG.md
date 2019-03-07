@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.15.0 (2019-03-07)
+
+### Added
+*	UX improvements and more verbose logging of Stripe payments.
+
+### Fixed
+*	Fix for FCC report crashes in rare cases.
+*	Minor fixes.
+
 ## 2.15.0-beta8 (2019-02-28)
 
 ### Added
