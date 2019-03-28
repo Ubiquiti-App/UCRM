@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.15.1 (2019-03-28)
+
+### Added
+*	Better and more user-friendly password strength validation.
+*	New UCRM localizations added: Georgian, Bulgarian.
+*	CA certificates are periodically updated.
+*	Better plugin installation and backuping/restoring.
+
+### Changed
+*	PHP upgraded to version 7.2.16
+*	Service period cannot be edited for already invoiced services to prevent possible issues with invoicing.
+
+### Fixed
+*	Fixed issues with Stripe subscription payments.
+*	UI/UX improvements for google maps.
+*	Fixed crashing receipt template in some cases of payments created via API.
+*	Factory reset not working, doing no changes to the data.
+*	Lets Encrypt TLSv1.0 removed, TLSv1.3 added.
+*	Fix for possible issues with ticketing import from some client email replies.
+*	Fixed displaying rounding difference on invoices with no custom rounding.
+*	Minor API fixes.
+*	Minor fixes.
+
 ## 2.15.0 (2019-03-07)
 
 ### Added
