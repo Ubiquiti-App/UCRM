@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.16.0-beta1 (2019-03-29)
+
+### Added
+*	2 months period are now enabled for Service Plans.
+*	Improved logging of payment subscription errors.
+*	Editing of paid invoices or proformas is now enabled. All invoice attributes can be edited except the invoice items.
+*	PDF of Invoices and Proforma invoices can be now included in the UCRM backup file. Note that this can increase the backup file size significantly. UCRM can always recreate a missing PDF but the current client's and organization's attributes are used as well as the current invoice template.
+*	Better Google Calendar sync of the scheduling jobs. The job's GPS and other attributes (e.g. description, job's tasks) are now pushed to the user's calendar event.
+*	Image thumbnails are now available for ticket attachments (supported formats are jpeg, png and gif).
+*	Client's custom attributes can be now configured as hidden from the client zone. You can use these attributes for sensitive data or technical data used by API or plugins.
+*	Automatic invoicing can be now turned ON/OFF in System > Billing.
+*	As an administrator you can create a new online payment on behalf of your client directly from the admin zone (you don't need to log in "as client" to the client zone).
+*	Admins without permission to view scheduling are now not included in the scheduling timeline.
+*	UI/UX Improvements and minor fixes (e.g. time zone of the system time shown on the dashboard, better invoicing preview when creating a new service).
+*	New "pay total amount" button added to the Client Zone, useful for clients having more than one unpaid invoice.
+*	"Suspension postpone" button added to the Client Zone. Besides the postponing enabled on the walled garden page, the postponing on the client profile page in the Client Zone can be used.
+*	Better UX for the payment subscription window. Clients now get all the info needed before they create a subscription. E.g. (whether the previous invoice is already paid or not and when is the next invoicing day)
+*	For plugin developers: now, it's possible to configure plugin's scripts hooked to common plugin actions - for plugin install, update, configure, enable, disable, remove.
+*	Plugins with incompatible max version are disabled automatically.
+*	Now, you can edit all the service's parameters using a single form. (also for already invoiced services)
+*	In-app guide helping WISP migrate UCRM to UNMS (will be enabled when UNMS v1.0 is released).
+
+### Changed
+*	Invoice number is not requested now when editing an invoice draft. It is automatically added when the draft is approved.
+*	The regenerate invoice PDF button now using the current client's and organization's data (like names, addresses, custom attributes) for recreating a new invoice. Same for quotes or proforma invoices.
+*	Changing of period length on service is not enabled to avoid invoicing issues of the given service.
+
+### Fixed
+*	Fixed issues with tickets loaded for some IMAP emails in rare formats. 
+*	Minor API fixes.
+
 ## 2.15.1 (2019-03-28)
 
 ### Added
