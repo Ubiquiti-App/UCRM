@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.16.0-beta2 (2019-04-01)
+
+### Fixed
+*	Minor fixes.
+*	Edit modal window fixed for editing service's billing settings.
+*	Fixed IPpay subscriptions - trigerring duplicate payments.
+
 ## 2.16.0-beta1 (2019-03-29)
 
 ### Added
