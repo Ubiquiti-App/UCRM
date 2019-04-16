@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.15.2 (2019-04-16)
+
+### Added
+*	New option for Stripe subscriptions "Import unattached payments" - if turned on in the organization settings, Stripe payments that would normally be ignored are imported as Unattached payments into UCRM.
+*	Added validation for IPpay payment form - zip code length is limited to 10 characters to prevent failing payments.
+
+### Changed
+*	Only the full proforma invoice's amount can be paid now, partially paid proforma invoices are not enabled by UCRM.
+*	Ticket subject limited to 80 characters. The input longer than 80 characters becomes part of the ticket message (applies only to the input from UCRM Client Zone, not from IMAP ticketing import).
+*	PHP upgraded to version 7.2.17
+
+### Fixed
+*	Fix issues with ticketing import for emails with incorrect encoding or formatting.
+*	Fixed manual editing of client's data usage (manual NetFlow edits).
+*	Raw payment amount from Stripe payment now shown in the correct format.
+*	Fixed minor rounding issue for predefined amount when creating a new subscription.
+*	Fixed performance issues on Organization show and edit pages.
+*	Fixed bugs with editing service deferred change.
+*	Fixed crashes when batch sending the invitation emails to the client zone.
+*	Fixed crash when plugin is updated and its new configuration requires a different configuration type.
+*	Minor improvements, tools update, logger improvements.
+*	Minor fixes.
+
 ## 2.16.0-beta2 (2019-04-01)
 
 ### Fixed
