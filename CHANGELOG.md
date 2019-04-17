@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.16.0-beta3 (2019-04-17)
+
+### Changed
+*	Client's address (optional value) is not prefilled automatically in the IPpay online payment form.
+
+### Fixed
+*	Fixed "pay total amount" feature in the client zone.
+*	Fixed online payments when changing of payment amount was disabled.
+*	Fixed back button on the payment success page.
+*	UX improvements.
+*	Minor Fixes.
+
 ## 2.15.2 (2019-04-16)
 
 ### Added
