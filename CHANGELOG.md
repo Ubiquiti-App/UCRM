@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.16.0-beta4 (2019-05-10)
+
+### Added
+*	Admins now able to pay via ACH when using the "pay online" feature from admin zone.
+*	Improved CC payment form for Authorize.Net and IPPay, new tooltips and look.
+*	Custom fonts enabled using CSS, read more in the guide at /help/invoice-templates.
+*	Better logging for Authorize.net payments.
+
+### Fixed
+*	Fixed payments created as unattached when processing one-time Stripe payments, improved payment matching.
+*	Minor fixes, UI/UX improvements.
+
 ## 2.16.0-beta3 (2019-04-17)
 
 ### Changed
