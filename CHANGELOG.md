@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.16.0 (2019-05-24)
+
+### Added
+*	Terminated services now grayed out on the map overview.
+*	The "New Invoice" and "Send invoices with zero balance" toggles are no longer chained.
+*	Approve all invoice drafts button added to the drafts grid page.
+*	Map client markers improved - it's possible to click on them to go to client/service/site.
+
+### Changed
+*	PHP upgraded to version 7.2.18
+
+### Fixed
+*	Fixed inability to add items to invoice for some users with specific permissions.
+*	Fixed permissions error shown on the client detail page for some users.
+*	Fixed missing discount (and other parameters) when a proforma was transformed into invoice.
+*	Created date couldn't be modified on new/edit Quote form.
+*	Fixed shaping sync after the service's plan is changed via deferred change.
+*	Broken page scrolling on some forms.
+*	Client zone invitation email is disabled for clients not having username.
+*	Minor fixes, UI/UX improvements.
+
 ## 2.16.0-beta4 (2019-05-10)
 
 ### Added
