@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.16.1 (2019-06-14)
+
+### Added
+*	When invited and not yet activated client resets his password, a new invitation email will be sent.
+
+### Changed
+*	PHP upgraded to version 7.2.19
+
+### Fixed
+*	Fixed rejecting IPpay subscription payments of the same amount for the same client with multiple subscriptions.
+*	A future service period (configured using the deferred change) is now invoiced automatically as expected even when the deferred change has not been activated. (This is useful for Forward invoicing and automatic invoicing a few days ahead.)
+*	Setup fees for quoted service are no longer invoiced automatically until the quoted service is accepted and activated.
+*	Client CSV import not failing now even when different encoding than UTF-8 is used.
+*	Minor improvements for ticketing IMAP import from servers with invalid email formats.
+*	Paid proforma invoices no longer included in the financial overview on dashboard.
+*	Fixed possible issues with Client CSV Import.
+*	Fixed rare crashes when approving an invoice draft.
+*	Minor fixes, UX improvements and UCRM API improvements.
+
 ## 2.16.0 (2019-05-24)
 
 ### Added
