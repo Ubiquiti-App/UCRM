@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.0-beta.2 (2019-06-26)
+## 3.0.0-beta.2 (in UNMS v1.0.0-beta.2) (2019-06-26)
 
 ### Added
 *	Full screen button added to CRM maps.
@@ -15,7 +15,7 @@
 *	API endpoint /clients/{id}/services fixed, lastInvoicedDate always null.
 *	Minor fixes and UX improvements.
 
-## 3.0.0-beta.1 (2019-06-17) - First public release of integrated UNMS and UCRM 
+## 3.0.0-beta.1 (in UNMS v1.0.0-beta.1) (2019-06-17) - First public release of integrated UNMS and UCRM 
 ### Added
 *	UCRM is now a natural part of UNMS. The whole application has two modules. The Network module is the NMS part which takes care of network monitoring and configuration and the CRM module is there for automated billing
 
