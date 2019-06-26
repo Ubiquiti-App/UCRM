@@ -1,5 +1,50 @@
 # Changelog
 
+## 3.0.0-beta.2 (in UNMS v1.0.0-beta.2) (2019-06-26)
+
+### Added
+*	Full screen button added to CRM maps.
+*	Translations updated.
+
+###	Fixed
+*	Better validation for some API endpoints.
+*	When a new user is created in UNMS settings, they can be seen in CRM module as well (even before the first login). Withing a few seconds, they will appear in CRM, e.g. in the Scheduling section.
+*	Fixed issues with CRM plugins. Some plugins were wrongly marked as incompatible with UNMS v1, some plugins were not able to use UNMS' API in specific cases.
+*	Fixed possible crashes of backend tasks (e.g. outgoing mails stuck in the queue).
+*	Better Ticket import from IMAP (in some cases emails sent from the UCRM support email address could have been imported).
+*	API endpoint /clients/{id}/services fixed, lastInvoicedDate always null.
+*	Minor fixes and UX improvements.
+
+## 3.0.0-beta.1 (in UNMS v1.0.0-beta.1) (2019-06-17) - First public release of integrated UNMS and UCRM 
+### Added
+*	UCRM is now a natural part of UNMS. The whole application has two modules. The Network module is the NMS part which takes care of network monitoring and configuration and the CRM module is there for automated billing
+
+Better network management
+*	No more duplicate configuration of devices in both UCRM and UNMS.
+*	All the devices are now managed by UNMS' Network module only.
+*	The client's services (in CRM module) can be linked to Client Sites with devices (in Network module)
+*	Fast, automatic and seamless Traffic Shaping and Suspension: everything is managed by UNMS (no need to configure any Firewall, NAT or QoS rules manually anymore).
+*	Easy client installation with automatic discovery and UNMS mobile app.
+*	Traffic Shaping, Suspension and NetFlow are compatible with DHCP: dynamic IPs are enabled now. UNMS is always aware of the current IP of all Ubiquiti devices.
+*	Advanced network monitoring, even for devices in a separate network, NAT. Also, seamless migration to cloud is now enabled.
+*	More useful features brought by UNMS' Network module
+
+Logging in for administrators and clients 
+*	All administrators are merged and can be configured in UNMS settings. It's possible to grant permissions for just one of the two modules.   
+*	All administrators can log in using the NMS login page (/nms), while clients will use the client zone login page (/crm)
+*	It's possible to configure the default login page to be shown when accessing the domain root (/).
+
+Other Improvements
+*	Better search feature in the header search bar.
+*	Improved bulk emailing with filters.
+
+###	Changed
+*	System configuration used by both UNMS' Network and CRM module can be set in UNMS settings (no more in CRM settings): Mailer configuration, System backups, Domain name/IP, SSL certificates, Users management.
+
+Upgrading tool for switching from UCRM v2 to UNMS
+*	For an easy upgrade and migration of your data use the upgrade tool: https://help.ubnt.com/hc/en-us/articles/360022498293-UNMS-v1-How-to-Upgrade-from-UCRM-to-UNMS
+
+
 ## 2.16.1 (2019-06-14)
 
 ### Added
