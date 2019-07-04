@@ -9,16 +9,21 @@
 
 ## 3.0.0-beta.3 (in UNMS v1.0.0-beta.3) (2019-07-02)
 
-###	Changed
-*	Better default look of all email templates
+###	Added
+*	Improved default look of all CRM email templates.
+*	Better Ticket import from IMAP (in some cases emails sent from the CRM support email address could have been imported).
 
 ### Fixed
-*	Improved handling of ticketing emails (e.g. case insensitive for blacklisted emails)
+*	Fixed handling of ticketing emails (e.g. case insensitive for blacklisted emails)
 *	Fixed backup restore of UCRM v2 backup in UNMS v1 (this affected only a few UCRM v2 users).
 *	Fixed access denied error on /crm/login when admin is logged in.
-*	Fixed QoS speed conversion.
+*	Fixed QoS speed conversion (Now 1 Mbps = 1000 kbps).
 *	Fixed default sandbox value not correctly represented in setup wizard UI.
-*	Minor fixes and UX improvements.
+*	Fixed possible crashes of backend tasks (e.g. outgoing mails stuck in the queue).
+*	Fixed API endpoint /clients/{id}/services fixed, lastInvoicedDate always null.
+*	Non functional online payment link removed from the suspension email template.
+*	Fixed timeout when deleting multiple payments.
+*	Fixed service billing preview (terminated discount was still visible).
 
 ## 3.0.0-beta.2 (in UNMS v1.0.0-beta.2) (2019-06-26)
 
