@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.16.2 (2019-07-04)
+
+###	Added
+*	Translations updated.
+
+###	Fixed
+*	Fixed possible crashes of backend tasks (e.g. outgoing mails stuck in the queue).
+*	Better Ticket import from IMAP (in some cases emails sent from the UCRM support email address could have been imported).
+*	API endpoint /clients/{id}/services fixed, lastInvoicedDate always null.
+*	Non-functional online payment link removed from the suspension email template.
+*	Fixed timeout when deleting multiple payments.
+*	Fixed service billing preview (terminated discount was still visible).
+*	Improved handling of ticketing emails (e.g. case insensitive for blacklisted emails)
+*	Fixed default sandbox value not correctly represented in setup wizard UI.
+*	Fixed possible crashes when deleting an invoice.
+*	Fixed edgeos qos crash.
+*	All emails coming from UCRM are ignored by UCRM's ticketing import from IMAP inbox.
+*	Minor fixes and UI/UX improvements.
+
 ## 3.0.0-beta.4 (in UNMS v1.0.0-beta.4) (2019-07-04)
 
 ### Fixed
