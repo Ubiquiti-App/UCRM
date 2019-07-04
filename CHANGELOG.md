@@ -1,5 +1,25 @@
 # Changelog
 
+## 3.0.0-beta.4 (in UNMS v1.0.0-beta.4) (2019-07-04)
+
+### Fixed
+*	Shaping upload and download decimal numbers were truncated when pulled from CRM service plans to UNMS Network.
+*	Fixes for ticketing: missing organization data in ticket automatic reply, fixed wrong "commented by" in new ticket comment notification.
+*	Minor UX/UI fixes.
+
+## 3.0.0-beta.3 (in UNMS v1.0.0-beta.3) (2019-07-02)
+
+###	Changed
+*	Better default look of all email templates
+
+### Fixed
+*	Improved handling of ticketing emails (e.g. case insensitive for blacklisted emails)
+*	Fixed backup restore of UCRM v2 backup in UNMS v1 (this affected only a few UCRM v2 users).
+*	Fixed access denied error on /crm/login when admin is logged in.
+*	Fixed QoS speed conversion.
+*	Fixed default sandbox value not correctly represented in setup wizard UI.
+*	Minor fixes and UX improvements.
+
 ## 3.0.0-beta.2 (in UNMS v1.0.0-beta.2) (2019-06-26)
 
 ### Added
