@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.0.0-beta.5 (in UNMS v1.0.0-beta.5) (2019-07-11)
+
+### Fixed
+*	All possible vairables are correctly shown for the ticketing templates now.
+*	Better UX for restoring UCRM v2 backup file in UNMS' CRM module.
+*	Images in outgoing crm notifications are no longer imported to the ticket when a client replies to that notification.
+*	Fixed failing UCRM v2 backup restore in UNMS v1 and failing UNMS beta2 upgrades to higher versions in some rare cases.
+*	Fixed NetFlow data charts and tables, the correct timezone is used now, so the usage data is not overlaping to a wrong day.
+*	Fixed crashes on service detail page in some rare cases.
+
 ## 2.16.2 (2019-07-04)
 
 ###	Added
