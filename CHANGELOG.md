@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.16.3 (2019-07-16)
+
+###	Added
+*	Improved logging for invoice attributes and sandbox enabling/disabling.
+
+### Changed
+*	Number of bank accounts added in the client zone limited to 10.
+*	PHP upgraded to version 7.2.20
+
+### Fixed
+*	Fixed failing UCRM upgrade in some rare cases.
+*	Fix form validation for Stripe ACH bank account verification.
+*	Fixed wrong currency formatting on invoice in some cases.
+*	Fixed invoicing preview for services.
+*	Fixed crash when adding non-unique email addresses to ticketing email blacklist.
+*	Fixed UCRM v2 connections to Mikrotik HW.
+*	Fixed API for invoices and quotes: org. tax and bank account data are now always available via API for new invoices/quotes.
+*	API fixes: can't update custom attribute when changing only name, missing validation for "attributeType" when creating new custom attribute.
+*	Minor fixes and UI/UX improvements.
+
 ## 3.0.0-beta.5 (in UNMS v1.0.0-beta.5) (2019-07-11)
 
 ### Fixed
