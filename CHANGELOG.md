@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.16.4 (2019-07-17)
+
+### Fixed
+*	Fixed crash when opening terminated services (in some cases, when the service is having a discount).
+*	Custom invoice attributes properly shown in the client zone now.
+
 ## 2.16.3 (2019-07-16)
 
 ###	Added
@@ -7,7 +13,6 @@
 
 ### Changed
 *	Number of bank accounts added in the client zone limited to 10.
-*	PHP upgraded to version 7.2.20
 
 ### Fixed
 *	Fixed failing UCRM upgrade in some rare cases.
