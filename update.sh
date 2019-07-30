@@ -368,6 +368,18 @@ patch__compose__add_rabbitmq() {
     fi
 }
 
+patch__compose__add_rabbitmq_hostname() {
+    if ! cat -vt "${UCRM_PATH}/docker-compose.yml" | grep -Eq "    hostname: ucrm-rabbitmq";
+    then
+        echo "Your docker-compose doesn't contain hostname in RabbitMQ section. Trying to add."
+        sed -i -e "s/image: rabbitmq:3/&\n    hostname: ucrm-rabbitmq/g" "${UCRM_PATH}/docker-compose.yml"
+
+        return 0
+    else
+        return 1
+    fi
+}
+
 patch__compose__add_supervisord() {
     if ! (is_updating_to_version "${UPDATING_TO}" "2002002" 1); then
         return 1
@@ -667,6 +679,7 @@ compose__run_update() {
     if patch__compose__add_rabbitmq; then
         needsVolumesFix=1
     fi
+    patch__compose__add_rabbitmq_hostname || true
     if patch__compose__add_supervisord; then
         needsVolumesFix=1
     fi
@@ -1168,7 +1181,7 @@ print_intro() {
     echo "+------------------------------------------------+"
     echo "| UCRM - Complete WISP Management Platform       |"
     echo "|                                                |"
-    echo "| https://ucrm.ubnt.com/          (updater v3.2) |"
+    echo "| https://ucrm.ubnt.com/          (updater v3.3) |"
     echo "+------------------------------------------------+"
     echo ""
 }

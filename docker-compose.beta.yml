@@ -52,6 +52,7 @@ services:
     restart: always
     volumes:
       - ./data/rabbitmq:/var/lib/rabbitmq
+    hostname: ucrm-rabbitmq
     logging:
       driver: "json-file"
       options:
