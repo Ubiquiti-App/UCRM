@@ -1,5 +1,37 @@
 # Changelog
 
+## 3.0.0-beta.7 (in UNMS v1.0.0-beta.6) (2019-07-31)
+
+### Added
+*	Plugin capabilities extended: New custom widgets and new "Pay Online" button through enabled by plugins. Any plugin can put a custom content to any CRM page having widgets (e.g. the dashboard, client profile, etc.) and you can also implement an own payment gateway integration triggered by a custom Pay Online button in the Client Zone.
+*	Added new Custom Attributes for payments (configurable manually or through API).
+*	Tooltip added for the CRM client zone login screen. (it's intended to be used by client only, administrators need to use the /nms/login page)
+
+### Fixed
+*	New localization added for Philippines (Tagalog).
+*	Fixed CRM network migration to UNMS (for migrating ucrm v2 data with services with undefined address into UNMS).
+*	Improved visibility of the connection lines on the CRM maps.
+*	Fixed search tool, now the user's language preferences are taken into account for the search results.
+*	Fixed generating invoice from paid proforma invoice.
+*	Fixed payment CSV import.
+*	Fixed IPpay subscriptions (first one succeeded, the subsequent subscriptions were failing)
+*	Fixed email resend feature (notification emails using new icons).
+*	Fixed crashes when downloading invoice PDF of a non-existing invoice template (this happens when user explicitly exluded invoice templates from ucrm backup).
+*	Fixed wrong currency formatting when a custom locale is used.
+*	API: user's attribute isActive can be now managed with API.
+*	Fixed payment CSV export.
+*	Fixed crashes for MercadoPago "pay all" payments in Client Zone with multiple unpaid invoices.
+*	Fixed upload size limit for backup upload.
+*	Errors from manually corrupted plugins are ignored now.
+*	Minor fixes.
+
+## 3.0.0-beta.6 (in UNMS v1.0.0-beta.6) (2019-07-17)
+
+### Added
+CRM - Better system settings. All the settings for a function are grouped together and visible on a single location. (e.g. all the options and notification settings for Suspension feature can be configured on a single page.).
+CRM - New default PDF templates for Invoice/Proforma/Quote.
+CRM - Improved CRM maps - more view options, full-screen mode, etc.
+
 ## 2.16.4 (2019-07-17)
 
 ### Fixed
