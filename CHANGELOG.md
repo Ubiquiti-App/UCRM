@@ -1,6 +1,17 @@
 # Changelog
 
-## 3.0.0-beta.7 (in UNMS v1.0.0-beta.6) (2019-07-31)
+## 3.0.0-beta.8 (in UNMS v1.0.0-beta.8) (2019-08-02)
+
+### Fixed
+*	Fixed email templates resetting to default version after any UNMS reboot or after migration from UCRM v2 to UNMS v1. (This issue occured for UNMS version 1.0.0-beta.3 to beta.7).
+*	Fixed user locale not used on first page load.
+*	Fixed rare possible issue with manual online payments, simultaneously created and applied to the same invoice.
+*	IPpay - prevent double payments (e.g. when client clicks to pay twice).
+*	Fixed unsuspend action not removing IP from the blocked IP list (for Mikrotik devices).
+*	Access denied page improved.
+*	Fixed slow automatic creating of invoices.
+
+## 3.0.0-beta.7 (in UNMS v1.0.0-beta.7) (2019-07-31)
 
 ### Added
 *	Plugin capabilities extended: New custom widgets and new "Pay Online" button through enabled by plugins. Any plugin can put a custom content to any CRM page having widgets (e.g. the dashboard, client profile, etc.) and you can also implement an own payment gateway integration triggered by a custom Pay Online button in the Client Zone.
