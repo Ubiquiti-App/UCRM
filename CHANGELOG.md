@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.16.5 (2019-08-06)
+
+### Fixed
+*	Fixed payment CSV export.
+*	Fixed unsuspend action not removing IP from the blocked IP list (for Mikrotik devices).
+*	Fixed crashes for MercadoPago "pay all" payments in Client Zone with multiple unpaid invoices.
+*	Fixed UCRM backup file upload.
+*	Fixed rare possible issue with manual online payments, simultaneously created and applied to the same invoice.
+*	IPpay - prevent double payments (e.g. when a client clicks to pay twice).
+*	Fixed rare issues with ticket import from IMAP.
+*	Access denied page improved.
+*	API: user's attribute isActive can be now managed with API.
+*	Security improvements for calendar sync feature.
+*	Fixed wrong currency formatting when a custom locale is used.
+*	Minor fixes.
+
 ## 3.0.0-beta.8 (in UNMS v1.0.0-beta.8) (2019-08-02)
 
 ### Fixed
