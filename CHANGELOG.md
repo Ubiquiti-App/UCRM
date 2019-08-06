@@ -12,7 +12,7 @@
 *	Fixed rare issues with ticket import from IMAP.
 *	Access denied page improved.
 *	API: user's attribute isActive can be now managed with API.
-*	Security improvements for calendar sync feature.
+*	Security improvements for iCal export and mobile app authentication.
 *	Fixed wrong currency formatting when a custom locale is used.
 *	Minor fixes.
 
