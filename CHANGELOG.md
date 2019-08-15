@@ -1,5 +1,39 @@
 # Changelog
 
+## 3.0.0-beta.10 (in UNMS v1.0.0-beta.10) (2019-08-15)
+
+### Added
+*	Stripe integration upgraded to meet PSD2 (new EU requirement for online payments)
+*	API: now, it's possible to retrieve archived clients via API.
+*	App speed improvements.
+*	Added missing IQD currency.
+*	UX improvements, guide improvements.
+*	Now you are able to unvoid voided invoice.
+
+### Fixed
+*	Fixed client grid export to CSV, some filters were not applied to exported items.
+*	Minor fixes.
+
+## 3.0.0-beta.9 (in UNMS v1.0.0-beta.9) (2019-08-08)
+
+### Added
+*	Translations updated.
+
+### Fixed
+*	UX Improvements, minor fixes.
+*	Security improvements for iCal export and mobile app authentication.
+*	CRM Mobile app authentiaction is disabled now until the CRM init wizard is completed.
+*	Fixed super admin not shown in the list of users in the scheduing module.
+*	Improved sync of Shaping data and Client Site data between CRM and UNMS.
+*	Fixed possible issues with manual invoice creating/editing due to concurent database actions.
+*	Fixed failing UCRM v2 backup restore in UNMS (in same rare cases).
+*	Fixed Total Overdue amount shown on dashboard, wrongly comprising invoices due today.
+*	Fixed crashes when IPpay servers failed to create payment (rare situations).
+*	Fixed issues with opening items in client log.
+*	App speed improvements and crash prevention for CRMs having thousands of clients or invoices. (e.g. batch exports or map view improved)
+
+### Fixed
+
 ## 2.16.5 (2019-08-06)
 
 ### Fixed
