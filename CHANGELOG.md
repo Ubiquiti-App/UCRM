@@ -1,7 +1,30 @@
 # Changelog
 
-## 3.0.0-beta.10 (in UNMS v1.0.0-beta.10) (2019-08-15)
+## 3.0.1 (in UNMS v1.0.1) (2019-08-29)
 
+### Changed
+*	The CRM Organization email is no longer used by default for the FROM header for outgoing CRM emails because this might cause issues in case the SMTP settings in UNMS is using different email. (Though, in Organization settings, it's possible to mark the Organization Email to be used as the FROM header if it works for you)
+
+### Fixed
+*	Fixed disconnected status shown on services (based on related client site status).
+*	Fixed issues with migration wizard (of CRM devices including SolarPoint) to UNMS.
+*	Fixed crashing suspension page (in case the suspended IP is used more than once in the ISP network).
+
+## 3.0.0 (in UNMS v1.0.0) (2019-08-22)
+### Added
+*	Stripe integration upgraded to meet PSD2 (new EU requirement for online payments)
+*	API: now, it's possible to retrieve archived clients via API.
+*	App speed improvements.
+*	Added missing IQD currency.
+*	UX improvements, guide improvements.
+*	Now you are able to unvoid voided invoice.
+
+### Fixed
+*	Fixed client grid export to CSV, some filters were not applied to exported items.
+*	Minor fixes.
+
+
+## 3.0.0-beta.10 (in UNMS v1.0.0-beta.10) (2019-08-15)
 ### Added
 *	Stripe integration upgraded to meet PSD2 (new EU requirement for online payments)
 *	API: now, it's possible to retrieve archived clients via API.
