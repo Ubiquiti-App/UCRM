@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.16.6 (2019-09-04)
+
+### Added
+*	Stripe integration upgraded to meet PSD2 (new EU requirement for online payments)
+*	Now you are able to unvoid voided invoice.
+*	App speed improvements.
+*	Add new IQD currency.
+*	UI/UX improvements, guide improvements.
+
+### Fixed
+*	Fixed total overdue amount and some overdue reports shown on dashboard and other locations (invoices overdue tomorrow were icnluded into other overdue ones).
+*	Fixed rare crashes, better handling of payments failed to be processed by IPpay.
+*	Fixed authentication for the iCal export.
+*	Client lead status no longer shown in the client zone.
+*	Minor fixes.
+
 ## 3.0.1 (in UNMS v1.0.1) (2019-08-29)
 
 ### Changed
