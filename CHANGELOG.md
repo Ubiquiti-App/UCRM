@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2.16.7 (2019-09-16)
+### Changed
+* PHP upgraded to 7.2.22
 ### Fixed
 *	Fixed rounding issue in tax recapitulation on invoice overview / PDF.
 *	Fixed IPpay payments, error 900 caused by breaking changes on IPpay side.
