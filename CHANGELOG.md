@@ -1,5 +1,40 @@
 # Changelog
 
+## 2.16.7 (2019-09-16)
+### Fixed
+*	Fixed rounding issue in tax recapitulation on invoice overview / PDF.
+*	Fixed IPpay payments, error 900 caused by breaking changes on IPpay side.
+*	Fixed rouning for some rare cases of IPpay payments.
+*	CRM webhook logs are pruned periodically now.
+*	Fixed issues with saving the plugin's configuration.
+*	Improved stripe payment processing and shown metadata of related crm payment.
+*	Improved payment page shown when clicked on "pay online button" for already paid invoice.
+
+## 3.0.3 (in UNMS v1.0.3) (2019-09-12)
+### Added
+*   Added JOD currency.
+*   Now, it's possible to manually invoice service for more than 3 years ahead.
+*   Improved stripe payment processing, also metadata of related CRM payments are now displayed.
+
+### Fixed
+*	Line breaks in the default ticketing notification template now works correctly.
+*	Fixed issues with two or more CRM organizations using the same Stripe account.
+*	Placing images into email templates now works without issues. Guides and template variables doc were improved.
+*	CRM webhook logs are now pruned periodically.
+*	Fixed issues with saving a plugin's configuration.
+*	Fixed IPpay payments, error 900 caused by breaking changes on IPpay side and rounding issues some rare cases of IPpay payments.
+
+## 3.0.2 (in UNMS v1.0.2) (2019-09-05)
+### Fixed
+*	The list of CRM language localization is now displayed in the local language
+*	The header search now allows searching for terms with diacritics.
+*	When many devices are being migrated from CRM to UNMS, the migration preview now shows the correct info.
+*	System log now correctly shows all usernames.
+*	When using the ical export the authentication now works correctly.
+*	Improved map clustering of client leads.
+*	Improved CRM dashboard loading.
+*	Client lead status no longer shown in the client zone.
+
 ## 2.16.6 (2019-09-04)
 
 ### Added
@@ -128,9 +163,9 @@
 ## 3.0.0-beta.6 (in UNMS v1.0.0-beta.6) (2019-07-17)
 
 ### Added
-CRM - Better system settings. All the settings for a function are grouped together and visible on a single location. (e.g. all the options and notification settings for Suspension feature can be configured on a single page.).
-CRM - New default PDF templates for Invoice/Proforma/Quote.
-CRM - Improved CRM maps - more view options, full-screen mode, etc.
+*	Better system settings. All the settings for a function are grouped together and visible on a single location. (e.g. all the options and notification settings for Suspension feature can be configured on a single page.).
+*	New default PDF templates for Invoice/Proforma/Quote.
+*	Improved CRM maps - more view options, full-screen mode, etc.
 
 ## 2.16.4 (2019-07-17)
 
