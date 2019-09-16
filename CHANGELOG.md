@@ -4,7 +4,7 @@
 ### Fixed
 *	Fixed rounding issue in tax recapitulation on invoice overview / PDF.
 *	Fixed IPpay payments, error 900 caused by breaking changes on IPpay side.
-*	Fixed rouning for some rare cases of IPpay payments.
+*	Fixed rounding for some rare cases of IPpay payments.
 *	CRM webhook logs are pruned periodically now.
 *	Fixed issues with saving the plugin's configuration.
 *	Improved stripe payment processing and shown metadata of related crm payment.
