@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.16.8 (2019-09-27)
+### Changed
+*	PHP upgraded to 7.2.23
+
+### Fixed
+*	Fixed rare crash on client detail after subscription is re-created.
+*	Fixed failing invoice number generator when approving invoice drafts (in some rare cases).
+*	Service reactivation is now forbidden for archived clients.
+*   Fixed failing plugin execution (manual and automatic).
+*	Minor fixes.
+
+## 3.0.4 (in UNMS v1.0.4) (2019-09-25)
+### Changed
+*	PHP upgraded to v7.3.
+
+### Fixed
+*	Improved payment page shown when clicked on "pay online button" for already paid invoice.
+*	Optimized disk usage when restoring backup of UCRM v2 in UNMS.
+*	Better UX for new subscription form in client zone.
+*	API improvements, better validations and fixes.
+*	Fixed redirect on the service reactivation page for clients.
+*	Fixed rare crash on client detail after subscription is re-created.
+*	Fixed failing invoice number generator when approving invoice drafts (in some rare cases).
+*	Minor fixes.
+
 ## 2.16.7 (2019-09-16)
 ### Changed
 * PHP upgraded to 7.2.22
