@@ -2,6 +2,9 @@
 
 ## 2.16.9 (2019-11-19)
 
+### Changed
+* PHP upgraded to 7.3.11
+
 ### Fixed
 *	The same name for a custom attribute for different entities (client, service, invoice) can now be created.
 *	Fixed template placeholders (having "_" in their name) not showing any value.
