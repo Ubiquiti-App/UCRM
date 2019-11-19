@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.16.9 (2019-11-19)
+
+### Fixed
+*	The same name for a custom attribute for different entities (client, service, invoice) can now be created.
+*	Fixed template placeholders (having "_" in their name) not showing any value.
+*	Fixed wrong invoice issue date in rare cases (only when invoicing 2 or more periods). The invoice was issued one day ahead.
+*	Improved rare situation when a paid proforma is created (credit is applied), the resulting invoice is now issued immediately, together with that proforma invoice.
+*	Fixed CSV payment import - matching to a custom payment method names fixed.
+*	API payment to invoice draft is not allowed now, fixed other minor bugs in payment API.
+*	Fixed issues with empty datetime parameter in plugin configuration.
+*	Other minor fixes.
+
 ## 2.16.8 (2019-09-27)
 ### Changed
 *	PHP upgraded to 7.2.23
