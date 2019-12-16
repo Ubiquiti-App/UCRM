@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.16.10 (2019-12-16)
+
+### Fixed
+*	Improved MercadoPago payments for amounts and currencies not having cents.
+*	Fixed issues with manual service suspension button.
+*	Fixed rare issues with pay online button for Stripe gateway.
+*	Fixed UCRM being stuck in some rare cases due to Ticketing bundle issues.
+*	Other minor fixes.
+
 ## 2.16.9 (2019-11-19)
 
 ### Changed
