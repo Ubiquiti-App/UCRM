@@ -2,6 +2,9 @@
 
 ## 2.16.10 (2019-12-16)
 
+### Changed
+*   PHP upgraded to 7.3.12
+
 ### Fixed
 *	Improved MercadoPago payments for amounts and currencies not having cents.
 *	Fixed issues with manual service suspension button.
