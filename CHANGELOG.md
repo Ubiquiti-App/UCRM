@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.16.11 (2020-01-30)
+
+### Changed
+*	Allowed custom CSS for some more elements (forms, scripts, iframes, objects)
+
+### Fixed
+*	Fixed print buttons that did nothing in some browsers.
+*	Fixed bounced emails causing ticketing loop in some cases.
+*	Fixed rare issues in system log.
+*	CSV structure updated for the FCC export.
+*	Fixes for some webhook events.
+*	Fixed bug in invoice draft edit - use credit toggle had no effect.
+*	Fixed invoice not created on specific date (this might happen in some rare cases with period start on 28th).
+*	Fixed filtering view for failed outgoing emails.
+
 ## 2.16.10 (2019-12-16)
 
 ### Changed
