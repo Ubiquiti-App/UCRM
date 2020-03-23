@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.16.12 (2020-03-23)
+
+### Changed
+*   Better handling of zero amount proformas and voiding invoices that were created from proformas. (The related proforma invoice is voided / restored automatically when the invoice is voided / restored manually)
+*   Invoice draft API - editing draft is now enabled.
+
+### Fixed
+*   Fixed failing very long PDF generation (e.g. while creating huge invoice count into PDF)
+*   Fixed client edit crash in some rare cases.
+*   Fixed invoice grid sorting.
+*   Fix crash when voiding processed proforma invoice via API.
+*   Minor rounding error for online payments views.
+*   Fixed invoicing issues with services having deferred change set or executed.
+*   Fixed rare crash on the service detail page.
+*   Fixed near due date notification offset. Now, when set to 1 for example, notification is sent 1 day before the due date as expected.
+*   Fixed ticketing IMAP import with strange encoding in email subject.
+*   Fixed client zone account statement - proforma invoices were not marked as proformas.
+*   Fixed minor UX issues and bugs.
+
 ## 2.16.11 (2020-01-30)
 
 ### Changed
