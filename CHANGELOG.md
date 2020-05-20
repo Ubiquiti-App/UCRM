@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.16.13 (2020-05-20)
+
+### Fixed
+*   Fixed payment form, showing to the client, that the invoices is already paid when attempted to pay it (just in some rare cases).
+*   Fixed attachments for client zone contact form.
+*   Fixed wrong due days count shown in invoice grid in some rare cases related to leap years.
+*   Fixed MapBox API deprecations.
+
 ## 2.16.12 (2020-03-23)
 
 ### Changed
