@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.16.14 (2020-06-23)
+
+### Fixed
+*   Fixed issues when having multiple Authorize.Net subscriptions for a single client.
+*   Fixed rare issues with invoicing of services having broken suspend/unsuspend process.
+*   Fixed several XSS vulnerabilities.
+
 ## 2.16.13 (2020-05-20)
 
 ### Fixed
