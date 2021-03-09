@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.16.15 (2021-03-09)
+
+### Fixed
+*   Fixed possible wrong client balance calculation after unvoiding proforma invoice.
+*   Fixed issues with Stripe ACH payments
+*   Fixed issues with netflow feature not measuring any data.
+*   Fixed FCC report issues when the company name contains "/"
+*   Possible fix for IMAP import for some strange mail servers and email formats.
+
+### Added
+*   Cookies security improvement.
+
 ## 2.16.14 (2020-06-23)
 
 ### Fixed
